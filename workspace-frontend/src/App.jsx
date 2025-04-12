@@ -1,18 +1,13 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+// Adjust the path to point to the components folder
+import LandingPage from './components/Landing_page';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <>
     <div>
-      <p>Welcome To WMS</p>
+      <LandingPage />
     </div>
-    </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
