@@ -18,8 +18,8 @@ const gradientAnimation = keyframes`
 
 // Styled Typography component that applies the animated gradient to the text
 const GradientText = styled(Typography)(({ theme }) => ({
-  // Define a gradient that repeats the colors to allow smooth flow
-  background: 'linear-gradient(90deg, #FFA500, #FFF700, #FFA500)',
+  // Define a gradient from orange to light lemon-green and back
+  background: 'linear-gradient(90deg, #FFA500, #BFFF00, #FFA500)',
   // Increase the background size for noticeable movement
   backgroundSize: '300% 100%',
   WebkitBackgroundClip: 'text',
