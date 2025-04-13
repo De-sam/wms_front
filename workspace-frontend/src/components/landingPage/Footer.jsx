@@ -25,17 +25,24 @@ const footerLinks = {
 
 const Footer = () => {
   return (
-    <Box component="footer" sx={{ backgroundColor: 'grey.900', color: 'grey.300', py: 6 }}>
-      <Container>
-        <Grid container spacing={4} sx={{ mb: 6 }}>
+    <Box
+      component="footer"
+      sx={{
+        backgroundColor: 'grey.900',
+        color: 'grey.300',
+        py: 6,
+        px: 2
+      }}
+    >
+      <Container maxWidth={false} disableGutters>
+        <Grid container spacing={4} sx={{ mb: 6, px: { xs: 2, md: 8 } }}>
           {/* Brand & Social */}
-          <Grid item xs={12} md={4}>
+          <Grid item xs={6} md={2}>
             <Typography variant="h3" sx={{ fontSize: '1.2rem', mb: 3, fontWeight: 600 }}>
               WorkSpace
             </Typography>
             <Typography sx={{ color: 'grey.500', lineHeight: 1.6, mb: 3 }}>
-              Our workspace management system helps teams organize tasks, collaborate effectively,
-              and boost productivity with intelligent tools and analytics.
+              Helping teams collaborate and manage workspaces intelligently.
             </Typography>
             <Box sx={{ display: 'flex', gap: 1 }}>
               {[FacebookIcon, TwitterIcon, LinkedInIcon, InstagramIcon].map((Icon, i) => (

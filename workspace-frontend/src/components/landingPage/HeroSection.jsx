@@ -1,12 +1,19 @@
 import React from 'react';
-import { Box, Button, Container, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Typography,
+  Container,
+  useTheme
+} from '@mui/material';
 import {
   ArrowForward as ArrowForwardIcon,
   PlayCircleOutline as PlayCircleOutlineIcon
 } from '@mui/icons-material';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 import myPhoto from '../../assets/my_photo.jpg';
-import { useTheme } from '@mui/material/styles';
 
 const HeroSection = () => {
   const [transform, setTransform] = React.useState({ rotateX: 0, rotateY: 0 });
@@ -30,37 +37,33 @@ const HeroSection = () => {
         mt: 10,
         width: '100%',
         overflowX: 'hidden',
-        backgroundColor: theme.palette.primary.main
+        backgroundColor: theme.palette.primary.main,
+        borderBottomLeftRadius: { xs: '16px', md: '24px' },
+        borderBottomRightRadius: { xs: '16px', md: '24px' },
+        transition: 'border-radius 0.3s ease'
       }}
     >
       <Container
         sx={{
-          maxWidth: '1200px',
           display: 'flex',
-          flexDirection: { xs: 'column-reverse', md: 'row' },
+          flexDirection: { xs: 'column', md: 'row' },
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: 4,
-          py: 4
+          py: 6
         }}
       >
         {/* Text Side */}
-        <Box
-          sx={{
-            flex: '1 1 50%',
-            maxWidth: { xs: '100%', md: '650px' },
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            textAlign: { xs: 'center', md: 'left' },
-            p: 3,
-            color: '#fff'
-          }}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: 'easeOut' }}
+          style={{ flex: 1, maxWidth: '600px', color: '#fff', textAlign: 'left' }}
         >
           <Typography
             variant="h1"
             sx={{
-              fontSize: { xs: '2.5rem', md: '3rem' },
+              fontSize: { xs: '2.4rem', md: '3rem' },
               fontWeight: 700,
               mb: 2
             }}
@@ -69,84 +72,89 @@ const HeroSection = () => {
           </Typography>
           <Typography
             sx={{
-              fontSize: { xs: '1rem', md: '1.25rem' },
-              mb: 4,
+              fontSize: { xs: '1rem', md: '1.2rem' },
               fontWeight: 300,
+              mb: 4,
               lineHeight: 1.6
             }}
           >
             Boost productivity with our intelligent workspace management system.
             Organize tasks, collaborate seamlessly, and analyze performance all in one place.
           </Typography>
+
           <Box
             sx={{
               display: 'flex',
-              flexDirection: { xs: 'column', md: 'row' },
+              flexDirection: 'row',
+              flexWrap: 'wrap',
               gap: 2,
               alignItems: 'center',
-              justifyContent: { xs: 'center', md: 'flex-start' }
+              justifyContent: 'center'
             }}
           >
-            <Button
-              variant="contained"
-              color="warning"
-              sx={{
-                fontWeight: 500,
-                px: 3,
-                py: 1.5,
-                fontSize: '1rem',
-                color: '#fff',
-                textTransform: 'none'
-              }}
-              startIcon={<ArrowForwardIcon />}
-            >
-              Start Free Trial
-            </Button>
-            <Button
-              variant="outlined"
-              sx={{
-                color: '#fff',
-                borderColor: '#fff',
-                '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
-                fontWeight: 500,
-                px: 3,
-                py: 1.5,
-                fontSize: '1rem',
-                textTransform: 'none'
-              }}
-              startIcon={<PlayCircleOutlineIcon />}
-            >
-              Watch Demo
-            </Button>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                component={Link}
+                to="/signup"
+                variant="contained"
+                color="warning"
+                sx={{
+                  fontWeight: 500,
+                  px: 3,
+                  py: 1.5,
+                  color: '#fff',
+                  textTransform: 'none'
+                }}
+                startIcon={<ArrowForwardIcon />}
+              >
+                Start Free Trial
+              </Button>
+            </motion.div>
+
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                variant="outlined"
+                sx={{
+                  color: '#fff',
+                  borderColor: '#fff',
+                  fontWeight: 500,
+                  px: 3,
+                  py: 1.5,
+                  textTransform: 'none',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                  }
+                }}
+                startIcon={<PlayCircleOutlineIcon />}
+              >
+                Watch Demo
+              </Button>
+            </motion.div>
           </Box>
-        </Box>
+        </motion.div>
 
         {/* Image Side */}
-        <Box
-          sx={{
-            flex: '1 1 50%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}
+        <motion.div
+          style={{ flex: 1, display: 'flex', justifyContent: 'center' }}
+          animate={{ y: [0, -10, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
         >
-          <Box
-            component="img"
+          <motion.img
             src={myPhoto}
             alt="Workspace Dashboard"
-            sx={{
+            style={{
               width: '100%',
-              maxWidth: 800,
-              maxHeight: 600,
+              maxWidth: 750,
+              maxHeight: 500,
               borderRadius: '16px',
               boxShadow: '0 15px 30px rgba(0,0,0,0.3)',
-              transform: `perspective(1000px) rotateX(${transform.rotateX}deg) rotateY(${transform.rotateY}deg)`,
-              transition: 'transform 0.2s ease-out'
+              transform: `perspective(1000px) rotateX(${transform.rotateX}deg) rotateY(${transform.rotateY}deg)`
             }}
+            transition={{ type: 'spring', stiffness: 50 }}
           />
-        </Box>
+        </motion.div>
       </Container>
     </Box>
   );

@@ -1,11 +1,12 @@
 import React from 'react';
-import { Box, Container, Typography, Grid } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 import {
   Dashboard as DashboardIcon,
   Assignment as TasksIcon,
   People as TeamIcon,
   Equalizer as AnalyticsIcon
 } from '@mui/icons-material';
+import { motion } from 'framer-motion';
 
 const features = [
   {
@@ -41,9 +42,13 @@ const FeaturesSection = () => {
           theme.palette.mode === 'light' ? '#f5f5f5' : 'background.default'
       }}
     >
-      <Container>
+      <Container sx={{ px: { xs: 2, md: 0 } }}>
+        {/* Section Title */}
         <Box sx={{ textAlign: 'center', mb: 6, position: 'relative' }}>
-          <Typography variant="h2" sx={{ fontSize: '2rem', fontWeight: 700, mb: 2 }}>
+          <Typography
+            variant="h2"
+            sx={{ fontSize: '2rem', fontWeight: 700, mb: 2 }}
+          >
             Powerful Features
           </Typography>
           <Box
@@ -59,21 +64,60 @@ const FeaturesSection = () => {
           />
         </Box>
 
-        <Grid container spacing={4}>
+        {/* Responsive Card Layout */}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+            justifyContent: { xs: 'center', md: 'space-between' },
+            alignItems: { xs: 'center', md: 'stretch' },
+            gap: 3,
+            flexWrap: 'wrap'
+          }}
+        >
           {features.map((feature, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
+            <motion.div
+              key={index}
+              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 40 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              style={{
+                flex: '1 1 auto',
+                width: '100%',
+                maxWidth: '280px'
+              }}
+            >
               <Box
                 sx={{
+                  position: 'relative',
                   backgroundColor: 'background.paper',
                   borderRadius: '8px',
                   boxShadow: 1,
                   p: 4,
                   textAlign: 'center',
                   height: '100%',
+                  overflow: 'hidden',
                   transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
                   '&:hover': {
                     transform: 'translateY(-10px)',
                     boxShadow: 3
+                  },
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    width: '300%',
+                    height: '300%',
+                    background:
+                      'radial-gradient(circle, rgba(255,193,7,0.15) 0%, transparent 60%)',
+                    transform: 'translate(-50%, -50%) scale(0.2)',
+                    opacity: 0,
+                    transition: 'opacity 0.4s ease, transform 0.4s ease'
+                  },
+                  '&:hover::before': {
+                    opacity: 1,
+                    transform: 'translate(-50%, -50%) scale(1)'
                   }
                 }}
               >
@@ -88,9 +132,9 @@ const FeaturesSection = () => {
                   {feature.description}
                 </Typography>
               </Box>
-            </Grid>
+            </motion.div>
           ))}
-        </Grid>
+        </Box>
       </Container>
     </Box>
   );
