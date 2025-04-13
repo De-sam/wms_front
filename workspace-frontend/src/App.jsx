@@ -1,6 +1,5 @@
 import React from 'react';
-// Adjust the path to point to the components folder
-import LandingPage from './components/LandingPage';
+import LandingPage from './pages/LandingPage'; // ← updated path!
 
 const App = () => {
   return (
