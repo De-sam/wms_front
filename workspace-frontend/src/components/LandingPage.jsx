@@ -241,7 +241,9 @@ const Header = () => {
         PaperProps={{
           sx: {
             width: { xs: '80vw', md: 250 },
-            backgroundColor: theme.palette.mode === 'dark' ? 'rgba(33,33,33,0.8)' : 'rgba(255,255,255,0.8)',
+            backgroundColor: theme.palette.mode === 'dark'
+              ? 'rgba(33,33,33,0.8)'
+              : 'rgba(255,255,255,0.8)',
             backdropFilter: 'blur(10px)',
           },
         }}
@@ -474,7 +476,10 @@ const HowItWorksSection = () => {
                 </Box>
                 {index !== steps.length - 1 && (
                   <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <MoreHorizIcon sx={{ transform: 'rotate(90deg)', color: 'warning.main' }} fontSize="medium" />
+                    <MoreHorizIcon 
+                      sx={{ transform: 'rotate(90deg)', color: 'warning.main' }} 
+                      fontSize="medium" 
+                    />
                   </Box>
                 )}
               </React.Fragment>
@@ -532,79 +537,108 @@ const HowItWorksSection = () => {
   );
 };
 
-// --- Contact Section ---
+// --- Contact Section (Side-by-Side) ---
 const ContactSection = () => {
   return (
     <Box component="section" sx={{ py: 8, backgroundColor: 'background.default' }} id="contact">
-      <Container>
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h2" sx={{ fontSize: '2rem', mb: 2 }}>
-              Get In Touch
-            </Typography>
-            <Typography sx={{ color: 'text.secondary', lineHeight: 1.6, mb: 3 }}>
-              Have questions or ready to transform your workspace? Our team is here to help you get started.
-            </Typography>
-            <List>
-              <ListItem disableGutters sx={{ mb: 2 }}>
-                <ListItemIcon sx={{ minWidth: 40 }}>
-                  <Box sx={{ 
-                    width: 40, 
-                    height: 40, 
-                    borderRadius: '50%', 
-                    backgroundColor: 'primary.main', 
-                    color: 'white', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center' 
-                  }}>
-                    <EmailIcon />
-                  </Box>
-                </ListItemIcon>
-                <Typography>contact@workspace-system.com</Typography>
-              </ListItem>
-              <ListItem disableGutters sx={{ mb: 2 }}>
-                <ListItemIcon sx={{ minWidth: 40 }}>
-                  <Box sx={{ 
-                    width: 40, 
-                    height: 40, 
-                    borderRadius: '50%', 
-                    backgroundColor: 'primary.main', 
-                    color: 'white', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center' 
-                  }}>
-                    <PhoneIcon />
-                  </Box>
-                </ListItemIcon>
-                <Typography>+1 (555) 123-4567</Typography>
-              </ListItem>
-              <ListItem disableGutters sx={{ mb: 2 }}>
-                <ListItemIcon sx={{ minWidth: 40 }}>
-                  <Box sx={{ 
-                    width: 40, 
-                    height: 40, 
-                    borderRadius: '50%', 
-                    backgroundColor: 'primary.main', 
-                    color: 'white', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center' 
-                  }}>
-                    <LocationIcon />
-                  </Box>
-                </ListItemIcon>
-                <Typography>
-                  123 Workspace Avenue, Suite 100<br />
-                  San Francisco, CA 94107
-                </Typography>
-              </ListItem>
-            </List>
+      <Container maxWidth="lg">
+        <Grid
+          container
+          spacing={4}
+          direction={{ xs: 'column', md: 'row' }}
+          alignItems="stretch"
+          justifyContent={{ xs: 'center', md: 'space-between' }}
+        >
+          {/* Left column: Get In Touch */}
+          <Grid item xs={12} md={6} sx={{ textAlign: 'left' }}>
+            <Box sx={{ height: '100%', pl: { xs: 2, md: 4 } }}>
+              <Typography variant="h2" sx={{ fontSize: '2rem', mb: 2 }}>
+                Get In Touch
+              </Typography>
+              <Typography sx={{ color: 'text.secondary', lineHeight: 1.6, mb: 3 }}>
+                Have questions or ready to transform your workspace? Our team is here to help you get started.
+              </Typography>
+              <List>
+                <ListItem disableGutters sx={{ mb: 2 }}>
+                  <ListItemIcon sx={{ minWidth: 40 }}>
+                    <Box
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: '50%',
+                        backgroundColor: 'primary.main',
+                        color: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <EmailIcon />
+                    </Box>
+                  </ListItemIcon>
+                  <Typography>contact@workspace-system.com</Typography>
+                </ListItem>
+                <ListItem disableGutters sx={{ mb: 2 }}>
+                  <ListItemIcon sx={{ minWidth: 40 }}>
+                    <Box
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: '50%',
+                        backgroundColor: 'primary.main',
+                        color: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <PhoneIcon />
+                    </Box>
+                  </ListItemIcon>
+                  <Typography>+1 (555) 123-4567</Typography>
+                </ListItem>
+                <ListItem disableGutters sx={{ mb: 2 }}>
+                  <ListItemIcon sx={{ minWidth: 40 }}>
+                    <Box
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: '50%',
+                        backgroundColor: 'primary.main',
+                        color: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <LocationIcon />
+                    </Box>
+                  </ListItemIcon>
+                  <Typography>
+                    123 Workspace Avenue, Suite 100<br />
+                    San Francisco, CA 94107
+                  </Typography>
+                </ListItem>
+              </List>
+            </Box>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <Box sx={{ backgroundColor: 'background.paper', p: 4, borderRadius: '12px', boxShadow: 2 }}>
-              <Typography variant="h3" sx={{ fontSize: '1.5rem', mb: 3, fontWeight: 600 }}>
+
+          {/* Right column: Contact Form */}
+          <Grid item xs={12} md={6} sx={{ textAlign: { xs: 'center', md: 'right' } }}>
+            <Box
+              sx={{
+                backgroundColor: 'background.paper',
+                p: { xs: 3, md: 4 },
+                borderRadius: '12px',
+                boxShadow: 2,
+                mx: { xs: 'auto', md: 0 },
+                width: { xs: '90%', sm: '80%', md: 'auto' },
+              }}
+            >
+              <Typography
+                variant="h3"
+                sx={{ fontSize: '1.5rem', mb: 3, fontWeight: 600, textAlign: 'center' }}
+              >
                 Send Us a Message
               </Typography>
               <Box component="form">
@@ -617,14 +651,14 @@ const ContactSection = () => {
                   </Grid>
                 </Grid>
                 <TextField fullWidth label="Subject" placeholder="Message subject" sx={{ mb: 2 }} variant="outlined" />
-                <TextField 
-                  fullWidth 
-                  label="Your Message" 
-                  placeholder="Write your message here..." 
-                  multiline 
+                <TextField
+                  fullWidth
+                  label="Your Message"
+                  placeholder="Write your message here..."
+                  multiline
                   rows={4}
                   sx={{ mb: 2 }}
-                  variant="outlined" 
+                  variant="outlined"
                 />
                 <Button type="submit" variant="contained" fullWidth color="primary" size="large">
                   Submit Message
@@ -637,6 +671,8 @@ const ContactSection = () => {
     </Box>
   );
 };
+
+
 
 const Footer = () => {
   const footerLinks = {
