@@ -1,0 +1,804 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WorkSpace Management System</title>
+  <!-- Material Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1976d2;
+      --primary-dark: #1565c0;
+      --secondary: #ffc107;
+      --secondary-dark: #e0a800;
+      --light-grey: #f5f5f5;
+      --white: #ffffff;
+      --dark-text: #333333;
+      --light-text: #ffffff;
+      --grey-text: rgba(255,255,255,0.7);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      color: var(--dark-text);
+      overflow-x: hidden;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    /* Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      transition: background-color 0.3s ease;
+    }
+    
+    header.scrolled {
+      background-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+    }
+    
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--dark-text);
+      text-decoration: none;
+    }
+    
+    .nav-links {
+      display: flex;
+      list-style: none;
+    }
+    
+    .nav-links li {
+      margin-left: 1.5rem;
+    }
+    
+    .nav-links a {
+      text-decoration: none;
+      color: var(--dark-text);
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 0.6rem 1.2rem;
+      font-weight: 500;
+      text-decoration: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: var(--white);
+      border: none;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .btn-secondary {
+      background-color: var(--secondary);
+      color: var(--dark-text);
+      border: none;
+    }
+    
+    .btn-secondary:hover {
+      background-color: var(--secondary-dark);
+    }
+    
+    .btn-outline {
+      background-color: transparent;
+      color: var(--white);
+      border: 1px solid var(--white);
+    }
+    
+    .btn-outline:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--dark-text);
+    }
+    
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, var(--primary) 0%, #0d47a1 100%);
+      color: var(--white);
+      padding: 100px 0 80px;
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      margin-top: 60px;
+    }
+    
+    .hero-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+    
+    .hero-text {
+      flex: 1;
+      min-width: 300px;
+    }
+    
+    .hero-image {
+      flex: 1;
+      min-width: 300px;
+      text-align: center;
+    }
+    
+    .hero-image img {
+      max-width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+      transform: perspective(1000px) rotateY(-10deg);
+      transition: all 0.5s ease;
+    }
+    
+    .hero-image img:hover {
+      transform: perspective(1000px) rotateY(0deg);
+    }
+    
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .hero p {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      font-weight: 300;
+      line-height: 1.6;
+    }
+    
+    .hero .btn-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    /* Section Styles */
+    .section {
+      padding: 5rem 0;
+    }
+    
+    .section-grey {
+      background-color: var(--light-grey);
+    }
+    
+    .section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+    
+    .section-title h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .section-title::after {
+      content: "";
+      position: absolute;
+      width: 80px;
+      height: 4px;
+      background: var(--secondary);
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    /* Features Section */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+    
+    .feature-card {
+      background-color: var(--white);
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      padding: 2rem;
+      text-align: center;
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      height: 100%;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+    }
+    
+    .feature-icon {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+    }
+    
+    .feature-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    
+    .feature-card p {
+      color: #666;
+      line-height: 1.6;
+    }
+    
+    /* How It Works Section */
+    .steps-container {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+    
+    .step-card {
+      display: flex;
+      background-color: var(--white);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .step-content {
+      flex: 1;
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    .step-image {
+      flex: 1;
+      background-color: var(--light-grey);
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .step-image img {
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .step-number {
+      color: var(--primary);
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .step-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+    
+    .step-card p {
+      color: #666;
+      line-height: 1.6;
+    }
+    
+    /* Contact Section */
+    .contact-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3rem;
+    }
+    
+    .contact-info {
+      flex: 1;
+      min-width: 300px;
+    }
+    
+    .contact-info h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    
+    .contact-info p {
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    
+    .contact-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .contact-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+    }
+    
+    .contact-form {
+      flex: 1;
+      min-width: 300px;
+    }
+    
+    .form-card {
+      background-color: var(--white);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .form-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-control {
+      flex: 1;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    
+    input, textarea {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    
+    /* Footer */
+    .footer {
+      background-color: #1a1a1a;
+      color: var(--white);
+      padding: 4rem 0 2rem;
+    }
+    
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    
+    .footer-column h3 {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+    
+    .footer-column p {
+      color: var(--grey-text);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    
+    .social-icons {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .social-icon {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background-color: rgba(255,255,255,0.1);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+    
+    .social-icon:hover {
+      background-color: var(--primary);
+    }
+    
+    .footer-links {
+      list-style: none;
+    }
+    
+    .footer-links li {
+      margin-bottom: 0.8rem;
+    }
+    
+    .footer-links a {
+      color: var(--grey-text);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    .footer-links a:hover {
+      color: var(--secondary);
+    }
+    
+    .footer-divider {
+      height: 1px;
+      background-color: rgba(255,255,255,0.1);
+      margin: 2rem 0;
+    }
+    
+    .copyright {
+      text-align: center;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.9rem;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .step-card {
+        flex-direction: column;
+      }
+      
+      .step-card:nth-child(even) .step-content {
+        order: 1;
+      }
+      
+      .step-card:nth-child(even) .step-image {
+        order: 2;
+      }
+      
+      .form-row {
+        flex-direction: column;
+      }
+      
+      .hero-text {
+        text-align: center;
+      }
+      
+      .hero .btn-group {
+        justify-content: center;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .nav-links {
+        display: none;
+      }
+      
+      .mobile-menu-btn {
+        display: block;
+      }
+      
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header id="header">
+    <div class="container">
+      <nav class="navbar">
+        <a href="#" class="logo">WorkSpace</a>
+        <ul class="nav-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="#contact">Contact Us</a></li>
+          <li><a href="#" class="btn btn-secondary">Get Started</a></li>
+        </ul>
+        <button class="mobile-menu-btn">
+          <i class="fas fa-bars"></i>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1>Streamline Your Workspace</h1>
+          <p>Boost productivity with our intelligent workspace management system. Organize tasks, collaborate seamlessly, and analyze performance all in one place.</p>
+          <div class="btn-group">
+            <a href="#" class="btn btn-secondary">Start Free Trial</a>
+            <a href="#" class="btn btn-outline">Watch Demo</a>
+          </div>
+        </div>
+        <div class="hero-image">
+          <img src="/api/placeholder/600/400" alt="Workspace Dashboard">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="section section-grey">
+    <div class="container">
+      <div class="section-title">
+        <h2>Powerful Features</h2>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-tachometer-alt"></i>
+          </div>
+          <h3>Smart Dashboard</h3>
+          <p>Get a comprehensive overview of your workspace with customizable widgets and real-time updates.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-tasks"></i>
+          </div>
+          <h3>Task Management</h3>
+          <p>Organize tasks with deadlines, priorities, and assignees. Track progress and get reminders.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <h3>Team Collaboration</h3>
+          <p>Work together seamlessly with shared workspaces, document collaboration, and instant messaging.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h3>Advanced Analytics</h3>
+          <p>Gain insights into productivity patterns, team performance, and resource allocation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section id="how-it-works" class="section">
+    <div class="container">
+      <div class="section-title">
+        <h2>How It Works</h2>
+      </div>
+      <div class="steps-container">
+        <div class="step-card">
+          <div class="step-content">
+            <div class="step-number">01</div>
+            <h3>Sign Up & Customize</h3>
+            <p>Create your account and customize your workspace to match your team's requirements and workflow.</p>
+          </div>
+          <div class="step-image">
+            <img src="/api/placeholder/500/300" alt="Sign Up & Customize">
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-image">
+            <img src="/api/placeholder/500/300" alt="Invite Your Team">
+          </div>
+          <div class="step-content">
+            <div class="step-number">02</div>
+            <h3>Invite Your Team</h3>
+            <p>Add team members, assign roles, and set permissions to ensure smooth collaboration.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-content">
+            <div class="step-number">03</div>
+            <h3>Start Managing Projects</h3>
+            <p>Create projects, assign tasks, set milestones, and track progress all in one platform.</p>
+          </div>
+          <div class="step-image">
+            <img src="/api/placeholder/500/300" alt="Start Managing Projects">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="section section-grey">
+    <div class="container">
+      <div class="contact-container">
+        <div class="contact-info">
+          <h2>Get In Touch</h2>
+          <p>Have questions or ready to transform your workspace? Our team is here to help you get started.</p>
+          
+          <div class="contact-item">
+            <div class="contact-icon">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div>contact@workspace-system.com</div>
+          </div>
+          
+          <div class="contact-item">
+            <div class="contact-icon">
+              <i class="fas fa-phone"></i>
+            </div>
+            <div>+1 (555) 123-4567</div>
+          </div>
+          
+          <div class="contact-item">
+            <div class="contact-icon">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <div>123 Workspace Avenue, Suite 100<br>San Francisco, CA 94107</div>
+          </div>
+        </div>
+        
+        <div class="contact-form">
+          <div class="form-card">
+            <h3>Send Us a Message</h3>
+            <form>
+              <div class="form-row">
+                <div class="form-control">
+                  <label for="name">Full Name</label>
+                  <input type="text" id="name" placeholder="Your full name">
+                </div>
+                <div class="form-control">
+                  <label for="email">Email Address</label>
+                  <input type="email" id="email" placeholder="Your email address">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="subject">Subject</label>
+                <input type="text" id="subject" placeholder="Message subject">
+              </div>
+              <div class="form-group">
+                <label for="message">Your Message</label>
+                <textarea id="message" placeholder="Write your message here..."></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Message</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-column">
+          <h3>WorkSpace</h3>
+          <p>Our workspace management system helps teams organize tasks, collaborate effectively, and boost productivity with intelligent tools and analytics.</p>
+          <div class="social-icons">
+            <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Company</h3>
+          <ul class="footer-links">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Press Kit</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Product</h3>
+          <ul class="footer-links">
+            <li><a href="#">Features</a></li>
+            <li><a href="#">Pricing</a></li>
+            <li><a href="#">Integrations</a></li>
+            <li><a href="#">Enterprise</a></li>
+            <li><a href="#">Security</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Resources</h3>
+          <ul class="footer-links">
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">API</a></li>
+            <li><a href="#">Community</a></li>
+            <li><a href="#">Webinars</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Legal</h3>
+          <ul class="footer-links">
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">GDPR</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer-divider"></div>
+      
+      <div class="copyright">
+        © <script>document.write(new Date().getFullYear())</script> WorkSpace Management System. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Add scrolled class to header when scrolling
+    window.addEventListener('scroll', function() {
+      const header = document.getElementById('header');
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+  </script>
+</body>
+</html>
+Made with
