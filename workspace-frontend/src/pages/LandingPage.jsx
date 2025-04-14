@@ -24,7 +24,7 @@ const LandingPage = () => {
   }, [location]);
 
   return (
-    <>
+    <div style={{ overflowX: "hidden" }}>
       <Header />
       <div id="hero">
         <HeroSection />
@@ -40,7 +40,7 @@ const LandingPage = () => {
       </div>
       <FAQSection />
       <Footer />
-    </>
+    </div>
   );
 };
 

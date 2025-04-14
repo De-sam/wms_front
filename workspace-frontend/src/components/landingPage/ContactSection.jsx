@@ -15,6 +15,9 @@ import {
   LocationOn as LocationIcon
 } from '@mui/icons-material';
 
+// Get the base URL from your .env file
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 const ContactSection = () => {
   return (
     <Box
@@ -35,6 +38,11 @@ const ContactSection = () => {
               </Typography>
               <Typography sx={{ color: 'text.secondary', lineHeight: 1.6, mb: 3 }}>
                 Have questions or ready to transform your workspace? Our team is here to help you get started.
+              </Typography>
+
+              {/* Optional: You can display the base URL here for debugging purposes */}
+              <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
+                API Base URL: {baseUrl}
               </Typography>
 
               <List>

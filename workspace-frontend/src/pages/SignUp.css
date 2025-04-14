@@ -1,0 +1,26 @@
+/* SignUp.css */
+.cloudy-left {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+  }
+  
+  .cloudy-left::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -1px;
+    height: 100%;
+    width: 120px;
+    background: inherit;
+    z-index: 2;
+    clip-path: path(
+      "M0,0 
+       C20,100 20,200 0,300 
+       C20,400 20,500 0,600 
+       C30,700 30,800 0,1000 
+       L120,1000 
+       L120,0 Z"
+    );
+  }
+  
