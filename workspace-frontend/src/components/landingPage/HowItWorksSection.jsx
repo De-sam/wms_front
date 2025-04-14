@@ -72,7 +72,7 @@ const DoubleCircleIndicator = ({ number, onComplete }) => {
     }
   `;
 
-  const spinnerDuration = '0.8s';
+  const spinnerDuration = '0.5s';
 
   const handleAnimationEnd = useCallback(() => {
     setAnimate(false);
