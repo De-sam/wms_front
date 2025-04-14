@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
   Box,
   Button,
@@ -18,44 +18,64 @@ import { Link, useLocation } from 'react-router-dom';
 import ColorModeContext from '../../context/ColorModeContext';
 
 const Header = () => {
-  const [scrolled, setScrolled] = React.useState(false);
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const [activeItem, setActiveItem] = React.useState('Home');
+  const [scrolled, setScrolled] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [activeItem, setActiveItem] = useState('Home');
   const theme = useTheme();
-  const colorMode = React.useContext(ColorModeContext);
+  const colorMode = useContext(ColorModeContext);
   const location = useLocation();
 
   const menuOptions = [
-    { text: 'Home', href: '#' },
-    { text: 'Features', href: '#features' },
-    { text: 'How It Works', href: '#how-it-works' },
-    { text: 'Contact Us', href: '#contact' }
+    { text: 'Home', id: 'hero' },
+    { text: 'Features', id: 'features' },
+    { text: 'How It Works', id: 'how-it-works' },
+    { text: 'Contact Us', id: 'contact' }
   ];
 
-  React.useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+
+      const scrollY = window.scrollY + 120; // offset to compensate for header
+      let current = 'Home';
+
+      for (const option of menuOptions) {
+        const section = document.getElementById(option.id);
+        if (section) {
+          const sectionTop = section.offsetTop;
+          const sectionHeight = section.offsetHeight;
+          if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+            current = option.text;
+            break;
+          }
+        }
+      }
+
+      setActiveItem(current);
+    };
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const toggleDrawer = (open) => (event) => {
-    if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
-    }
-    setDrawerOpen(open);
-  };
-
-  const handleScrollTo = (href) => {
-    if (href === '#') {
+  const handleScrollTo = (id) => {
+    if (id === 'hero') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      const section = document.querySelector(href);
+      const section = document.getElementById(id);
       if (section) {
         const yOffset = -80;
         const y = section.getBoundingClientRect().top + window.pageYOffset + yOffset;
         window.scrollTo({ top: y, behavior: 'smooth' });
       }
     }
+  };
+
+  const toggleDrawer = (open) => (event) => {
+    if (event?.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+    setDrawerOpen(open);
   };
 
   const lightBackground = scrolled
@@ -92,7 +112,6 @@ const Header = () => {
             width: '100%'
           }}
         >
-          {/* Logo */}
           <Typography
             component={Link}
             to="/"
@@ -106,7 +125,7 @@ const Header = () => {
             WorkSpace
           </Typography>
 
-          {/* Desktop Nav */}
+          {/* Desktop Menu */}
           <Box
             sx={{
               display: { xs: 'none', md: 'flex' },
@@ -122,9 +141,9 @@ const Header = () => {
                   e.preventDefault();
                   setActiveItem(option.text);
                   if (location.pathname === '/') {
-                    handleScrollTo(option.href);
+                    handleScrollTo(option.id);
                   } else {
-                    window.location.href = '/' + option.href;
+                    window.location.href = `/#${option.id}`;
                   }
                 }}
                 sx={{
@@ -183,7 +202,7 @@ const Header = () => {
         </Box>
       </Box>
 
-      {/* Mobile Drawer */}
+      {/* Drawer */}
       <Drawer
         anchor="left"
         open={drawerOpen}
@@ -209,9 +228,9 @@ const Header = () => {
                 e.preventDefault();
                 setActiveItem(option.text);
                 if (location.pathname === '/') {
-                  handleScrollTo(option.href);
+                  handleScrollTo(option.id);
                 } else {
-                  window.location.href = '/' + option.href;
+                  window.location.href = `/#${option.id}`;
                 }
               }}
               sx={{

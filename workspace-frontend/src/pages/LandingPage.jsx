@@ -16,7 +16,6 @@ const LandingPage = () => {
     if (hash) {
       const targetElement = document.querySelector(hash);
       if (targetElement) {
-        // Delay to ensure sections have rendered
         setTimeout(() => {
           targetElement.scrollIntoView({ behavior: "smooth" });
         }, 300);
@@ -27,10 +26,18 @@ const LandingPage = () => {
   return (
     <>
       <Header />
-      <HeroSection />
-      <FeaturesSection />
-      <HowItWorksSection />
-      <ContactSection />
+      <div id="hero">
+        <HeroSection />
+      </div>
+      <div id="features">
+        <FeaturesSection />
+      </div>
+      <div id="how-it-works">
+        <HowItWorksSection />
+      </div>
+      <div id="contact">
+        <ContactSection />
+      </div>
       <FAQSection />
       <Footer />
     </>
