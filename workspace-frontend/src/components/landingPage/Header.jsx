@@ -13,7 +13,7 @@ import {
   Brightness7 as Brightness7Icon,
   ArrowForward as ArrowForwardIcon
 } from '@mui/icons-material';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import ColorModeContext from '../../context/ColorModeContext';
 
@@ -24,6 +24,7 @@ const Header = () => {
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const menuOptions = [
     { text: 'Home', id: 'hero' },
@@ -36,27 +37,35 @@ const Header = () => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
 
-      const scrollY = window.scrollY + 120; // offset to compensate for header
-      let current = 'Home';
+      // Only update activeItem when on the homepage.
+      if (location.pathname === '/') {
+        const scrollY = window.scrollY + 120; // offset to compensate for header
+        let current = 'Home';
 
-      for (const option of menuOptions) {
-        const section = document.getElementById(option.id);
-        if (section) {
-          const sectionTop = section.offsetTop;
-          const sectionHeight = section.offsetHeight;
-          if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
-            current = option.text;
-            break;
+        for (const option of menuOptions) {
+          const section = document.getElementById(option.id);
+          if (section) {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+            if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+              current = option.text;
+              break;
+            }
           }
         }
+        setActiveItem(current);
+      } else {
+        // Remove underline if not on homepage.
+        setActiveItem('');
       }
-
-      setActiveItem(current);
     };
 
     window.addEventListener('scroll', handleScroll);
+    // Also call once on mount.
+    handleScroll();
+
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [location.pathname]);
 
   const handleScrollTo = (id) => {
     if (id === 'hero') {
@@ -84,6 +93,17 @@ const Header = () => {
   const darkBackground = scrolled
     ? 'rgba(33, 33, 33, 0.2)'
     : 'rgba(33, 33, 33, 0.15)';
+
+  const handleNavigation = (e, option) => {
+    e.preventDefault();
+    setActiveItem(option.text);
+    if (location.pathname === '/') {
+      handleScrollTo(option.id);
+    } else {
+      // Navigate back to homepage with hash.
+      navigate(`/#${option.id}`);
+    }
+  };
 
   return (
     <>
@@ -137,25 +157,26 @@ const Header = () => {
             {menuOptions.map((option) => (
               <Button
                 key={option.text}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setActiveItem(option.text);
-                  if (location.pathname === '/') {
-                    handleScrollTo(option.id);
-                  } else {
-                    window.location.href = `/#${option.id}`;
-                  }
-                }}
+                onClick={(e) => handleNavigation(e, option)}
                 sx={{
                   color: 'text.primary',
                   fontWeight: 500,
                   textTransform: 'none',
-                  borderBottom:
-                    activeItem === option.text
-                      ? '2px solid #ffc107'
-                      : '2px solid transparent',
-                  transition: 'border-bottom 0.3s ease',
-                  borderRadius: 0
+                  position: 'relative',
+                  // Underline only if active and on homepage.
+                  '&::after': {
+                    content: "''",
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    width:
+                      activeItem === option.text && location.pathname === '/'
+                        ? '100%'
+                        : '0%',
+                    height: '2px',
+                    bgcolor: '#ffc107',
+                    transition: 'width 0.3s ease'
+                  }
                 }}
               >
                 {option.text}
@@ -224,15 +245,7 @@ const Header = () => {
           {menuOptions.map((option) => (
             <Button
               key={option.text}
-              onClick={(e) => {
-                e.preventDefault();
-                setActiveItem(option.text);
-                if (location.pathname === '/') {
-                  handleScrollTo(option.id);
-                } else {
-                  window.location.href = `/#${option.id}`;
-                }
-              }}
+              onClick={(e) => handleNavigation(e, option)}
               sx={{
                 display: 'block',
                 textAlign: 'left',
@@ -240,7 +253,21 @@ const Header = () => {
                 fontWeight: 500,
                 textTransform: 'none',
                 width: '100%',
-                my: 1
+                my: 1,
+                position: 'relative',
+                '&::after': {
+                  content: "''",
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  width:
+                    activeItem === option.text && location.pathname === '/'
+                      ? '100%'
+                      : '0%',
+                  height: '2px',
+                  bgcolor: '#ffc107',
+                  transition: 'width 0.3s ease'
+                }
               }}
             >
               {option.text}
