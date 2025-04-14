@@ -55,7 +55,7 @@ const Header = () => {
         }
         setActiveItem(current);
       } else {
-        // Remove underline if not on homepage.
+        // Clear active item when not on the homepage.
         setActiveItem('');
       }
     };
@@ -163,7 +163,6 @@ const Header = () => {
                   fontWeight: 500,
                   textTransform: 'none',
                   position: 'relative',
-                  // Underline only if active and on homepage.
                   '&::after': {
                     content: "''",
                     position: 'absolute',
@@ -223,14 +222,18 @@ const Header = () => {
         </Box>
       </Box>
 
-      {/* Drawer */}
+      {/* Mobile Drawer */}
       <Drawer
         anchor="left"
         open={drawerOpen}
         onClose={toggleDrawer(false)}
         PaperProps={{
           sx: {
-            backgroundColor: 'transparent',
+            // Using low-opacity colors to let blurred content be visible in both modes.
+            backgroundColor:
+              theme.palette.mode === 'dark'
+                ? 'rgba(33, 33, 33, 0.1)'
+                : 'rgba(255, 255, 255, 0.1)',
             backdropFilter: 'blur(15px)',
             boxShadow: 'none'
           }
@@ -249,7 +252,7 @@ const Header = () => {
               sx={{
                 display: 'block',
                 textAlign: 'left',
-                color: 'text.primary',
+                color: theme.palette.mode === 'dark' ? '#fff' : '#000',
                 fontWeight: 500,
                 textTransform: 'none',
                 width: '100%',

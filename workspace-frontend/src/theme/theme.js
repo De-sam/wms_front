@@ -18,7 +18,7 @@ export const getTheme = (mode) =>
         paper: mode === 'light' ? '#ffffff' : '#1e1e1e',    // cards/forms
       },
       text: {
-        primary: mode === 'light' ? '#333' : '#fff',        // flip text
+        primary: mode === 'light' ? '#333' : '#fff',        // default text color
         secondary: mode === 'light' ? '#666' : '#bbb',
       },
     },
@@ -31,6 +31,19 @@ export const getTheme = (mode) =>
           root: {
             borderRadius: '8px',
             textTransform: 'none',
+          },
+        },
+      },
+      MuiDrawer: {
+        styleOverrides: {
+          paper: {
+            // Use a dark glass background in both modes for the slider so white text is visible.
+            backgroundColor: mode === 'dark'
+              ? 'rgba(33, 33, 33, 0.8)'
+              : 'rgba(0, 0, 0, 0.8)',
+            backdropFilter: 'blur(15px)',
+            color: '#fff', // Force white text in the drawer
+            boxShadow: 'none',
           },
         },
       },
