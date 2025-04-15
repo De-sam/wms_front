@@ -7,8 +7,7 @@ import {
   BarChart as BarChartIcon
 } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
-import { amber } from '@mui/material/colors';
-
+import { amber, grey } from '@mui/material/colors';
 
 // Steps data
 const steps = [
@@ -40,8 +39,9 @@ const steps = [
 
 //
 // Modified DoubleCircleIndicator Component
-// Now accepts `shouldSpin` and `onSpinComplete` props to enable controlled, sequential spinning.
-const DoubleCircleIndicator = ({ number, shouldSpin, onSpinComplete }) => {
+// Accepts `shouldSpin`, `onSpinComplete`, and `isActive` props.
+// The outer animated circles render only when active (or while animating)
+const DoubleCircleIndicator = ({ number, shouldSpin, onSpinComplete, isActive = true }) => {
   const theme = useTheme();
   const [animate, setAnimate] = useState(false);
 
@@ -87,51 +87,56 @@ const DoubleCircleIndicator = ({ number, shouldSpin, onSpinComplete }) => {
   return (
     <Box sx={{ position: 'relative', width: 80, height: 80 }}>
       <style>{keyframesStyles}</style>
-      {/* Outer Circle SVG */}
-      <svg width="80" height="80" style={{ position: 'absolute', top: 0, left: 0 }}>
-        <circle
-          cx="40"
-          cy="40"
-          r={outerRadius}
-          fill="none"
-          stroke={amber[500]}
-          strokeWidth="2"
-          strokeDasharray={`${outerDash} ${outerGap}`}
-          strokeDashoffset="0"
-          style={
-            animate
-              ? {
-                  animation: `outerSpin ${spinnerDuration} linear 1`,
-                  transformOrigin: '50% 50%',
-                  transformBox: 'fill-box'
-                }
-              : {}
-          }
-          onAnimationEnd={handleAnimationEnd}
-        />
-      </svg>
-      {/* Inner Circle SVG */}
-      <svg width="80" height="80" style={{ position: 'absolute', top: 10, left: 10 }}>
-        <circle
-          cx="30"
-          cy="30"
-          r={innerRadius}
-          fill="none"
-          stroke={amber[500]}
-          strokeWidth="2"
-          strokeDasharray={`${innerDash} ${innerGap}`}
-          strokeDashoffset={innerCircumference / 2}
-          style={
-            animate
-              ? {
-                  animation: `innerSpin ${spinnerDuration} linear 1`,
-                  transformOrigin: '50% 50%',
-                  transformBox: 'fill-box'
-                }
-              : {}
-          }
-        />
-      </svg>
+      {/* Render the outer animated circles only when active or animating */}
+      {(isActive || animate) && (
+        <>
+          {/* Outer Circle SVG */}
+          <svg width="80" height="80" style={{ position: 'absolute', top: 0, left: 0 }}>
+            <circle
+              cx="40"
+              cy="40"
+              r={outerRadius}
+              fill="none"
+              stroke={amber[500]}
+              strokeWidth="2"
+              strokeDasharray={`${outerDash} ${outerGap}`}
+              strokeDashoffset="0"
+              style={
+                animate
+                  ? {
+                      animation: `outerSpin ${spinnerDuration} linear 1`,
+                      transformOrigin: '50% 50%',
+                      transformBox: 'fill-box'
+                    }
+                  : {}
+              }
+              onAnimationEnd={handleAnimationEnd}
+            />
+          </svg>
+          {/* Inner Circle SVG */}
+          <svg width="80" height="80" style={{ position: 'absolute', top: 10, left: 10 }}>
+            <circle
+              cx="30"
+              cy="30"
+              r={innerRadius}
+              fill="none"
+              stroke={amber[500]}
+              strokeWidth="2"
+              strokeDasharray={`${innerDash} ${innerGap}`}
+              strokeDashoffset={innerCircumference / 2}
+              style={
+                animate
+                  ? {
+                      animation: `innerSpin ${spinnerDuration} linear 1`,
+                      transformOrigin: '50% 50%',
+                      transformBox: 'fill-box'
+                    }
+                  : {}
+              }
+            />
+          </svg>
+        </>
+      )}
       {/* Center Filled Circle with Step Number */}
       <Box
         sx={{
@@ -142,7 +147,7 @@ const DoubleCircleIndicator = ({ number, shouldSpin, onSpinComplete }) => {
           height: 40,
           transform: 'translate(-50%, -50%)',
           borderRadius: '50%',
-          backgroundColor: amber[500],
+          backgroundColor: isActive ? amber[500] : grey[400],
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -160,11 +165,15 @@ const DoubleCircleIndicator = ({ number, shouldSpin, onSpinComplete }) => {
 
 //
 // StepRow Component for MobileTimeline (vertical layout)
-// (Remains unchanged)
+// This has been modified so that the spinner (DoubleCircleIndicator) spins once when the row comes into view.
 const StepRow = ({ step, index, isReversed }) => {
   const theme = useTheme();
   const rowRef = useRef(null);
   const [animateText, setAnimateText] = useState(false);
+  
+  // New states for controlling the spinner in mobile view:
+  const [hasSpun, setHasSpun] = useState(false);
+  const [shouldSpin, setShouldSpin] = useState(false);
 
   const slideKeyframes = `
     @keyframes slideInFromLeft {
@@ -177,6 +186,7 @@ const StepRow = ({ step, index, isReversed }) => {
     }
   `;
 
+  // Intersection observer for text animation.
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -187,6 +197,21 @@ const StepRow = ({ step, index, isReversed }) => {
     if (rowRef.current) observer.observe(rowRef.current);
     return () => observer.disconnect();
   }, []);
+
+  // Separate observer to trigger spinner animation only once when row enters view.
+  useEffect(() => {
+    const spinObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasSpun) {
+          setShouldSpin(true);
+          setHasSpun(true);
+        }
+      },
+      { threshold: 0.5 }
+    );
+    if (rowRef.current) spinObserver.observe(rowRef.current);
+    return () => spinObserver.disconnect();
+  }, [hasSpun]);
 
   const textAnimationStyle = animateText
     ? {
@@ -235,13 +260,21 @@ const StepRow = ({ step, index, isReversed }) => {
         <>
           <TextContainer />
           <Box sx={{ ml: 2 }}>
-            <DoubleCircleIndicator number={index + 1} />
+            <DoubleCircleIndicator 
+              number={index + 1}
+              shouldSpin={shouldSpin}
+              isActive={hasSpun}
+            />
           </Box>
         </>
       ) : (
         <>
           <Box sx={{ mr: 2 }}>
-            <DoubleCircleIndicator number={index + 1} />
+            <DoubleCircleIndicator 
+              number={index + 1}
+              shouldSpin={shouldSpin}
+              isActive={hasSpun}
+            />
           </Box>
           <TextContainer />
         </>
@@ -251,20 +284,9 @@ const StepRow = ({ step, index, isReversed }) => {
 };
 
 //
-// MobileTimeline Component: Renders each step in a vertical layout.
-const MobileTimeline = () => (
-  <Box sx={{ mt: 4 }}>
-    {steps.map((step, index) => {
-      const isReversed = index % 2 !== 0;
-      return <StepRow key={index} step={step} index={index} isReversed={isReversed} />;
-    })}
-  </Box>
-);
-
-//
 // DesktopStep Component for DesktopTimeline.
-// (Remains unchanged)
-const DesktopStep = ({ step, index, circleRef, shouldSpin, onSpinComplete }) => {
+// It accepts an additional `isActive` prop and is controlled by the global sequence.
+const DesktopStep = ({ step, index, circleRef, shouldSpin, onSpinComplete, isActive }) => {
   const theme = useTheme();
   const [animateText, setAnimateText] = useState(false);
   const containerRef = useRef(null);
@@ -315,21 +337,21 @@ const DesktopStep = ({ step, index, circleRef, shouldSpin, onSpinComplete }) => 
   return (
     <Box ref={containerRef} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mx: 2 }}>
       <Box ref={circleRef}>
-        <DoubleCircleIndicator number={index + 1} shouldSpin={shouldSpin} onSpinComplete={onSpinComplete} />
+        <DoubleCircleIndicator 
+          number={index + 1} 
+          shouldSpin={shouldSpin} 
+          isActive={isActive} 
+          onSpinComplete={onSpinComplete} 
+        />
       </Box>
       <TextContainer />
     </Box>
   );
 };
 
-// ... (other components remain unchanged)
-
 //
 // DesktopTimeline Component: Renders all desktop steps in a single row with connecting line segments.
-// The sequence is now controlled so that for step i:
-//   - The spinner animates when currentAnimIndex === 2*i
-//   - The connecting line animates when currentAnimIndex === 2*i + 1
-// Once a line animation completes, its final state (strokeDashoffset: 0) is permanently kept.
+// For each step (other than the first) the spinner background turns amber only after the connecting line animation before it is complete.
 const DesktopTimeline = () => {
   const theme = useTheme();
   const timelineRef = useRef(null);
@@ -371,7 +393,7 @@ const DesktopTimeline = () => {
     setLineSegments(segments);
   }, []);
 
-  // Intersection Observer to start the sequence when timeline enters viewport.
+  // Intersection Observer to start the global sequence when timeline enters viewport.
   useEffect(() => {
     if (!timelineRef.current) return;
     const observer = new IntersectionObserver(
@@ -405,9 +427,7 @@ const DesktopTimeline = () => {
         {lineSegments.map((seg, index) => {
           const lineLength = seg.x2 - seg.x1;
           const lineAnimIndex = 2 * index + 1;
-          // If currentAnimIndex is greater than the line's anim index, the line has finished animating.
           const hasFinished = currentAnimIndex > lineAnimIndex;
-          // The line should animate only when currentAnimIndex exactly equals its anim index.
           const shouldAnimateLine = currentAnimIndex === lineAnimIndex;
 
           return (
@@ -421,7 +441,6 @@ const DesktopTimeline = () => {
               strokeWidth="5"
               strokeLinecap="round"
               strokeDasharray={lineLength}
-              // If the animation finished, ensure the dash offset remains at 0 (fully drawn).
               strokeDashoffset={hasFinished ? 0 : lineLength}
               style={
                 shouldAnimateLine
@@ -450,8 +469,9 @@ const DesktopTimeline = () => {
         }}
       >
         {steps.map((step, index) => {
-          // For each step, its spinner should run when currentAnimIndex equals 2*index.
           const shouldSpin = currentAnimIndex === 2 * index;
+          // For desktop, step 0 is active by default; for others, they become active only when the sequence has reached or passed 2*index.
+          const isActive = index === 0 || currentAnimIndex >= 2 * index;
           return (
             <DesktopStep
               key={index}
@@ -460,6 +480,7 @@ const DesktopTimeline = () => {
               circleRef={circleRefs.current[index]}
               shouldSpin={shouldSpin}
               onSpinComplete={advanceSequence}
+              isActive={isActive}
             />
           );
         })}
@@ -467,9 +488,6 @@ const DesktopTimeline = () => {
     </Box>
   );
 };
-
-// ... (HowItWorksSection and export remain unchanged)
-
 
 //
 // HowItWorksSection Component:
@@ -497,7 +515,17 @@ const HowItWorksSection = () => {
             }}
           />
         </Box>
-        {isMobile ? <MobileTimeline /> : <DesktopTimeline />}
+        {isMobile ? (
+          // MobileTimeline uses StepRow (modified for mobile spinner)
+          <Box sx={{ mt: 4 }}>
+            {steps.map((step, index) => {
+              const isReversed = index % 2 !== 0;
+              return <StepRow key={index} step={step} index={index} isReversed={isReversed} />;
+            })}
+          </Box>
+        ) : (
+          <DesktopTimeline />
+        )}
       </Container>
     </Box>
   );
