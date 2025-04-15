@@ -8,6 +8,7 @@ import {
   Paper
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import axios from 'axios';
 
 const ActivateAccount = () => {
   const { token } = useParams();
@@ -19,19 +20,19 @@ const ActivateAccount = () => {
   useEffect(() => {
     const activateAccount = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/organisations/activate/${token}/`);
-        const data = await response.json();
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/api/organisations/activate/${token}/`
+        );
 
-        if (response.ok) {
-          setSuccess(true);
-          setMessage('Your account has been activated. Check your email for your login credentials.');
-        } else {
-          setSuccess(false);
-          setMessage(data?.detail || 'Activation failed. Please try again.');
-        }
-      } catch (err) {
+        setSuccess(true);
+        setMessage('Your account has been activated. Check your email for your login credentials.');
+      } catch (error) {
         setSuccess(false);
-        setMessage('Network error occurred during activation.');
+        if (error.response) {
+          setMessage(error.response.data?.detail || 'Activation failed. Please try again.');
+        } else {
+          setMessage('Network error occurred during activation.');
+        }
       } finally {
         setLoading(false);
       }
@@ -85,9 +86,7 @@ const ActivateAccount = () => {
             <Typography variant="h5" fontWeight="bold" gutterBottom>
               Activation Successful
             </Typography>
-            <Typography>
-              {message}
-            </Typography>
+            <Typography>{message}</Typography>
           </>
         ) : (
           <>
