@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -11,7 +10,6 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import axios from 'axios';
 
 const ActivateAccount = () => {
-  const { token } = useParams();
   const theme = useTheme();
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
@@ -19,6 +17,9 @@ const ActivateAccount = () => {
 
   useEffect(() => {
     const activateAccount = async () => {
+      const pathParts = window.location.pathname.split('/');
+      const token = pathParts[pathParts.length - 1]; // Last part of the path
+
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_BASE_URL}/api/organisations/activate/${token}/`
@@ -39,7 +40,7 @@ const ActivateAccount = () => {
     };
 
     activateAccount();
-  }, [token]);
+  }, []);
 
   if (loading) {
     return (
