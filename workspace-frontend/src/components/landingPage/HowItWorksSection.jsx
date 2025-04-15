@@ -42,10 +42,9 @@ const steps = [
 // DoubleCircleIndicator Component
 // - Uses a spinner animation for both outer and inner circles.
 // - The circles are styled in amber, while the step number is rendered in white.
-// - The spinner speed is adjusted based on the viewport: slower in desktop view.
+// - The spinner speed is now fixed for both desktop and mobile views.
 const DoubleCircleIndicator = ({ number, onComplete }) => {
   const theme = useTheme();
-  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
   const containerRef = useRef(null);
   const [animate, setAnimate] = useState(false);
   const wasVisible = useRef(false);
@@ -75,8 +74,8 @@ const DoubleCircleIndicator = ({ number, onComplete }) => {
     }
   `;
 
-  // Adjust spinner duration depending on the viewport.
-  const spinnerDuration = isDesktop ? '1.5s' : '0.5s';
+  // Fixed spinner duration for both desktop and mobile views.
+  const spinnerDuration = '1.5s';
 
   const handleAnimationEnd = useCallback(() => {
     setAnimate(false);
