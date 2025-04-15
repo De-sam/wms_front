@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container, Typography, useTheme } from '@mui/material';
 import {
   Dashboard as DashboardIcon,
   Assignment as TasksIcon,
@@ -30,6 +30,90 @@ const features = [
     description: 'Gain insights into productivity patterns, team performance, and resource allocation.'
   }
 ];
+
+const FeatureCard = ({ feature, index }) => {
+  const theme = useTheme();
+  const [mousePos, setMousePos] = React.useState({ x: '50%', y: '50%' });
+
+  // Update the mouse position relative to the card
+  const handleMouseMove = (e) => {
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - left) / width) * 100;
+    const y = ((e.clientY - top) / height) * 100;
+    setMousePos({ x: `${x}%`, y: `${y}%` });
+  };
+
+  const handleMouseLeave = () => {
+    // Reset to the center on mouse leave.
+    setMousePos({ x: '50%', y: '50%' });
+  };
+
+  return (
+    <motion.div
+      key={index}
+      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 40 }}
+      transition={{ duration: 0.6, delay: index * 0.1 }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        flex: '1 1 auto',
+        width: '100%',
+        maxWidth: '280px'
+      }}
+    >
+      <Box
+        sx={{
+          position: 'relative',
+          backgroundColor: 'background.paper',
+          borderRadius: '8px',
+          boxShadow: 1,
+          p: 4,
+          textAlign: 'center',
+          height: '100%',
+          overflow: 'hidden',
+          transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+          '&:hover': {
+            transform: 'translateY(-10px)',
+            boxShadow: 3
+          },
+          // Set CSS variables for the mouse position
+          '--mouse-x': mousePos.x,
+          '--mouse-y': mousePos.y,
+          // Create the pseudo-element for the gradient effect.
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            // For desktop only: use the theme breakpoint (md and up) to enable the hover gradient.
+            background: {
+              xs: 'none',
+              md: `radial-gradient(
+                circle at var(--mouse-x) var(--mouse-y),
+                rgba(255, 193, 7, 0.3),
+                transparent 60%
+              )`
+            },
+            opacity: 1,
+            transition: 'opacity 0.4s ease, transform 0.4s ease',
+            pointerEvents: 'none'
+          }
+        }}
+      >
+        <Box sx={{ color: 'primary.main', mb: 3 }}>{feature.icon}</Box>
+        <Typography variant="h3" sx={{ fontSize: '1.3rem', mb: 2, fontWeight: 600 }}>
+          {feature.title}
+        </Typography>
+        <Typography sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
+          {feature.description}
+        </Typography>
+      </Box>
+    </motion.div>
+  );
+};
 
 const FeaturesSection = () => {
   return (
@@ -76,63 +160,7 @@ const FeaturesSection = () => {
           }}
         >
           {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              whileInView={{ opacity: 1, y: 0 }}
-              initial={{ opacity: 0, y: 40 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              style={{
-                flex: '1 1 auto',
-                width: '100%',
-                maxWidth: '280px'
-              }}
-            >
-              <Box
-                sx={{
-                  position: 'relative',
-                  backgroundColor: 'background.paper',
-                  borderRadius: '8px',
-                  boxShadow: 1,
-                  p: 4,
-                  textAlign: 'center',
-                  height: '100%',
-                  overflow: 'hidden',
-                  transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
-                  '&:hover': {
-                    transform: 'translateY(-10px)',
-                    boxShadow: 3
-                  },
-                  '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    width: '300%',
-                    height: '300%',
-                    background:
-                      'radial-gradient(circle, rgba(255,193,7,0.15) 0%, transparent 60%)',
-                    transform: 'translate(-50%, -50%) scale(0.2)',
-                    opacity: 0,
-                    transition: 'opacity 0.4s ease, transform 0.4s ease'
-                  },
-                  '&:hover::before': {
-                    opacity: 1,
-                    transform: 'translate(-50%, -50%) scale(1)'
-                  }
-                }}
-              >
-                <Box sx={{ color: 'primary.main', mb: 3 }}>{feature.icon}</Box>
-                <Typography
-                  variant="h3"
-                  sx={{ fontSize: '1.3rem', mb: 2, fontWeight: 600 }}
-                >
-                  {feature.title}
-                </Typography>
-                <Typography sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
-                  {feature.description}
-                </Typography>
-              </Box>
-            </motion.div>
+            <FeatureCard key={index} feature={feature} index={index} />
           ))}
         </Box>
       </Container>
