@@ -39,8 +39,8 @@ const steps = [
 
 //
 // Modified DoubleCircleIndicator Component
-// Accepts `shouldSpin`, `onSpinComplete`, and `isActive` props.
-// The outer animated circles render only when active (or while animating)
+// Now accepts `shouldSpin`, `onSpinComplete`, and `isActive` props. The outer animated circles are rendered only when active (or animating)
+// Note: the useEffect supports both boolean and numeric values for shouldSpin.
 const DoubleCircleIndicator = ({ number, shouldSpin, onSpinComplete, isActive = true }) => {
   const theme = useTheme();
   const [animate, setAnimate] = useState(false);
@@ -72,8 +72,9 @@ const DoubleCircleIndicator = ({ number, shouldSpin, onSpinComplete, isActive = 
 
   const spinnerDuration = '1.5s';
 
+  // This effect supports both boolean and numeric values.
   useEffect(() => {
-    if (shouldSpin) {
+    if (typeof shouldSpin === 'number' ? shouldSpin > 0 : shouldSpin) {
       setAnimate(true);
     }
   }, [shouldSpin]);
@@ -165,15 +166,14 @@ const DoubleCircleIndicator = ({ number, shouldSpin, onSpinComplete, isActive = 
 
 //
 // StepRow Component for MobileTimeline (vertical layout)
-// This has been modified so that the spinner (DoubleCircleIndicator) spins once when the row comes into view.
+// We update this component so that every time the step row enters the viewport, it triggers the spinner animation.
 const StepRow = ({ step, index, isReversed }) => {
   const theme = useTheme();
   const rowRef = useRef(null);
   const [animateText, setAnimateText] = useState(false);
-  
-  // New states for controlling the spinner in mobile view:
-  const [hasSpun, setHasSpun] = useState(false);
-  const [shouldSpin, setShouldSpin] = useState(false);
+  // Local state for triggering the spinner repeatedly.
+  const [inView, setInView] = useState(false);
+  const [spinTrigger, setSpinTrigger] = useState(0);
 
   const slideKeyframes = `
     @keyframes slideInFromLeft {
@@ -186,32 +186,24 @@ const StepRow = ({ step, index, isReversed }) => {
     }
   `;
 
-  // Intersection observer for text animation.
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
+        // Trigger spinner only when entering (and not if already in view).
+        if (entry.isIntersecting && !inView) {
+          setInView(true);
+          setSpinTrigger(prev => prev + 1);
+        } else if (!entry.isIntersecting && inView) {
+          setInView(false);
+        }
+        // For text animation
         setAnimateText(entry.isIntersecting);
       },
       { threshold: 0.5 }
     );
     if (rowRef.current) observer.observe(rowRef.current);
     return () => observer.disconnect();
-  }, []);
-
-  // Separate observer to trigger spinner animation only once when row enters view.
-  useEffect(() => {
-    const spinObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasSpun) {
-          setShouldSpin(true);
-          setHasSpun(true);
-        }
-      },
-      { threshold: 0.5 }
-    );
-    if (rowRef.current) spinObserver.observe(rowRef.current);
-    return () => spinObserver.disconnect();
-  }, [hasSpun]);
+  }, [inView]);
 
   const textAnimationStyle = animateText
     ? {
@@ -260,21 +252,14 @@ const StepRow = ({ step, index, isReversed }) => {
         <>
           <TextContainer />
           <Box sx={{ ml: 2 }}>
-            <DoubleCircleIndicator 
-              number={index + 1}
-              shouldSpin={shouldSpin}
-              isActive={hasSpun}
-            />
+            {/* Pass the spinTrigger value to trigger spinner animation each time */}
+            <DoubleCircleIndicator number={index + 1} shouldSpin={spinTrigger} />
           </Box>
         </>
       ) : (
         <>
           <Box sx={{ mr: 2 }}>
-            <DoubleCircleIndicator 
-              number={index + 1}
-              shouldSpin={shouldSpin}
-              isActive={hasSpun}
-            />
+            <DoubleCircleIndicator number={index + 1} shouldSpin={spinTrigger} />
           </Box>
           <TextContainer />
         </>
@@ -285,7 +270,7 @@ const StepRow = ({ step, index, isReversed }) => {
 
 //
 // DesktopStep Component for DesktopTimeline.
-// It accepts an additional `isActive` prop and is controlled by the global sequence.
+// Now it accepts an additional `isActive` prop.
 const DesktopStep = ({ step, index, circleRef, shouldSpin, onSpinComplete, isActive }) => {
   const theme = useTheme();
   const [animateText, setAnimateText] = useState(false);
@@ -393,7 +378,7 @@ const DesktopTimeline = () => {
     setLineSegments(segments);
   }, []);
 
-  // Intersection Observer to start the global sequence when timeline enters viewport.
+  // Intersection Observer to start the sequence when timeline enters viewport.
   useEffect(() => {
     if (!timelineRef.current) return;
     const observer = new IntersectionObserver(
@@ -413,7 +398,7 @@ const DesktopTimeline = () => {
 
   // Handler to advance the sequence.
   const advanceSequence = () => {
-    setCurrentAnimIndex((prev) => prev + 1);
+    setCurrentAnimIndex(prev => prev + 1);
   };
 
   return (
@@ -470,7 +455,6 @@ const DesktopTimeline = () => {
       >
         {steps.map((step, index) => {
           const shouldSpin = currentAnimIndex === 2 * index;
-          // For desktop, step 0 is active by default; for others, they become active only when the sequence has reached or passed 2*index.
           const isActive = index === 0 || currentAnimIndex >= 2 * index;
           return (
             <DesktopStep
@@ -516,14 +500,13 @@ const HowItWorksSection = () => {
           />
         </Box>
         {isMobile ? (
-          // MobileTimeline uses StepRow (modified for mobile spinner)
-          <Box sx={{ mt: 4 }}>
-            {steps.map((step, index) => {
-              const isReversed = index % 2 !== 0;
-              return <StepRow key={index} step={step} index={index} isReversed={isReversed} />;
-            })}
-          </Box>
+          // For mobile, render the vertical layout
+          steps.map((step, index) => {
+            const isReversed = index % 2 !== 0;
+            return <StepRow key={index} step={step} index={index} isReversed={isReversed} />;
+          })
         ) : (
+          // For desktop, render the horizontal timeline
           <DesktopTimeline />
         )}
       </Container>
