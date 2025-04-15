@@ -39,9 +39,16 @@ const steps = [
 
 //
 // Modified DoubleCircleIndicator Component
-// Now accepts `shouldSpin`, `onSpinComplete`, and `isActive` props. The outer animated circles are rendered only when active (or animating)
-// Note: the useEffect supports both boolean and numeric values for shouldSpin.
-const DoubleCircleIndicator = ({ number, shouldSpin, onSpinComplete, isActive = true }) => {
+// Now accepts `shouldSpin`, `onSpinComplete`, `isActive`, and a new prop spinnerDuration.
+// The outer animated circles are rendered only when active (or animating)
+// Note: The useEffect supports both boolean and numeric values for shouldSpin.
+const DoubleCircleIndicator = ({
+  number,
+  shouldSpin,
+  onSpinComplete,
+  isActive = true,
+  spinnerDuration = '1.5s'
+}) => {
   const theme = useTheme();
   const [animate, setAnimate] = useState(false);
 
@@ -69,8 +76,6 @@ const DoubleCircleIndicator = ({ number, shouldSpin, onSpinComplete, isActive = 
       100% { transform: rotate(0deg); }
     }
   `;
-
-  const spinnerDuration = '1.5s';
 
   // This effect supports both boolean and numeric values.
   useEffect(() => {
@@ -166,7 +171,7 @@ const DoubleCircleIndicator = ({ number, shouldSpin, onSpinComplete, isActive = 
 
 //
 // StepRow Component for MobileTimeline (vertical layout)
-// We update this component so that every time the step row enters the viewport, it triggers the spinner animation.
+// Every time the step row enters the viewport, it triggers the spinner animation.
 const StepRow = ({ step, index, isReversed }) => {
   const theme = useTheme();
   const rowRef = useRef(null);
@@ -196,7 +201,7 @@ const StepRow = ({ step, index, isReversed }) => {
         } else if (!entry.isIntersecting && inView) {
           setInView(false);
         }
-        // For text animation
+        // For text animation.
         setAnimateText(entry.isIntersecting);
       },
       { threshold: 0.5 }
@@ -252,14 +257,14 @@ const StepRow = ({ step, index, isReversed }) => {
         <>
           <TextContainer />
           <Box sx={{ ml: 2 }}>
-            {/* Pass the spinTrigger value to trigger spinner animation each time */}
-            <DoubleCircleIndicator number={index + 1} shouldSpin={spinTrigger} />
+            {/* Pass the spinTrigger value and slower spinnerDuration to trigger spinner animation each time */}
+            <DoubleCircleIndicator number={index + 1} shouldSpin={spinTrigger} spinnerDuration="2.5s" />
           </Box>
         </>
       ) : (
         <>
           <Box sx={{ mr: 2 }}>
-            <DoubleCircleIndicator number={index + 1} shouldSpin={spinTrigger} />
+            <DoubleCircleIndicator number={index + 1} shouldSpin={spinTrigger} spinnerDuration="2.5s" />
           </Box>
           <TextContainer />
         </>
@@ -500,13 +505,13 @@ const HowItWorksSection = () => {
           />
         </Box>
         {isMobile ? (
-          // For mobile, render the vertical layout
+          // For mobile, render the vertical layout.
           steps.map((step, index) => {
             const isReversed = index % 2 !== 0;
             return <StepRow key={index} step={step} index={index} isReversed={isReversed} />;
           })
         ) : (
-          // For desktop, render the horizontal timeline
+          // For desktop, render the horizontal timeline.
           <DesktopTimeline />
         )}
       </Container>
