@@ -19,7 +19,7 @@ const ActivateAccount = () => {
   useEffect(() => {
     const activateAccount = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/organisation/activate/${token}`);
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/organisations/activate/${token}`);
         const data = await response.json();
 
         if (response.ok) {
