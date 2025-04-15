@@ -6,7 +6,8 @@ import { getTheme } from './theme/theme';
 import ColorModeContext from './context/ColorModeContext';
 
 import LandingPage from './pages/LandingPage';
-import SignUp from './pages/SignUp'; // make sure this file exists
+import SignUp from './pages/SignUp';
+import ActivateAccount from './pages/ActivateAccount'; // ✅ import the new component
 
 const App = () => {
   const [mode, setMode] = React.useState('light');
@@ -28,6 +29,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/activate/:token" element={<ActivateAccount />} /> {/* ✅ NEW */}
         </Routes>
       </ThemeProvider>
     </ColorModeContext.Provider>
