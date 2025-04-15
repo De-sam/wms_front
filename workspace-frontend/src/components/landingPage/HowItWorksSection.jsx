@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Box, Container, Typography, useMediaQuery } from '@mui/material';
 import {
   PersonAdd as PersonAddIcon,
@@ -42,8 +42,8 @@ const steps = [
 // DoubleCircleIndicator Component
 // - Uses a spinner animation for both outer and inner circles.
 // - The circles are styled in amber, while the step number is rendered in white.
-// - The spinner speed is now fixed for both desktop and mobile views.
-const DoubleCircleIndicator = ({ number, onComplete }) => {
+// - The spinner speed is fixed to 1.5s regardless of the viewport.
+const DoubleCircleIndicator = ({ number }) => {
   const theme = useTheme();
   const containerRef = useRef(null);
   const [animate, setAnimate] = useState(false);
@@ -74,16 +74,9 @@ const DoubleCircleIndicator = ({ number, onComplete }) => {
     }
   `;
 
-  // Fixed spinner duration for both desktop and mobile views.
   const spinnerDuration = '1.5s';
 
-  const handleAnimationEnd = useCallback(() => {
-    setAnimate(false);
-    if (onComplete) {
-      onComplete();
-    }
-  }, [onComplete]);
-
+  // Listen to when the indicator enters the viewport, then trigger the spinner.
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -99,6 +92,11 @@ const DoubleCircleIndicator = ({ number, onComplete }) => {
     if (containerRef.current) observer.observe(containerRef.current);
     return () => observer.disconnect();
   }, []);
+
+  // When the spinner animation ends, simply stop the spinner.
+  const handleAnimationEnd = () => {
+    setAnimate(false);
+  };
 
   return (
     <Box sx={{ position: 'relative', width: 80, height: 80 }} ref={containerRef}>
@@ -176,6 +174,7 @@ const DoubleCircleIndicator = ({ number, onComplete }) => {
 
 //
 // StepRow Component for MobileTimeline (vertical layout)
+// The text now slides in immediately when the row enters the viewport.
 const StepRow = ({ step, index, isReversed }) => {
   const theme = useTheme();
   const rowRef = useRef(null);
@@ -193,10 +192,15 @@ const StepRow = ({ step, index, isReversed }) => {
     }
   `;
 
+  // Use Intersection Observer to trigger text animation immediately upon entry.
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting) setAnimateText(false);
+        if (entry.isIntersecting) {
+          setAnimateText(true);
+        } else {
+          setAnimateText(false);
+        }
       },
       { threshold: 0.5 }
     );
@@ -251,13 +255,13 @@ const StepRow = ({ step, index, isReversed }) => {
         <>
           <TextContainer />
           <Box sx={{ ml: 2 }}>
-            <DoubleCircleIndicator number={index + 1} onComplete={() => setAnimateText(true)} />
+            <DoubleCircleIndicator number={index + 1} />
           </Box>
         </>
       ) : (
         <>
           <Box sx={{ mr: 2 }}>
-            <DoubleCircleIndicator number={index + 1} onComplete={() => setAnimateText(true)} />
+            <DoubleCircleIndicator number={index + 1} />
           </Box>
           <TextContainer />
         </>
@@ -278,8 +282,9 @@ const MobileTimeline = () => (
 );
 
 //
-// DesktopStep Component for DesktopTimeline with an added onStepComplete callback.
-const DesktopStep = ({ step, index, circleRef, onStepComplete }) => {
+// DesktopStep Component for DesktopTimeline.
+// The text slides in immediately upon the component entering the viewport.
+const DesktopStep = ({ step, index, circleRef }) => {
   const theme = useTheme();
   const [animateText, setAnimateText] = useState(false);
   const containerRef = useRef(null);
@@ -287,15 +292,17 @@ const DesktopStep = ({ step, index, circleRef, onStepComplete }) => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !animateText) {
+        if (entry.isIntersecting) {
           setAnimateText(true);
+        } else {
+          setAnimateText(false);
         }
       },
       { threshold: 0.5 }
     );
     if (containerRef.current) observer.observe(containerRef.current);
     return () => observer.disconnect();
-  }, [animateText]);
+  }, []);
 
   const TextContainer = () => (
     <Box
@@ -303,7 +310,10 @@ const DesktopStep = ({ step, index, circleRef, onStepComplete }) => {
         maxWidth: 220,
         textAlign: 'center',
         mt: 2,
-        px: 1
+        px: 1,
+        opacity: animateText ? 1 : 0,
+        transform: animateText ? 'translateX(0)' : 'translateX(20px)',
+        transition: 'opacity 0.5s ease, transform 0.5s ease'
       }}
     >
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1, color: theme.palette.primary.main }}>
@@ -321,13 +331,7 @@ const DesktopStep = ({ step, index, circleRef, onStepComplete }) => {
   return (
     <Box ref={containerRef} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mx: 2 }}>
       <Box ref={circleRef}>
-        <DoubleCircleIndicator
-          number={index + 1}
-          onComplete={() => {
-            setAnimateText(true);
-            if (onStepComplete) onStepComplete();
-          }}
-        />
+        <DoubleCircleIndicator number={index + 1} />
       </Box>
       <TextContainer />
     </Box>
@@ -347,7 +351,7 @@ const DesktopTimeline = () => {
       .fill(null)
       .map((_, i) => circleRefs.current[i] || React.createRef());
   }
-  const gap = 20; // Increased gap for extra space between circles
+  const gap = 20; // Extra space between circles
 
   useEffect(() => {
     if (!timelineRef.current) return;
@@ -359,10 +363,8 @@ const DesktopTimeline = () => {
       if (current && next) {
         const currentRect = current.getBoundingClientRect();
         const nextRect = next.getBoundingClientRect();
-        // The line segment starts at currentRect.right plus gap and ends at nextRect.left minus gap.
         const startX = currentRect.right - timelineRect.left + gap;
         const endX = nextRect.left - timelineRect.left - gap;
-        // Use the vertical center of the current circle.
         const y = currentRect.top + currentRect.height / 2 - timelineRect.top;
         segments.push({ x1: startX, x2: endX, y });
       }
@@ -400,12 +402,7 @@ const DesktopTimeline = () => {
         }}
       >
         {steps.map((step, index) => (
-          <DesktopStep
-            key={index}
-            step={step}
-            index={index}
-            circleRef={circleRefs.current[index]}
-          />
+          <DesktopStep key={index} step={step} index={index} circleRef={circleRefs.current[index]} />
         ))}
       </Box>
     </Box>
@@ -414,8 +411,8 @@ const DesktopTimeline = () => {
 
 //
 // HowItWorksSection Component:
-// Displays the section header and timeline. Uses MobileTimeline for devices up to the 'md' breakpoint;
-// for larger screens, the DesktopTimeline is rendered.
+// Displays the header and timeline. Uses MobileTimeline for devices up to the 'md' breakpoint,
+// and DesktopTimeline for larger screens.
 const HowItWorksSection = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
