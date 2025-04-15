@@ -39,15 +39,11 @@ const steps = [
 ];
 
 //
-// DoubleCircleIndicator Component
-// - Uses a spinner animation for both outer and inner circles.
-// - The circles are styled in amber, while the step number is rendered in white.
-// - The spinner speed is fixed to 1.5s regardless of the viewport.
-const DoubleCircleIndicator = ({ number }) => {
+// Modified DoubleCircleIndicator Component
+// Now accepts `shouldSpin` and `onSpinComplete` props to enable controlled, sequential spinning.
+const DoubleCircleIndicator = ({ number, shouldSpin, onSpinComplete }) => {
   const theme = useTheme();
-  const containerRef = useRef(null);
   const [animate, setAnimate] = useState(false);
-  const wasVisible = useRef(false);
 
   // Outer circle configuration.
   const outerRadius = 38;
@@ -76,30 +72,20 @@ const DoubleCircleIndicator = ({ number }) => {
 
   const spinnerDuration = '1.5s';
 
-  // Listen to when the indicator enters the viewport, then trigger the spinner.
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !wasVisible.current) {
-          setAnimate(true);
-          wasVisible.current = true;
-        } else if (!entry.isIntersecting) {
-          wasVisible.current = false;
-        }
-      },
-      { threshold: 0.5 }
-    );
-    if (containerRef.current) observer.observe(containerRef.current);
-    return () => observer.disconnect();
-  }, []);
+    if (shouldSpin) {
+      setAnimate(true);
+    }
+  }, [shouldSpin]);
 
-  // When the spinner animation ends, simply stop the spinner.
+  // When the spinner animation ends, notify the parent.
   const handleAnimationEnd = () => {
     setAnimate(false);
+    if (onSpinComplete) onSpinComplete();
   };
 
   return (
-    <Box sx={{ position: 'relative', width: 80, height: 80 }} ref={containerRef}>
+    <Box sx={{ position: 'relative', width: 80, height: 80 }}>
       <style>{keyframesStyles}</style>
       {/* Outer Circle SVG */}
       <svg width="80" height="80" style={{ position: 'absolute', top: 0, left: 0 }}>
@@ -174,13 +160,12 @@ const DoubleCircleIndicator = ({ number }) => {
 
 //
 // StepRow Component for MobileTimeline (vertical layout)
-// The text now slides in immediately when the row enters the viewport.
+// (Remains unchanged)
 const StepRow = ({ step, index, isReversed }) => {
   const theme = useTheme();
   const rowRef = useRef(null);
   const [animateText, setAnimateText] = useState(false);
 
-  // Keyframes for text slide-in.
   const slideKeyframes = `
     @keyframes slideInFromLeft {
       0% { opacity: 0; transform: translateX(-20px); }
@@ -192,15 +177,10 @@ const StepRow = ({ step, index, isReversed }) => {
     }
   `;
 
-  // Use Intersection Observer to trigger text animation immediately upon entry.
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setAnimateText(true);
-        } else {
-          setAnimateText(false);
-        }
+        setAnimateText(entry.isIntersecting);
       },
       { threshold: 0.5 }
     );
@@ -283,8 +263,8 @@ const MobileTimeline = () => (
 
 //
 // DesktopStep Component for DesktopTimeline.
-// The text slides in immediately upon the component entering the viewport.
-const DesktopStep = ({ step, index, circleRef }) => {
+// (Remains unchanged)
+const DesktopStep = ({ step, index, circleRef, shouldSpin, onSpinComplete }) => {
   const theme = useTheme();
   const [animateText, setAnimateText] = useState(false);
   const containerRef = useRef(null);
@@ -292,11 +272,7 @@ const DesktopStep = ({ step, index, circleRef }) => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setAnimateText(true);
-        } else {
-          setAnimateText(false);
-        }
+        setAnimateText(entry.isIntersecting);
       },
       { threshold: 0.5 }
     );
@@ -316,7 +292,15 @@ const DesktopStep = ({ step, index, circleRef }) => {
         transition: 'opacity 0.5s ease, transform 0.5s ease'
       }}
     >
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1, color: theme.palette.primary.main }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: 1,
+          color: theme.palette.primary.main
+        }}
+      >
         {React.cloneElement(step.icon, { sx: { color: theme.palette.primary.main } })}
         <Typography variant="h6" sx={{ fontWeight: 600, color: theme.palette.primary.main }}>
           {step.label}
@@ -331,28 +315,43 @@ const DesktopStep = ({ step, index, circleRef }) => {
   return (
     <Box ref={containerRef} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mx: 2 }}>
       <Box ref={circleRef}>
-        <DoubleCircleIndicator number={index + 1} />
+        <DoubleCircleIndicator number={index + 1} shouldSpin={shouldSpin} onSpinComplete={onSpinComplete} />
       </Box>
       <TextContainer />
     </Box>
   );
 };
 
+// ... (other components remain unchanged)
+
 //
 // DesktopTimeline Component: Renders all desktop steps in a single row with connecting line segments.
+// The sequence is now controlled so that for step i:
+//   - The spinner animates when currentAnimIndex === 2*i
+//   - The connecting line animates when currentAnimIndex === 2*i + 1
+// Once a line animation completes, its final state (strokeDashoffset: 0) is permanently kept.
 const DesktopTimeline = () => {
   const theme = useTheme();
   const timelineRef = useRef(null);
   const [lineSegments, setLineSegments] = useState([]);
-  // Create an array of refs (one for each step's circle)
+  const [currentAnimIndex, setCurrentAnimIndex] = useState(-1); // Starts at -1; will be set to 0 when timeline enters viewport.
   const circleRefs = useRef([]);
   if (circleRefs.current.length !== steps.length) {
     circleRefs.current = Array(steps.length)
       .fill(null)
       .map((_, i) => circleRefs.current[i] || React.createRef());
   }
-  const gap = 20; // Extra space between circles
+  const gap = 20; // Extra space between circles.
 
+  // Keyframes for drawing the line with smooth movement.
+  const drawLineKeyframes = `
+    @keyframes drawLine {
+      from { stroke-dashoffset: var(--line-length); }
+      to { stroke-dashoffset: 0; }
+    }
+  `;
+
+  // Measure and set line segments.
   useEffect(() => {
     if (!timelineRef.current) return;
     const timelineRect = timelineRef.current.getBoundingClientRect();
@@ -372,25 +371,74 @@ const DesktopTimeline = () => {
     setLineSegments(segments);
   }, []);
 
+  // Intersection Observer to start the sequence when timeline enters viewport.
+  useEffect(() => {
+    if (!timelineRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          // Start the sequence with the first spinner.
+          setCurrentAnimIndex(0);
+        } else {
+          setCurrentAnimIndex(-1); // Reset if leaving viewport.
+        }
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(timelineRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // Handler to advance the sequence.
+  const advanceSequence = () => {
+    setCurrentAnimIndex((prev) => prev + 1);
+  };
+
   return (
     <Box sx={{ width: '100%', mt: 4, position: 'relative' }} ref={timelineRef}>
+      <style>{drawLineKeyframes}</style>
       <svg
         style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }}
         width="100%"
         height="100%"
       >
-        {lineSegments.map((seg, index) => (
-          <line
-            key={index}
-            x1={seg.x1}
-            y1={seg.y}
-            x2={seg.x2}
-            y2={seg.y}
-            stroke={theme.palette.warning.main}
-            strokeWidth="5"
-            strokeLinecap="round"
-          />
-        ))}
+        {lineSegments.map((seg, index) => {
+          const lineLength = seg.x2 - seg.x1;
+          const lineAnimIndex = 2 * index + 1;
+          // If currentAnimIndex is greater than the line's anim index, the line has finished animating.
+          const hasFinished = currentAnimIndex > lineAnimIndex;
+          // The line should animate only when currentAnimIndex exactly equals its anim index.
+          const shouldAnimateLine = currentAnimIndex === lineAnimIndex;
+
+          return (
+            <line
+              key={index}
+              x1={seg.x1}
+              y1={seg.y}
+              x2={seg.x2}
+              y2={seg.y}
+              stroke={theme.palette.warning.main}
+              strokeWidth="5"
+              strokeLinecap="round"
+              strokeDasharray={lineLength}
+              // If the animation finished, ensure the dash offset remains at 0 (fully drawn).
+              strokeDashoffset={hasFinished ? 0 : lineLength}
+              style={
+                shouldAnimateLine
+                  ? {
+                      '--line-length': lineLength,
+                      animation: `drawLine 0.8s ease-in-out forwards`
+                    }
+                  : { transition: 'none' }
+              }
+              onAnimationEnd={() => {
+                if (shouldAnimateLine) {
+                  advanceSequence();
+                }
+              }}
+            />
+          );
+        })}
       </svg>
       <Box
         sx={{
@@ -401,13 +449,27 @@ const DesktopTimeline = () => {
           zIndex: 1
         }}
       >
-        {steps.map((step, index) => (
-          <DesktopStep key={index} step={step} index={index} circleRef={circleRefs.current[index]} />
-        ))}
+        {steps.map((step, index) => {
+          // For each step, its spinner should run when currentAnimIndex equals 2*index.
+          const shouldSpin = currentAnimIndex === 2 * index;
+          return (
+            <DesktopStep
+              key={index}
+              step={step}
+              index={index}
+              circleRef={circleRefs.current[index]}
+              shouldSpin={shouldSpin}
+              onSpinComplete={advanceSequence}
+            />
+          );
+        })}
       </Box>
     </Box>
   );
 };
+
+// ... (HowItWorksSection and export remain unchanged)
+
 
 //
 // HowItWorksSection Component:
