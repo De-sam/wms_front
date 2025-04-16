@@ -22,7 +22,8 @@ const ActivateAccount = () => {
 
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/api/organisations/activate/${token}/`
+          `${import.meta.env.VITE_API_BASE_URL}/api/organisations/activate/${token}/`,
+          { withCredentials: true } // ✅ important for session/cookie-based auth
         );
 
         setSuccess(true);
