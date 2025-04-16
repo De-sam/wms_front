@@ -229,7 +229,6 @@ const Header = () => {
         onClose={toggleDrawer(false)}
         PaperProps={{
           sx: {
-            // Using low-opacity colors to let blurred content be visible in both modes.
             backgroundColor:
               theme.palette.mode === 'dark'
                 ? 'rgba(33, 33, 33, 0.1)'
@@ -279,7 +278,7 @@ const Header = () => {
 
           <Button
             component={Link}
-            to="/signup"
+            to="/auth"
             variant="contained"
             color="warning"
             sx={{

@@ -7,7 +7,7 @@ import {
   BarChart as BarChartIcon
 } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
-import { amber, grey } from '@mui/material/colors';
+import { amber } from '@mui/material/colors';
 
 // Steps data
 const steps = [
@@ -37,28 +37,25 @@ const steps = [
   }
 ];
 
-//
 // Modified DoubleCircleIndicator Component
-// Now accepts `shouldSpin`, `onSpinComplete`, `isActive`, and a new prop spinnerDuration.
-// The outer animated circles are rendered only when active (or animating)
-// Note: The useEffect supports both boolean and numeric values for shouldSpin.
+// Uses a spinnerDuration of '0.5s' (faster) and always displays an amber background.
 const DoubleCircleIndicator = ({
   number,
   shouldSpin,
   onSpinComplete,
   isActive = true,
-  spinnerDuration = '1.5s'
+  spinnerDuration = '0.5s'
 }) => {
   const theme = useTheme();
   const [animate, setAnimate] = useState(false);
 
-  // Outer circle configuration.
+  // Outer circle settings.
   const outerRadius = 38;
   const outerCircumference = 2 * Math.PI * outerRadius;
   const outerGap = 30;
   const outerDash = outerCircumference - outerGap;
 
-  // Inner circle configuration.
+  // Inner circle settings.
   const innerRadius = 28;
   const innerCircumference = 2 * Math.PI * innerRadius;
   const innerGap = 20;
@@ -77,14 +74,13 @@ const DoubleCircleIndicator = ({
     }
   `;
 
-  // This effect supports both boolean and numeric values.
   useEffect(() => {
     if (typeof shouldSpin === 'number' ? shouldSpin > 0 : shouldSpin) {
       setAnimate(true);
     }
   }, [shouldSpin]);
 
-  // When the spinner animation ends, notify the parent.
+  // Notify parent when spinner animation completes.
   const handleAnimationEnd = () => {
     setAnimate(false);
     if (onSpinComplete) onSpinComplete();
@@ -93,10 +89,9 @@ const DoubleCircleIndicator = ({
   return (
     <Box sx={{ position: 'relative', width: 80, height: 80 }}>
       <style>{keyframesStyles}</style>
-      {/* Render the outer animated circles only when active or animating */}
       {(isActive || animate) && (
         <>
-          {/* Outer Circle SVG */}
+          {/* Outer circle spinner */}
           <svg width="80" height="80" style={{ position: 'absolute', top: 0, left: 0 }}>
             <circle
               cx="40"
@@ -119,7 +114,7 @@ const DoubleCircleIndicator = ({
               onAnimationEnd={handleAnimationEnd}
             />
           </svg>
-          {/* Inner Circle SVG */}
+          {/* Inner circle spinner */}
           <svg width="80" height="80" style={{ position: 'absolute', top: 10, left: 10 }}>
             <circle
               cx="30"
@@ -143,7 +138,7 @@ const DoubleCircleIndicator = ({
           </svg>
         </>
       )}
-      {/* Center Filled Circle with Step Number */}
+      {/* Center always shows an amber circle with the step number */}
       <Box
         sx={{
           position: 'absolute',
@@ -153,7 +148,7 @@ const DoubleCircleIndicator = ({
           height: 40,
           transform: 'translate(-50%, -50%)',
           borderRadius: '50%',
-          backgroundColor: isActive ? amber[500] : grey[400],
+          backgroundColor: amber[500],
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -169,9 +164,7 @@ const DoubleCircleIndicator = ({
   );
 };
 
-//
 // StepRow Component for MobileTimeline (vertical layout)
-// Every time the step row enters the viewport, it triggers the spinner animation.
 const StepRow = ({ step, index, isReversed }) => {
   const theme = useTheme();
   const rowRef = useRef(null);
@@ -273,9 +266,11 @@ const StepRow = ({ step, index, isReversed }) => {
   );
 };
 
-//
+
 // DesktopStep Component for DesktopTimeline.
-// Now it accepts an additional `isActive` prop.
+// The circle is rendered only when the connecting line has reached the step.
+// For step 1 (index 0) the circle is always visible.
+// For steps 2, 3, and 4, the circle is rendered only when currentAnimIndex > (2*(index - 1) + 1).
 const DesktopStep = ({ step, index, circleRef, shouldSpin, onSpinComplete, isActive }) => {
   const theme = useTheme();
   const [animateText, setAnimateText] = useState(false);
@@ -283,9 +278,7 @@ const DesktopStep = ({ step, index, circleRef, shouldSpin, onSpinComplete, isAct
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        setAnimateText(entry.isIntersecting);
-      },
+      ([entry]) => setAnimateText(entry.isIntersecting),
       { threshold: 0.5 }
     );
     if (containerRef.current) observer.observe(containerRef.current);
@@ -326,36 +319,38 @@ const DesktopStep = ({ step, index, circleRef, shouldSpin, onSpinComplete, isAct
 
   return (
     <Box ref={containerRef} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mx: 2 }}>
-      <Box ref={circleRef}>
-        <DoubleCircleIndicator 
-          number={index + 1} 
-          shouldSpin={shouldSpin} 
-          isActive={isActive} 
-          onSpinComplete={onSpinComplete} 
-        />
+      <Box ref={circleRef} sx={{ width: 80, height: 80 }}>
+        {isActive && (
+          <DoubleCircleIndicator 
+            number={index + 1} 
+            shouldSpin={shouldSpin} 
+            isActive={isActive} 
+            onSpinComplete={onSpinComplete} 
+            spinnerDuration="0.5s"
+          />
+        )}
       </Box>
       <TextContainer />
     </Box>
   );
 };
 
-//
-// DesktopTimeline Component: Renders all desktop steps in a single row with connecting line segments.
-// For each step (other than the first) the spinner background turns amber only after the connecting line animation before it is complete.
+// DesktopTimeline Component: Renders desktop steps in a horizontal row with connecting lines.
+// A step (other than the first) is not visible until the connecting line from the previous step has completed its animation.
+// For example, step 2 (index 1) is shown only when currentAnimIndex > 1, step 3 only when currentAnimIndex > 3, and step 4 only when currentAnimIndex > 5.
 const DesktopTimeline = () => {
   const theme = useTheme();
   const timelineRef = useRef(null);
   const [lineSegments, setLineSegments] = useState([]);
-  const [currentAnimIndex, setCurrentAnimIndex] = useState(-1); // Starts at -1; will be set to 0 when timeline enters viewport.
+  const [currentAnimIndex, setCurrentAnimIndex] = useState(-1);
   const circleRefs = useRef([]);
   if (circleRefs.current.length !== steps.length) {
     circleRefs.current = Array(steps.length)
       .fill(null)
       .map((_, i) => circleRefs.current[i] || React.createRef());
   }
-  const gap = 20; // Extra space between circles.
+  const gap = 20;
 
-  // Keyframes for drawing the line with smooth movement.
   const drawLineKeyframes = `
     @keyframes drawLine {
       from { stroke-dashoffset: var(--line-length); }
@@ -363,7 +358,6 @@ const DesktopTimeline = () => {
     }
   `;
 
-  // Measure and set line segments.
   useEffect(() => {
     if (!timelineRef.current) return;
     const timelineRect = timelineRef.current.getBoundingClientRect();
@@ -383,16 +377,14 @@ const DesktopTimeline = () => {
     setLineSegments(segments);
   }, []);
 
-  // Intersection Observer to start the sequence when timeline enters viewport.
   useEffect(() => {
     if (!timelineRef.current) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          // Start the sequence with the first spinner.
           setCurrentAnimIndex(0);
         } else {
-          setCurrentAnimIndex(-1); // Reset if leaving viewport.
+          setCurrentAnimIndex(-1);
         }
       },
       { threshold: 0.5 }
@@ -401,7 +393,7 @@ const DesktopTimeline = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Handler to advance the sequence.
+  // Advance the sequence automatically.
   const advanceSequence = () => {
     setCurrentAnimIndex(prev => prev + 1);
   };
@@ -416,10 +408,10 @@ const DesktopTimeline = () => {
       >
         {lineSegments.map((seg, index) => {
           const lineLength = seg.x2 - seg.x1;
+          // The connecting line between step i and i+1 is animated when currentAnimIndex equals (2 * index + 1)
           const lineAnimIndex = 2 * index + 1;
           const hasFinished = currentAnimIndex > lineAnimIndex;
           const shouldAnimateLine = currentAnimIndex === lineAnimIndex;
-
           return (
             <line
               key={index}
@@ -436,7 +428,7 @@ const DesktopTimeline = () => {
                 shouldAnimateLine
                   ? {
                       '--line-length': lineLength,
-                      animation: `drawLine 0.8s ease-in-out forwards`
+                      animation: `drawLine 0.3s ease-in-out forwards`
                     }
                   : { transition: 'none' }
               }
@@ -459,8 +451,19 @@ const DesktopTimeline = () => {
         }}
       >
         {steps.map((step, index) => {
+          // For step 0, it is always visible.
+          // For subsequent steps, the circle appears only after the previous connecting line is complete.
+          let isActive = false;
+          if (index === 0) {
+            isActive = true;
+          } else if (index === 1) {
+            isActive = currentAnimIndex > 1; // Step 2 visible after line1 finishes
+          } else if (index === 2) {
+            isActive = currentAnimIndex > 3; // Step 3 visible after line2 finishes
+          } else if (index === 3) {
+            isActive = currentAnimIndex > 5; // Step 4 visible after line3 finishes
+          }
           const shouldSpin = currentAnimIndex === 2 * index;
-          const isActive = index === 0 || currentAnimIndex >= 2 * index;
           return (
             <DesktopStep
               key={index}
@@ -478,10 +481,7 @@ const DesktopTimeline = () => {
   );
 };
 
-//
-// HowItWorksSection Component:
-// Displays the header and timeline. Uses MobileTimeline for devices up to the 'md' breakpoint,
-// and DesktopTimeline for larger screens.
+// HowItWorksSection Component: Displays the header and selects mobile or desktop layout.
 const HowItWorksSection = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -505,13 +505,13 @@ const HowItWorksSection = () => {
           />
         </Box>
         {isMobile ? (
-          // For mobile, render the vertical layout.
+          // Mobile vertical layout using StepRow.
           steps.map((step, index) => {
             const isReversed = index % 2 !== 0;
             return <StepRow key={index} step={step} index={index} isReversed={isReversed} />;
           })
         ) : (
-          // For desktop, render the horizontal timeline.
+          // Desktop horizontal timeline.
           <DesktopTimeline />
         )}
       </Container>
