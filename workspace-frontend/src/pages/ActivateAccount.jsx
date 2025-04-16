@@ -18,12 +18,11 @@ const ActivateAccount = () => {
   useEffect(() => {
     const activateAccount = async () => {
       const pathParts = window.location.pathname.split('/');
-      const token = pathParts[pathParts.length - 1]; // Last part of the path
+      const token = pathParts[pathParts.length - 1]; // Grab token from URL
 
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/api/organisations/activate/${token}/`,
-          { withCredentials: true } // ✅ important for session/cookie-based auth
+          `${import.meta.env.VITE_API_BASE_URL}/api/organisations/activate/${token}/`
         );
 
         setSuccess(true);
