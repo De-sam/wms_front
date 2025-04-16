@@ -5,6 +5,7 @@ const ActivatePage = () => {
   const { token } = useParams();
   const [status, setStatus] = useState('loading'); // 'loading' | 'success' | 'error'
   const [message, setMessage] = useState('');
+  const [resendStatus, setResendStatus] = useState(null); // null | 'sending' | 'sent' | 'error'
   const hasFetchedRef = useRef(false);
 
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -25,6 +26,28 @@ const ActivatePage = () => {
         setStatus('error');
       });
   }, [token, BASE_URL]);
+
+  const handleResend = () => {
+    const email = prompt('Enter the email used to register the organization:');
+    if (!email) return;
+
+    setResendStatus('sending');
+
+    fetch(`${BASE_URL}/api/organizations/resend-activation/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.detail && data.detail.includes('sent')) {
+          setResendStatus('sent');
+        } else {
+          setResendStatus('error');
+        }
+      })
+      .catch(() => setResendStatus('error'));
+  };
 
   return (
     <div style={styles.container}>
@@ -52,6 +75,29 @@ const ActivatePage = () => {
         {status === 'error' && (
           <div style={styles.resultContainer}>
             <p style={{ ...styles.message, color: '#d32f2f' }}>{message}</p>
+
+            {message.toLowerCase().includes('expired') && (
+              <>
+                <button
+                  style={styles.resendButton}
+                  onClick={handleResend}
+                  disabled={resendStatus === 'sending'}
+                >
+                  {resendStatus === 'sending' ? 'Resending...' : 'Resend Activation Link'}
+                </button>
+
+                {resendStatus === 'sent' && (
+                  <p style={{ color: '#4caf50', marginTop: '0.5rem' }}>
+                    ✅ A new activation link has been sent!
+                  </p>
+                )}
+                {resendStatus === 'error' && (
+                  <p style={{ color: '#d32f2f', marginTop: '0.5rem' }}>
+                    ❌ Failed to resend link. Please try again.
+                  </p>
+                )}
+              </>
+            )}
           </div>
         )}
       </div>
@@ -103,6 +149,16 @@ const styles = {
     marginTop: '1rem',
     fontSize: '1.1rem',
     fontWeight: 500,
+  },
+  resendButton: {
+    marginTop: '1rem',
+    padding: '10px 20px',
+    backgroundColor: '#1976d2',
+    color: 'white',
+    border: 'none',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontSize: '1rem',
   },
 };
 
