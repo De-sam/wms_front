@@ -18,7 +18,7 @@ const ActivateAccount = () => {
   useEffect(() => {
     const activateAccount = async () => {
       const pathParts = window.location.pathname.split('/');
-      const token = pathParts[pathParts.length - 1]; // Grab token from URL
+      const token = pathParts[pathParts.length - 1]; // Get token from URL
 
       try {
         const response = await axios.get(
@@ -29,9 +29,12 @@ const ActivateAccount = () => {
         setMessage('Your account has been activated. Check your email for your login credentials.');
       } catch (error) {
         setSuccess(false);
+
         if (error.response) {
+          console.error('🔥 Backend error:', error.response);
           setMessage(error.response.data?.detail || 'Activation failed. Please try again.');
         } else {
+          console.error('🔥 Network error:', error.message);
           setMessage('Network error occurred during activation.');
         }
       } finally {
