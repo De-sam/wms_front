@@ -14,8 +14,8 @@ import {
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import BookOnlineIcon from '@mui/icons-material/BookOnline';
-import ScheduleIcon from '@mui/icons-material/Schedule';
-import SettingsIcon from '@mui/icons-material/Settings';
+import PeopleIcon from '@mui/icons-material/People';
+import BarChartIcon from '@mui/icons-material/BarChart';
 import CloseIcon from '@mui/icons-material/Close';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
@@ -34,8 +34,8 @@ const Sidebar = ({ open, onClose }) => {
     { label: 'Dashboard', icon: <DashboardIcon /> },
     { label: 'Workspaces', icon: <WorkspacesIcon /> },
     { label: 'Bookings', icon: <BookOnlineIcon /> },
-    { label: 'Team Schedule', icon: <ScheduleIcon /> },
-    { label: 'Settings', icon: <SettingsIcon /> },
+    { label: 'Users', icon: <PeopleIcon /> },
+    { label: 'Reports', icon: <BarChartIcon /> },
   ];
 
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -93,20 +93,46 @@ const Sidebar = ({ open, onClose }) => {
           </IconButton>
         </Box>
       )}
-      <Box sx={{ pt: 2 }}>
+
+      {/* Logo + Org Name */}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          pt: 1,
+        }}
+      >
+        <Avatar
+          variant="rounded"
+          sx={{
+            width: 64,
+            height: 64,
+            mb: 1,
+            bgcolor: theme.palette.mode === 'dark' ? 'grey.800' : 'grey.200',
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: theme.palette.text.primary,
+          }}
+        >
+          LOGO
+        </Avatar>
+
         <Typography
           variant="h6"
           fontWeight="bold"
-          sx={{ color: theme.palette.text.primary }}
+          sx={{ color: theme.palette.text.primary, textAlign: 'center' }}
         >
           {orgName}
         </Typography>
       </Box>
+
       <Box sx={{ mt: 4, pl: 2 }}>
         <Typography variant="body2" color="text.secondary">
           Workspace Management System
         </Typography>
       </Box>
+
       <Box sx={{ mt: 2 }}>
         <List>
           {menuItems.map((item, index) => {
@@ -157,6 +183,7 @@ const Sidebar = ({ open, onClose }) => {
           })}
         </List>
       </Box>
+
       <Box sx={{ mt: 'auto' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', ml: 1 }}>
           <Tooltip
@@ -223,6 +250,7 @@ const Sidebar = ({ open, onClose }) => {
           },
         }}
         sx={{
+          zIndex: 1600,
           display: { xs: 'block', md: 'none' },
           '& .MuiDrawer-paper': {
             width: drawerWidth,
