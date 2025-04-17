@@ -114,7 +114,7 @@ const Header = () => {
           top: 0,
           left: 0,
           width: '100%',
-          zIndex: 2000, // Header now has a higher z-index than the sidebar
+          zIndex: 1000,
           backgroundColor: theme.palette.mode === 'dark' ? darkBackground : lightBackground,
           backdropFilter: 'blur(25px)',
           WebkitBackdropFilter: 'blur(25px)',
@@ -278,7 +278,7 @@ const Header = () => {
 
           <Button
             component={Link}
-            to="/signup"
+            to="/auth"
             variant="contained"
             color="warning"
             sx={{
