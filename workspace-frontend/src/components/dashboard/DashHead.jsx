@@ -86,7 +86,7 @@ const DashHead = ({ handleDrawerToggle }) => {
         <ListItemIcon>
           <PersonIcon fontSize="small" />
         </ListItemIcon>
-        My Profile
+        Profile
       </MenuItem>
 
       <MenuItem onClick={handleProfileClose}>
