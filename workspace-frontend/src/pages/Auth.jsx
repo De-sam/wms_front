@@ -53,15 +53,33 @@ const Auth = () => {
         throw new Error(data.detail || 'Login failed.');
       }
 
-      // ✅ Save org name to localStorage
+      // ✅ Save all important items to localStorage
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+      }
+
+      if (shortcode) {
+        localStorage.setItem('shortcode', shortcode);
+      }
+
       if (data.organization) {
         localStorage.setItem('org_name', data.organization);
       }
 
-      // ✅ Show success alert
+      if (data.user) {
+        localStorage.setItem('user', JSON.stringify(data.user));
+      }
+
+      // Debugging logs
+      console.log('📦 Saved to localStorage:', {
+        token: localStorage.getItem('token'),
+        shortcode: localStorage.getItem('shortcode'),
+        org_name: localStorage.getItem('org_name'),
+        user: localStorage.getItem('user'),
+      });
+
       setLoginAlert({ open: true, message: '🎉 Successfully logged in!', severity: 'success' });
 
-      // ✅ Redirect after short delay
       setTimeout(() => {
         navigate(`/${shortcode}/dashboard`);
       }, 1000);
@@ -111,6 +129,7 @@ const Auth = () => {
               overflow: 'hidden',
             }}
           >
+            {/* Desktop form side */}
             <Box
               sx={{
                 display: { xs: 'none', md: 'flex' },
@@ -156,6 +175,7 @@ const Auth = () => {
               )}
             </Box>
 
+            {/* Info panel side */}
             <Box
               sx={{
                 display: { xs: 'none', md: 'block' },
@@ -175,6 +195,7 @@ const Auth = () => {
               <InfoPanel isLogin={effectiveMode === 'login'} />
             </Box>
 
+            {/* Mobile view */}
             <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column', height: '100%' }}>
               <Box
                 sx={{
