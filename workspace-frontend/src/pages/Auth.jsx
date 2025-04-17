@@ -50,16 +50,13 @@ const Auth = () => {
 
       const data = await response.json();
 
-      console.log("🛠️ Full login response:", data);
-
       if (!response.ok) {
         throw new Error(data.detail || 'Login failed.');
       }
 
       // ✅ Save all important items to localStorage
-      const token = data.token || data.access_token || null;
-      if (token) {
-        localStorage.setItem('token', token);
+      if (data.access) {
+        localStorage.setItem('token', data.access);  // Store access token correctly
       }
 
       if (shortcode) {
@@ -70,10 +67,11 @@ const Auth = () => {
         localStorage.setItem('org_name', data.organization);
       }
 
-      if (data.user) {
-        localStorage.setItem('user', JSON.stringify(data.user));
+      if (data.email) {
+        localStorage.setItem('user', JSON.stringify({ email: data.email, id: data.user_id }));
       }
 
+      // ✅ Debug logs
       console.log('📦 Saved to localStorage:', {
         token: localStorage.getItem('token'),
         shortcode: localStorage.getItem('shortcode'),
@@ -198,7 +196,7 @@ const Auth = () => {
               <InfoPanel isLogin={effectiveMode === 'login'} />
             </Box>
 
-            {/* Mobile */}
+            {/* Mobile form */}
             <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column', height: '100%' }}>
               <Box
                 sx={{
