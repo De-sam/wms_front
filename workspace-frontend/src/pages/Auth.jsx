@@ -1,3 +1,4 @@
+// src/pages/Auth.jsx
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
@@ -49,13 +50,16 @@ const Auth = () => {
 
       const data = await response.json();
 
+      console.log("🛠️ Full login response:", data);
+
       if (!response.ok) {
         throw new Error(data.detail || 'Login failed.');
       }
 
-      // ✅ Save important data to localStorage
-      if (data.token) {
-        localStorage.setItem('token', data.token);
+      // ✅ Save all important items to localStorage
+      const token = data.token || data.access_token || null;
+      if (token) {
+        localStorage.setItem('token', token);
       }
 
       if (shortcode) {
@@ -70,7 +74,6 @@ const Auth = () => {
         localStorage.setItem('user', JSON.stringify(data.user));
       }
 
-      // ✅ Confirm saved values
       console.log('📦 Saved to localStorage:', {
         token: localStorage.getItem('token'),
         shortcode: localStorage.getItem('shortcode'),
@@ -78,11 +81,11 @@ const Auth = () => {
         user: localStorage.getItem('user'),
       });
 
-      // ✅ Show success message
       setLoginAlert({ open: true, message: '🎉 Successfully logged in!', severity: 'success' });
 
-      // ✅ Navigate immediately after saving
-      navigate(`/${shortcode}/dashboard`);
+      setTimeout(() => {
+        navigate(`/${shortcode}/dashboard`);
+      }, 1000);
 
     } catch (error) {
       setLoginAlert({ open: true, message: error.message, severity: 'error' });
@@ -96,7 +99,6 @@ const Auth = () => {
     setSignupLoading(true);
     setSignupAlert({ open: false, message: '', severity: 'info' });
 
-    // Simulated signup
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setSignupAlert({ open: true, message: 'Signup complete!', severity: 'success' });
     setSignupLoading(false);
@@ -130,7 +132,7 @@ const Auth = () => {
               overflow: 'hidden',
             }}
           >
-            {/* Desktop login/signup form */}
+            {/* Desktop form */}
             <Box
               sx={{
                 display: { xs: 'none', md: 'flex' },
@@ -176,7 +178,7 @@ const Auth = () => {
               )}
             </Box>
 
-            {/* Desktop info panel */}
+            {/* Info Panel */}
             <Box
               sx={{
                 display: { xs: 'none', md: 'block' },
@@ -196,7 +198,7 @@ const Auth = () => {
               <InfoPanel isLogin={effectiveMode === 'login'} />
             </Box>
 
-            {/* Mobile login/signup form */}
+            {/* Mobile */}
             <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column', height: '100%' }}>
               <Box
                 sx={{
