@@ -278,7 +278,7 @@ const Header = () => {
 
           <Button
             component={Link}
-            to="/auth"
+            to="/signup"
             variant="contained"
             color="warning"
             sx={{
