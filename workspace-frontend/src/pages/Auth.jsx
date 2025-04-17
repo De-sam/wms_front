@@ -53,7 +53,7 @@ const Auth = () => {
         throw new Error(data.detail || 'Login failed.');
       }
 
-      // ✅ Save all important items to localStorage
+      // ✅ Save important data to localStorage
       if (data.token) {
         localStorage.setItem('token', data.token);
       }
@@ -70,7 +70,7 @@ const Auth = () => {
         localStorage.setItem('user', JSON.stringify(data.user));
       }
 
-      // Debugging logs
+      // ✅ Confirm saved values
       console.log('📦 Saved to localStorage:', {
         token: localStorage.getItem('token'),
         shortcode: localStorage.getItem('shortcode'),
@@ -78,11 +78,11 @@ const Auth = () => {
         user: localStorage.getItem('user'),
       });
 
+      // ✅ Show success message
       setLoginAlert({ open: true, message: '🎉 Successfully logged in!', severity: 'success' });
 
-      setTimeout(() => {
-        navigate(`/${shortcode}/dashboard`);
-      }, 1000);
+      // ✅ Navigate immediately after saving
+      navigate(`/${shortcode}/dashboard`);
 
     } catch (error) {
       setLoginAlert({ open: true, message: error.message, severity: 'error' });
@@ -96,6 +96,7 @@ const Auth = () => {
     setSignupLoading(true);
     setSignupAlert({ open: false, message: '', severity: 'info' });
 
+    // Simulated signup
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setSignupAlert({ open: true, message: 'Signup complete!', severity: 'success' });
     setSignupLoading(false);
@@ -129,7 +130,7 @@ const Auth = () => {
               overflow: 'hidden',
             }}
           >
-            {/* Desktop form side */}
+            {/* Desktop login/signup form */}
             <Box
               sx={{
                 display: { xs: 'none', md: 'flex' },
@@ -175,7 +176,7 @@ const Auth = () => {
               )}
             </Box>
 
-            {/* Info panel side */}
+            {/* Desktop info panel */}
             <Box
               sx={{
                 display: { xs: 'none', md: 'block' },
@@ -195,7 +196,7 @@ const Auth = () => {
               <InfoPanel isLogin={effectiveMode === 'login'} />
             </Box>
 
-            {/* Mobile view */}
+            {/* Mobile login/signup form */}
             <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column', height: '100%' }}>
               <Box
                 sx={{
