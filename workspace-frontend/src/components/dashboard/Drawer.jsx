@@ -223,6 +223,7 @@ const Sidebar = ({ open, onClose }) => {
           },
         }}
         sx={{
+          zIndex: 1600, // 👈 ensure it's above AppBar & Slide
           display: { xs: 'block', md: 'none' },
           '& .MuiDrawer-paper': {
             width: drawerWidth,
