@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import {
   Avatar,
   Box,
+  Collapse,
   Drawer,
   IconButton,
   List,
@@ -11,14 +12,23 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import WorkspacesIcon from '@mui/icons-material/Workspaces';
-import BookOnlineIcon from '@mui/icons-material/BookOnline';
-import PeopleIcon from '@mui/icons-material/People';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import CloseIcon from '@mui/icons-material/Close';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
+import {
+  Dashboard as DashboardIcon,
+  Workspaces as WorkspacesIcon,
+  BookOnline as BookOnlineIcon,
+  People as PeopleIcon,
+  BarChart as BarChartIcon,
+  ExpandLess,
+  ExpandMore,
+  Add as AddIcon,
+  Settings as SettingsIcon,
+  Widgets as WidgetsIcon,
+  Tune as TuneIcon,
+  ViewList as ViewListIcon,
+  Close as CloseIcon,
+  Brightness4 as Brightness4Icon,
+  Brightness7 as Brightness7Icon,
+} from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import ColorModeContext from '../../context/ColorModeContext';
 
@@ -30,15 +40,8 @@ const Sidebar = ({ open, onClose }) => {
 
   const orgName = localStorage.getItem('org_name') || 'Workspace';
 
-  const menuItems = [
-    { label: 'Dashboard', icon: <DashboardIcon /> },
-    { label: 'Workspaces', icon: <WorkspacesIcon /> },
-    { label: 'Bookings', icon: <BookOnlineIcon /> },
-    { label: 'Users', icon: <PeopleIcon /> },
-    { label: 'Reports', icon: <BarChartIcon /> },
-  ];
-
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [workspaceOpen, setWorkspaceOpen] = useState(false);
 
   const handleListItemClick = (index) => {
     setSelectedIndex(index);
@@ -78,14 +81,7 @@ const Sidebar = ({ open, onClose }) => {
   );
 
   const renderDrawerContent = (isMobile = false) => (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        p: 2,
-      }}
-    >
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', p: 2 }}>
       {isMobile && (
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <IconButton onClick={onClose}>
@@ -94,15 +90,7 @@ const Sidebar = ({ open, onClose }) => {
         </Box>
       )}
 
-      {/* Logo + Org Name */}
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          pt: 1,
-        }}
-      >
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', pt: 1 }}>
         <Avatar
           variant="rounded"
           sx={{
@@ -135,52 +123,82 @@ const Sidebar = ({ open, onClose }) => {
 
       <Box sx={{ mt: 2 }}>
         <List>
-          {menuItems.map((item, index) => {
-            const isSelected = selectedIndex === index;
-            return (
-              <ListItem
-                key={item.label}
-                button
-                onClick={() => handleListItemClick(index)}
-                sx={{
-                  px: 2,
-                  py: 0.5,
-                  mb: 1,
-                  borderRadius: 1,
-                  backgroundColor: isSelected
-                    ? 'rgba(0,150,255,0.2)'
-                    : 'transparent',
-                  transform: isSelected ? 'translateX(10px)' : 'translateX(0)',
-                  transition: 'background 0.3s ease, transform 0.3s ease',
-                  '&:hover': {
-                    backgroundColor: isSelected
-                      ? 'rgba(0,150,255,0.3)'
-                      : 'rgba(0,0,0,0.05)',
-                  },
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    color: isSelected
-                      ? theme.palette.primary.main
-                      : theme.palette.text.primary,
-                    minWidth: 'auto',
-                    mr: 1,
-                  }}
-                >
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={item.label}
-                  sx={{
-                    color: isSelected
-                      ? theme.palette.primary.main
-                      : theme.palette.text.primary,
-                  }}
-                />
+          <ListItem
+            button
+            onClick={() => handleListItemClick(0)}
+            sx={{
+              px: 2,
+              py: 0.5,
+              mb: 1,
+              borderRadius: 1,
+              backgroundColor: selectedIndex === 0 ? 'rgba(0,150,255,0.2)' : 'transparent',
+              '&:hover': {
+                backgroundColor: 'rgba(0,0,0,0.05)',
+              },
+            }}
+          >
+            <ListItemIcon sx={{ minWidth: 'auto', mr: 1, color: theme.palette.text.primary }}>
+              <DashboardIcon />
+            </ListItemIcon>
+            <ListItemText primary="Dashboard" />
+          </ListItem>
+
+          <ListItem
+            button
+            onClick={() => setWorkspaceOpen(!workspaceOpen)}
+            sx={{
+              px: 2,
+              py: 0.5,
+              mb: 1,
+              borderRadius: 1,
+              backgroundColor: workspaceOpen ? 'rgba(0,150,255,0.1)' : 'transparent',
+              '&:hover': {
+                backgroundColor: 'rgba(0,0,0,0.05)',
+              },
+            }}
+          >
+            <ListItemIcon sx={{ minWidth: 'auto', mr: 1, color: theme.palette.text.primary }}>
+              <WorkspacesIcon />
+            </ListItemIcon>
+            <ListItemText primary="Workspaces" />
+            {workspaceOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItem>
+
+          <Collapse in={workspaceOpen} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding sx={{ pl: 4 }}>
+              <ListItem button sx={{ py: 0.5 }}>
+                <ListItemIcon sx={{ minWidth: 'auto', mr: 1 }}><ViewListIcon /></ListItemIcon>
+                <ListItemText primary="All Workspaces" />
               </ListItem>
-            );
-          })}
+              <ListItem button sx={{ py: 0.5 }}>
+                <ListItemIcon sx={{ minWidth: 'auto', mr: 1 }}><AddIcon /></ListItemIcon>
+                <ListItemText primary="Add New Workspace" />
+              </ListItem>
+              <ListItem button sx={{ py: 0.5 }}>
+                <ListItemIcon sx={{ minWidth: 'auto', mr: 1 }}><TuneIcon /></ListItemIcon>
+                <ListItemText primary="Availability Settings" />
+              </ListItem>
+              <ListItem button sx={{ py: 0.5 }}>
+                <ListItemIcon sx={{ minWidth: 'auto', mr: 1 }}><WidgetsIcon /></ListItemIcon>
+                <ListItemText primary="Amenities Management" />
+              </ListItem>
+            </List>
+          </Collapse>
+
+          <ListItem button onClick={() => handleListItemClick(1)} sx={{ px: 2, py: 0.5, mb: 1 }}>
+            <ListItemIcon sx={{ minWidth: 'auto', mr: 1 }}><BookOnlineIcon /></ListItemIcon>
+            <ListItemText primary="Bookings" />
+          </ListItem>
+
+          <ListItem button onClick={() => handleListItemClick(2)} sx={{ px: 2, py: 0.5, mb: 1 }}>
+            <ListItemIcon sx={{ minWidth: 'auto', mr: 1 }}><PeopleIcon /></ListItemIcon>
+            <ListItemText primary="Users" />
+          </ListItem>
+
+          <ListItem button onClick={() => handleListItemClick(3)} sx={{ px: 2, py: 0.5, mb: 1 }}>
+            <ListItemIcon sx={{ minWidth: 'auto', mr: 1 }}><BarChartIcon /></ListItemIcon>
+            <ListItemText primary="Reports" />
+          </ListItem>
         </List>
       </Box>
 
@@ -194,15 +212,8 @@ const Sidebar = ({ open, onClose }) => {
             }
             placement="top"
           >
-            <IconButton
-              onClick={handleToggleDarkMode}
-              sx={{ color: theme.palette.text.primary }}
-            >
-              {theme.palette.mode === 'dark' ? (
-                <Brightness7Icon />
-              ) : (
-                <Brightness4Icon />
-              )}
+            <IconButton onClick={handleToggleDarkMode} sx={{ color: theme.palette.text.primary }}>
+              {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
             </IconButton>
           </Tooltip>
         </Box>
