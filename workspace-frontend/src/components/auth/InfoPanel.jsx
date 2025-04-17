@@ -1,8 +1,7 @@
-// src/components/auth/InfoPanel.jsx
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 
-const InfoPanel = ({ isLogin }) => {
+const InfoPanel = ({ isLogin, orgInfo }) => {
   return (
     <Box
       sx={{
@@ -22,12 +21,13 @@ const InfoPanel = ({ isLogin }) => {
         fontWeight="bold"
         sx={{ fontSize: { xs: '2rem', md: '3rem' } }}
       >
-        Workspace
+        {orgInfo?.name || 'Workspace'}
       </Typography>
+
       {isLogin ? (
         <>
           <Typography variant="subtitle1" sx={{ mt: 2, opacity: 0.8 }}>
-            Welcome back, mobile user!
+            Welcome back!
           </Typography>
           <Typography variant="body1" sx={{ mt: 2, textAlign: 'center' }}>
             Access your dashboard and collaborate on the go.

@@ -23,24 +23,17 @@ const Auth = () => {
   const [mode, setMode] = useState(isMobile ? 'login' : null);
   const effectiveMode = mode || 'login';
 
-  const [orgInfo, setOrgInfo] = useState(null); // ✅ New state for organization info
-
-  // Login state
+  const [orgInfo, setOrgInfo] = useState(null);
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginAlert, setLoginAlert] = useState({ open: false, message: '', severity: 'info' });
-
-  // Snackbar state
   const [showToast, setShowToast] = useState(false);
-
-  // Signup state
   const [signupOrg, setSignupOrg] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [signupLoading, setSignupLoading] = useState(false);
   const [signupAlert, setSignupAlert] = useState({ open: false, message: '', severity: 'info' });
 
-  // ✅ Fetch organization info on load
   useEffect(() => {
     const fetchOrgInfo = async () => {
       try {
@@ -54,7 +47,6 @@ const Auth = () => {
     fetchOrgInfo();
   }, [shortcode]);
 
-  // LOGIN FUNCTION
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setLoginLoading(true);
@@ -187,7 +179,7 @@ const Auth = () => {
                 borderBottomLeftRadius: effectiveMode === 'signup' ? theme.shape.borderRadius : 0,
               }}
             >
-              <InfoPanel isLogin={effectiveMode === 'login'} />
+              <InfoPanel isLogin={effectiveMode === 'login'} orgInfo={orgInfo} />
             </Box>
 
             <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column', height: '100%' }}>
