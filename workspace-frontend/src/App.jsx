@@ -1,3 +1,4 @@
+// src/App.jsx
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider, CssBaseline } from '@mui/material';
@@ -8,13 +9,15 @@ import LandingPage from './pages/LandingPage';
 import SignUp from './pages/SignUp';
 import Auth from './pages/Auth';
 import ActivateAccount from './pages/ActivateAccount';
+import Dashboard from './components/Dashboard';
 
 const App = () => {
   const [mode, setMode] = React.useState('light');
 
   const colorMode = React.useMemo(
     () => ({
-      toggleColorMode: () => setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light')),
+      toggleColorMode: () =>
+        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light')),
     }),
     []
   );
@@ -30,6 +33,7 @@ const App = () => {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/activate/:token" element={<ActivateAccount />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </ThemeProvider>
     </ColorModeContext.Provider>
