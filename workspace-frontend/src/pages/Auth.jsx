@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
-import { Box, Container, Paper, useTheme, useMediaQuery } from '@mui/material';
-import { amber } from '@mui/material/colors';
+import { useParams } from 'react-router-dom';
+import {
+  Box,
+  Container,
+  Paper,
+  Snackbar,
+  Alert,
+  useTheme,
+  useMediaQuery
+} from '@mui/material';
 import Header from '../components/landingPage/Header';
 import InfoPanel from '../components/auth/InfoPanel';
 import LoginForm from '../components/auth/LoginForm';
@@ -8,33 +16,57 @@ import SignupForm from '../components/auth/SignupForm';
 
 const Auth = () => {
   const theme = useTheme();
-  const headerHeight = 64; // Assumed header height for mobile
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const headerHeight = 64;
+  const { shortcode } = useParams();
 
-  // On mobile we default to 'login' (or 'signup' as required), on desktop we leave it as null.
   const [mode, setMode] = useState(isMobile ? 'login' : null);
   const effectiveMode = mode || 'login';
 
-  // Login states
+  // Login state
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginAlert, setLoginAlert] = useState({ open: false, message: '', severity: 'info' });
 
-  // Signup states
+  // NEW: Snackbar state
+  const [showToast, setShowToast] = useState(false);
+
+  // Signup state
   const [signupOrg, setSignupOrg] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [signupLoading, setSignupLoading] = useState(false);
   const [signupAlert, setSignupAlert] = useState({ open: false, message: '', severity: 'info' });
 
-  // Handlers
+  // LOGIN FUNCTION
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setLoginLoading(true);
     setLoginAlert({ open: false, message: '', severity: 'info' });
-    // Simulate async login work
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setLoginAlert({ open: true, message: 'Logged in!', severity: 'success' });
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/organizations/login/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: loginEmail,
+          password: loginPassword,
+          shortcode: shortcode,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || 'Login failed.');
+      }
+
+      setShowToast(true); // ✅ show login toast
+
+    } catch (error) {
+      setLoginAlert({ open: true, message: error.message, severity: 'error' });
+    }
+
     setLoginLoading(false);
   };
 
@@ -42,8 +74,8 @@ const Auth = () => {
     e.preventDefault();
     setSignupLoading(true);
     setSignupAlert({ open: false, message: '', severity: 'info' });
-    // Simulate async signup work
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // mock
     setSignupAlert({ open: true, message: 'Signup complete!', severity: 'success' });
     setSignupLoading(false);
     setMode('login');
@@ -76,7 +108,7 @@ const Auth = () => {
               overflow: 'hidden',
             }}
           >
-            {/* Desktop View */}
+            {/* Desktop Panel */}
             <Box
               sx={{
                 display: { xs: 'none', md: 'flex' },
@@ -122,7 +154,7 @@ const Auth = () => {
               )}
             </Box>
 
-            {/* Blue Info Overlay for Desktop */}
+            {/* Info Panel */}
             <Box
               sx={{
                 display: { xs: 'none', md: 'block' },
@@ -144,7 +176,6 @@ const Auth = () => {
 
             {/* Mobile View */}
             <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column', height: '100%' }}>
-              {/* Blue Section */}
               <Box
                 sx={{
                   backgroundColor: theme.palette.primary.main,
@@ -172,7 +203,7 @@ const Auth = () => {
                 </Box>
               </Box>
 
-              {/* Form Container */}
+              {/* Mobile Form */}
               {mode && (
                 <Box
                   sx={{
@@ -221,6 +252,18 @@ const Auth = () => {
           </Paper>
         </Container>
       </Box>
+
+      {/* ✅ Snackbar Toast for Login */}
+      <Snackbar
+        open={showToast}
+        autoHideDuration={3000}
+        onClose={() => setShowToast(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setShowToast(false)} severity="success" sx={{ width: '100%' }}>
+          🎉 Successfully logged in!
+        </Alert>
+      </Snackbar>
     </>
   );
 };

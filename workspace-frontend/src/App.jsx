@@ -28,7 +28,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/auth" element={<Auth />} />
+          <Route path="/:shortcode/login" element={<Auth />} />  // ✅ Use `/login`, render Auth
           <Route path="/activate/:token" element={<ActivateAccount />} />
         </Routes>
       </ThemeProvider>
