@@ -9,7 +9,7 @@ import LandingPage from './pages/LandingPage';
 import SignUp from './pages/SignUp';
 import Auth from './pages/Auth';
 import ActivateAccount from './pages/ActivateAccount';
-import Dashboard from './components/Dashboard';
+import Dashboard from './pages/Dashboard';
 
 const App = () => {
   const [mode, setMode] = React.useState('light');
