@@ -19,6 +19,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import LogoutIcon from '@mui/icons-material/Logout';
+import SettingsIcon from '@mui/icons-material/Settings';
+import PersonIcon from '@mui/icons-material/Person';
 import { amber } from '@mui/material/colors';
 
 const drawerWidth = 240;
@@ -39,6 +42,7 @@ const DashHead = ({ handleDrawerToggle }) => {
   const theme = useTheme();
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [profileAnchorEl, setProfileAnchorEl] = useState(null);
 
   const iconColor =
     theme.palette.mode === 'dark'
@@ -48,6 +52,14 @@ const DashHead = ({ handleDrawerToggle }) => {
   const handleMobileMenuOpen = (event) => setMobileMoreAnchorEl(event.currentTarget);
   const handleMobileMenuClose = () => setMobileMoreAnchorEl(null);
   const toggleMobileSearch = () => setMobileSearchOpen((prev) => !prev);
+
+  const handleProfileClick = (event) => {
+    setProfileAnchorEl(event.currentTarget);
+  };
+
+  const handleProfileClose = () => {
+    setProfileAnchorEl(null);
+  };
 
   const renderMobileMenu = (
     <Menu
@@ -70,6 +82,35 @@ const DashHead = ({ handleDrawerToggle }) => {
           <Avatar sx={{ bgcolor: amber[500] }}>XX</Avatar>
         </ListItemIcon>
         <Typography>Profile</Typography>
+      </MenuItem>
+    </Menu>
+  );
+
+  const renderProfileMenu = (
+    <Menu
+      anchorEl={profileAnchorEl}
+      open={Boolean(profileAnchorEl)}
+      onClose={handleProfileClose}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+    >
+      <MenuItem onClick={handleProfileClose}>
+        <ListItemIcon>
+          <PersonIcon fontSize="small" />
+        </ListItemIcon>
+        My Profile
+      </MenuItem>
+      <MenuItem onClick={handleProfileClose}>
+        <ListItemIcon>
+          <SettingsIcon fontSize="small" />
+        </ListItemIcon>
+        Settings
+      </MenuItem>
+      <MenuItem onClick={handleProfileClose}>
+        <ListItemIcon>
+          <LogoutIcon fontSize="small" />
+        </ListItemIcon>
+        Logout
       </MenuItem>
     </Menu>
   );
@@ -165,7 +206,9 @@ const DashHead = ({ handleDrawerToggle }) => {
         >
           <IconButton><EmailOutlinedIcon sx={{ color: iconColor }} /></IconButton>
           <IconButton><NotificationsNoneIcon sx={{ color: iconColor }} /></IconButton>
-          <Avatar sx={{ bgcolor: amber[500], color: '#000' }}>XX</Avatar>
+          <IconButton onClick={handleProfileClick}>
+            <Avatar sx={{ bgcolor: amber[500], color: '#000' }}>XX</Avatar>
+          </IconButton>
           <Typography sx={{ fontWeight: 700 }}>XX</Typography>
         </Box>
 
@@ -176,7 +219,9 @@ const DashHead = ({ handleDrawerToggle }) => {
           </IconButton>
         </Box>
       </Toolbar>
+
       {renderMobileMenu}
+      {renderProfileMenu}
     </AppBar>
   );
 };
