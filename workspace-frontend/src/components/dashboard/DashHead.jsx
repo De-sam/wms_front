@@ -9,11 +9,12 @@ import {
   Menu,
   MenuItem,
   ListItemIcon,
-  Typography,
   Slide,
   Divider,
+  useMediaQuery,
 } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
@@ -40,6 +41,8 @@ const SearchBar = styled('div')(({ theme }) => ({
 
 const DashHead = ({ handleDrawerToggle }) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const navigate = useNavigate();
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [profileAnchorEl, setProfileAnchorEl] = useState(null);
 
@@ -51,6 +54,26 @@ const DashHead = ({ handleDrawerToggle }) => {
   const toggleMobileSearch = () => setMobileSearchOpen((prev) => !prev);
   const handleProfileClick = (event) => setProfileAnchorEl(event.currentTarget);
   const handleProfileClose = () => setProfileAnchorEl(null);
+
+  const handleLogout = () => {
+    const shortcode = localStorage.getItem('shortcode');
+    console.log('📦 LOGOUT triggered...');
+    console.log('➡️ shortcode from localStorage:', shortcode);
+
+    if (!shortcode) {
+      console.warn('⚠️ Shortcode not found! Redirecting to landing page instead.');
+      navigate('/');
+      return;
+    }
+
+    localStorage.clear();
+    sessionStorage.clear();
+    handleProfileClose();
+
+    const redirectPath = `/${shortcode}/login`;
+    console.log('🔁 Redirecting to:', redirectPath);
+    navigate(redirectPath);
+  };
 
   const renderProfileMenu = (
     <Menu
@@ -66,21 +89,26 @@ const DashHead = ({ handleDrawerToggle }) => {
         },
       }}
     >
-      <MenuItem onClick={handleProfileClose}>
-        <ListItemIcon>
-          <EmailOutlinedIcon fontSize="small" />
-        </ListItemIcon>
-        Messages
-      </MenuItem>
+      {/* Only show Messages and Notifications in mobile dropdown */}
+      {isMobile && (
+        <>
+          <MenuItem onClick={handleProfileClose}>
+            <ListItemIcon>
+              <EmailOutlinedIcon fontSize="small" />
+            </ListItemIcon>
+            Messages
+          </MenuItem>
 
-      <MenuItem onClick={handleProfileClose}>
-        <ListItemIcon>
-          <NotificationsNoneIcon fontSize="small" />
-        </ListItemIcon>
-        Notifications
-      </MenuItem>
+          <MenuItem onClick={handleProfileClose}>
+            <ListItemIcon>
+              <NotificationsNoneIcon fontSize="small" />
+            </ListItemIcon>
+            Notifications
+          </MenuItem>
 
-      <Divider sx={{ my: 0.5 }} />
+          <Divider sx={{ my: 0.5 }} />
+        </>
+      )}
 
       <MenuItem onClick={handleProfileClose}>
         <ListItemIcon>
@@ -98,7 +126,7 @@ const DashHead = ({ handleDrawerToggle }) => {
 
       <Divider sx={{ my: 0.5 }} />
 
-      <MenuItem onClick={handleProfileClose}>
+      <MenuItem onClick={handleLogout}>
         <ListItemIcon>
           <LogoutIcon fontSize="small" />
         </ListItemIcon>
@@ -184,7 +212,7 @@ const DashHead = ({ handleDrawerToggle }) => {
           </SearchBar>
         </Box>
 
-        {/* Avatar only */}
+        {/* Desktop: Email + Notification + Avatar */}
         <Box
           sx={{
             display: 'flex',
@@ -193,9 +221,19 @@ const DashHead = ({ handleDrawerToggle }) => {
             top: '50%',
             right: 0,
             transform: 'translateY(-50%)',
-            pr: 1, // added space between avatar and edge
+            pr: 1,
           }}
         >
+          {!isMobile && (
+            <>
+              <IconButton>
+                <EmailOutlinedIcon sx={{ color: iconColor }} />
+              </IconButton>
+              <IconButton>
+                <NotificationsNoneIcon sx={{ color: iconColor }} />
+              </IconButton>
+            </>
+          )}
           <IconButton onClick={handleProfileClick} sx={{ p: 0 }}>
             <Avatar sx={{ bgcolor: amber[500], color: '#000' }}>XX</Avatar>
           </IconButton>
