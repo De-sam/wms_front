@@ -14,8 +14,8 @@ import {
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import BookOnlineIcon from '@mui/icons-material/BookOnline';
-import PeopleIcon from '@mui/icons-material/People';
-import BarChartIcon from '@mui/icons-material/BarChart';
+import ScheduleIcon from '@mui/icons-material/Schedule';
+import SettingsIcon from '@mui/icons-material/Settings';
 import CloseIcon from '@mui/icons-material/Close';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
@@ -34,8 +34,8 @@ const Sidebar = ({ open, onClose }) => {
     { label: 'Dashboard', icon: <DashboardIcon /> },
     { label: 'Workspaces', icon: <WorkspacesIcon /> },
     { label: 'Bookings', icon: <BookOnlineIcon /> },
-    { label: 'Users', icon: <PeopleIcon /> },
-    { label: 'Reports', icon: <BarChartIcon /> },
+    { label: 'Team Schedule', icon: <ScheduleIcon /> },
+    { label: 'Settings', icon: <SettingsIcon /> },
   ];
 
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -132,7 +132,6 @@ const Sidebar = ({ open, onClose }) => {
           Workspace Management System
         </Typography>
       </Box>
-
       <Box sx={{ mt: 2 }}>
         <List>
           {menuItems.map((item, index) => {
@@ -183,7 +182,6 @@ const Sidebar = ({ open, onClose }) => {
           })}
         </List>
       </Box>
-
       <Box sx={{ mt: 'auto' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', ml: 1 }}>
           <Tooltip
