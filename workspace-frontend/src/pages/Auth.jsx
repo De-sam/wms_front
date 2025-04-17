@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -19,26 +19,22 @@ const Auth = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const headerHeight = 64;
   const { shortcode } = useParams();
+  const navigate = useNavigate();
 
   const [mode, setMode] = useState(isMobile ? 'login' : null);
   const effectiveMode = mode || 'login';
 
-  // Login state
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginAlert, setLoginAlert] = useState({ open: false, message: '', severity: 'info' });
-
-  // NEW: Snackbar state
   const [showToast, setShowToast] = useState(false);
 
-  // Signup state
   const [signupOrg, setSignupOrg] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [signupLoading, setSignupLoading] = useState(false);
   const [signupAlert, setSignupAlert] = useState({ open: false, message: '', severity: 'info' });
 
-  // LOGIN FUNCTION
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setLoginLoading(true);
@@ -61,6 +57,9 @@ const Auth = () => {
       }
 
       setShowToast(true);
+      setTimeout(() => {
+        navigate(`/${shortcode}/dashboard`);
+      }, 1000);
 
     } catch (error) {
       setLoginAlert({ open: true, message: error.message, severity: 'error' });

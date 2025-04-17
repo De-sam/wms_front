@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Typography } from '@mui/material';
-import Sidebar from './dashboard/Drawer';
-import DashHead from './dashboard/DashHead';
+import Sidebar from '../components/dashboard/Drawer';
+import DashHead from '../components/dashboard/DashHead';
 
 const drawerWidth = 300;
 

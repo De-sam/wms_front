@@ -33,7 +33,7 @@ const App = () => {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/:shortcode/login" element={<Auth />} />  // ✅ Use `/login`, render Auth
           <Route path="/activate/:token" element={<ActivateAccount />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/:shortcode/dashboard" element={<Dashboard />} />
         </Routes>
       </ThemeProvider>
     </ColorModeContext.Provider>
