@@ -45,13 +45,12 @@ const Auth = () => {
     setLoginAlert({ open: false, message: '', severity: 'info' });
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/organizations/login/`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/${shortcode}/admin/login/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: loginEmail,
-          password: loginPassword,
-          shortcode: shortcode,
+          password: loginPassword
         }),
       });
 
@@ -61,7 +60,7 @@ const Auth = () => {
         throw new Error(data.detail || 'Login failed.');
       }
 
-      setShowToast(true); // ✅ show login toast
+      setShowToast(true);
 
     } catch (error) {
       setLoginAlert({ open: true, message: error.message, severity: 'error' });
@@ -75,7 +74,7 @@ const Auth = () => {
     setSignupLoading(true);
     setSignupAlert({ open: false, message: '', severity: 'info' });
 
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // mock
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setSignupAlert({ open: true, message: 'Signup complete!', severity: 'success' });
     setSignupLoading(false);
     setMode('login');
@@ -108,7 +107,6 @@ const Auth = () => {
               overflow: 'hidden',
             }}
           >
-            {/* Desktop Panel */}
             <Box
               sx={{
                 display: { xs: 'none', md: 'flex' },
@@ -154,7 +152,6 @@ const Auth = () => {
               )}
             </Box>
 
-            {/* Info Panel */}
             <Box
               sx={{
                 display: { xs: 'none', md: 'block' },
@@ -174,7 +171,6 @@ const Auth = () => {
               <InfoPanel isLogin={effectiveMode === 'login'} />
             </Box>
 
-            {/* Mobile View */}
             <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column', height: '100%' }}>
               <Box
                 sx={{
@@ -203,7 +199,6 @@ const Auth = () => {
                 </Box>
               </Box>
 
-              {/* Mobile Form */}
               {mode && (
                 <Box
                   sx={{
@@ -253,7 +248,6 @@ const Auth = () => {
         </Container>
       </Box>
 
-      {/* ✅ Snackbar Toast for Login */}
       <Snackbar
         open={showToast}
         autoHideDuration={3000}
