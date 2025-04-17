@@ -16,7 +16,7 @@ const Auth = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const headerHeight = 64;
-  const { shortcode } = useParams(); // 👈 capture shortcode from route
+  const { shortcode } = useParams();
   const navigate = useNavigate();
 
   const [mode, setMode] = useState(isMobile ? 'login' : null);
@@ -53,10 +53,7 @@ const Auth = () => {
         throw new Error(data.detail || 'Login failed.');
       }
 
-      // ✅ Store shortcode for logout redirection
-      localStorage.setItem('shortcode', shortcode);
-
-      // ✅ Store organization name if available
+      // ✅ Save org name to localStorage
       if (data.organization) {
         localStorage.setItem('org_name', data.organization);
       }
@@ -64,7 +61,7 @@ const Auth = () => {
       // ✅ Show success alert
       setLoginAlert({ open: true, message: '🎉 Successfully logged in!', severity: 'success' });
 
-      // ✅ Redirect to dashboard after delay
+      // ✅ Redirect after short delay
       setTimeout(() => {
         navigate(`/${shortcode}/dashboard`);
       }, 1000);
@@ -114,7 +111,6 @@ const Auth = () => {
               overflow: 'hidden',
             }}
           >
-            {/* Desktop Form Container */}
             <Box
               sx={{
                 display: { xs: 'none', md: 'flex' },
@@ -160,7 +156,6 @@ const Auth = () => {
               )}
             </Box>
 
-            {/* Info Panel */}
             <Box
               sx={{
                 display: { xs: 'none', md: 'block' },
@@ -180,7 +175,6 @@ const Auth = () => {
               <InfoPanel isLogin={effectiveMode === 'login'} />
             </Box>
 
-            {/* Mobile Form Container */}
             <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column', height: '100%' }}>
               <Box
                 sx={{
