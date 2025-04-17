@@ -28,6 +28,8 @@ const Sidebar = ({ open, onClose }) => {
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
 
+  const orgName = localStorage.getItem('org_name') || 'Workspace';
+
   const menuItems = [
     { label: 'Dashboard', icon: <DashboardIcon /> },
     { label: 'Workspaces', icon: <WorkspacesIcon /> },
@@ -46,7 +48,6 @@ const Sidebar = ({ open, onClose }) => {
     colorMode.toggleColorMode();
   };
 
-  // Glassmorphism styles for the permanent (desktop) drawer
   const glassStyles = {
     background:
       theme.palette.mode === 'dark'
@@ -63,7 +64,6 @@ const Sidebar = ({ open, onClose }) => {
     color: theme.palette.text.primary,
   };
 
-  // Profile section to be rendered at bottom of the drawer
   const renderProfileSection = () => (
     <Box sx={{ display: 'flex', alignItems: 'center', ml: 2, mt: 2 }}>
       <Avatar sx={{ width: 50, height: 50, mr: 2 }}>E</Avatar>
@@ -77,8 +77,6 @@ const Sidebar = ({ open, onClose }) => {
     </Box>
   );
 
-  // Drawer content for both desktop and mobile
-  // The parameter "isMobile" will dictate whether the close button is rendered.
   const renderDrawerContent = (isMobile = false) => (
     <Box
       sx={{
@@ -88,7 +86,6 @@ const Sidebar = ({ open, onClose }) => {
         p: 2,
       }}
     >
-      {/* Mobile header with close button */}
       {isMobile && (
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <IconButton onClick={onClose}>
@@ -102,7 +99,7 @@ const Sidebar = ({ open, onClose }) => {
           fontWeight="bold"
           sx={{ color: theme.palette.text.primary }}
         >
-          WorkSpace
+          {orgName}
         </Typography>
       </Box>
       <Box sx={{ mt: 4, pl: 2 }}>
@@ -161,7 +158,6 @@ const Sidebar = ({ open, onClose }) => {
         </List>
       </Box>
       <Box sx={{ mt: 'auto' }}>
-        {/* Dark mode toggle */}
         <Box sx={{ display: 'flex', alignItems: 'center', ml: 1 }}>
           <Tooltip
             title={
@@ -182,9 +178,6 @@ const Sidebar = ({ open, onClose }) => {
               )}
             </IconButton>
           </Tooltip>
-          <Typography variant="body2" sx={{ ml: 1, color: theme.palette.text.primary }}>
-            {theme.palette.mode === 'dark' ? '' : ''}
-          </Typography>
         </Box>
         <Box
           sx={{
@@ -204,7 +197,6 @@ const Sidebar = ({ open, onClose }) => {
 
   return (
     <>
-      {/* Permanent Drawer for Desktop */}
       <Drawer
         variant="permanent"
         sx={{
@@ -220,7 +212,6 @@ const Sidebar = ({ open, onClose }) => {
         {renderDrawerContent()}
       </Drawer>
 
-      {/* Temporary Drawer for Mobile */}
       <Drawer
         variant="temporary"
         open={open}
@@ -228,7 +219,6 @@ const Sidebar = ({ open, onClose }) => {
         ModalProps={{
           keepMounted: true,
           BackdropProps: {
-            // This sets the dimming effect for the area behind the drawer.
             style: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
           },
         }}
@@ -237,9 +227,7 @@ const Sidebar = ({ open, onClose }) => {
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
-            // Use a bright, opaque background for the sliding drawer
             background: theme.palette.background.paper,
-            // Remove any blur or glass effects for mobile drawer
             backdropFilter: 'none',
           },
         }}

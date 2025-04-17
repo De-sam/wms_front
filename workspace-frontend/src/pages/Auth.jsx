@@ -4,8 +4,6 @@ import {
   Box,
   Container,
   Paper,
-  Snackbar,
-  Alert,
   useTheme,
   useMediaQuery
 } from '@mui/material';
@@ -28,7 +26,6 @@ const Auth = () => {
   const [loginPassword, setLoginPassword] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginAlert, setLoginAlert] = useState({ open: false, message: '', severity: 'info' });
-  const [showToast, setShowToast] = useState(false);
 
   const [signupOrg, setSignupOrg] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
@@ -56,7 +53,15 @@ const Auth = () => {
         throw new Error(data.detail || 'Login failed.');
       }
 
-      setShowToast(true);
+      // ✅ Save org name to localStorage
+      if (data.organization) {
+        localStorage.setItem('org_name', data.organization);
+      }
+
+      // ✅ Show success alert
+      setLoginAlert({ open: true, message: '🎉 Successfully logged in!', severity: 'success' });
+
+      // ✅ Redirect after short delay
       setTimeout(() => {
         navigate(`/${shortcode}/dashboard`);
       }, 1000);
@@ -246,17 +251,6 @@ const Auth = () => {
           </Paper>
         </Container>
       </Box>
-
-      <Snackbar
-        open={showToast}
-        autoHideDuration={3000}
-        onClose={() => setShowToast(false)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert onClose={() => setShowToast(false)} severity="success" sx={{ width: '100%' }}>
-          🎉 Successfully logged in!
-        </Alert>
-      </Snackbar>
     </>
   );
 };
