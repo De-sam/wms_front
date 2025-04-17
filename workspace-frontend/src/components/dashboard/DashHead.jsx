@@ -10,7 +10,8 @@ import {
   MenuItem,
   ListItemIcon,
   Typography,
-  Slide
+  Slide,
+  Divider,
 } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -18,7 +19,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PersonIcon from '@mui/icons-material/Person';
@@ -40,7 +40,6 @@ const SearchBar = styled('div')(({ theme }) => ({
 
 const DashHead = ({ handleDrawerToggle }) => {
   const theme = useTheme();
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [profileAnchorEl, setProfileAnchorEl] = useState(null);
 
@@ -49,42 +48,9 @@ const DashHead = ({ handleDrawerToggle }) => {
       ? theme.palette.grey[300]
       : theme.palette.primary.main;
 
-  const handleMobileMenuOpen = (event) => setMobileMoreAnchorEl(event.currentTarget);
-  const handleMobileMenuClose = () => setMobileMoreAnchorEl(null);
   const toggleMobileSearch = () => setMobileSearchOpen((prev) => !prev);
-
-  const handleProfileClick = (event) => {
-    setProfileAnchorEl(event.currentTarget);
-  };
-
-  const handleProfileClose = () => {
-    setProfileAnchorEl(null);
-  };
-
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={Boolean(mobileMoreAnchorEl)}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <ListItemIcon><EmailOutlinedIcon /></ListItemIcon>
-        <Typography>Messages</Typography>
-      </MenuItem>
-      <MenuItem>
-        <ListItemIcon><NotificationsNoneIcon /></ListItemIcon>
-        <Typography>Notifications</Typography>
-      </MenuItem>
-      <MenuItem>
-        <ListItemIcon>
-          <Avatar sx={{ bgcolor: amber[500] }}>XX</Avatar>
-        </ListItemIcon>
-        <Typography>Profile</Typography>
-      </MenuItem>
-    </Menu>
-  );
+  const handleProfileClick = (event) => setProfileAnchorEl(event.currentTarget);
+  const handleProfileClose = () => setProfileAnchorEl(null);
 
   const renderProfileMenu = (
     <Menu
@@ -93,19 +59,45 @@ const DashHead = ({ handleDrawerToggle }) => {
       onClose={handleProfileClose}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      PaperProps={{
+        sx: {
+          width: 220,
+          boxShadow: theme.shadows[3],
+        },
+      }}
     >
+      <MenuItem onClick={handleProfileClose}>
+        <ListItemIcon>
+          <EmailOutlinedIcon fontSize="small" />
+        </ListItemIcon>
+        Messages
+      </MenuItem>
+
+      <MenuItem onClick={handleProfileClose}>
+        <ListItemIcon>
+          <NotificationsNoneIcon fontSize="small" />
+        </ListItemIcon>
+        Notifications
+      </MenuItem>
+
+      <Divider sx={{ my: 0.5 }} />
+
       <MenuItem onClick={handleProfileClose}>
         <ListItemIcon>
           <PersonIcon fontSize="small" />
         </ListItemIcon>
         My Profile
       </MenuItem>
+
       <MenuItem onClick={handleProfileClose}>
         <ListItemIcon>
           <SettingsIcon fontSize="small" />
         </ListItemIcon>
         Settings
       </MenuItem>
+
+      <Divider sx={{ my: 0.5 }} />
+
       <MenuItem onClick={handleProfileClose}>
         <ListItemIcon>
           <LogoutIcon fontSize="small" />
@@ -129,7 +121,7 @@ const DashHead = ({ handleDrawerToggle }) => {
       }}
     >
       <Toolbar sx={{ px: 2, height: 100, position: 'relative' }}>
-        {/* Drawer toggle and search icon grouped in mobile (no spacing) */}
+        {/* Mobile: Drawer toggle + search */}
         <Box
           sx={{
             display: { xs: 'flex', sm: 'none' },
@@ -146,7 +138,7 @@ const DashHead = ({ handleDrawerToggle }) => {
           </IconButton>
         </Box>
 
-        {/* Slide-in mobile search bar */}
+        {/* Mobile Slide-in Search */}
         <Slide direction="left" in={mobileSearchOpen} mountOnEnter unmountOnExit>
           <Box
             sx={{
@@ -171,7 +163,7 @@ const DashHead = ({ handleDrawerToggle }) => {
           </Box>
         </Slide>
 
-        {/* Desktop Search Bar */}
+        {/* Desktop Search */}
         <Box
           sx={{
             display: { xs: 'none', sm: 'block' },
@@ -192,35 +184,24 @@ const DashHead = ({ handleDrawerToggle }) => {
           </SearchBar>
         </Box>
 
-        {/* Desktop action icons */}
+        {/* Just the Avatar now */}
         <Box
           sx={{
-            display: { xs: 'none', sm: 'flex' },
+            display: 'flex',
+            alignItems: 'center',
             position: 'absolute',
             top: '50%',
-            right: 48,
+            right: 0,
             transform: 'translateY(-50%)',
-            alignItems: 'center',
-            gap: 2,
+            pr: 0.5,
           }}
         >
-          <IconButton><EmailOutlinedIcon sx={{ color: iconColor }} /></IconButton>
-          <IconButton><NotificationsNoneIcon sx={{ color: iconColor }} /></IconButton>
-          <IconButton onClick={handleProfileClick}>
+          <IconButton onClick={handleProfileClick} sx={{ p: 0 }}>
             <Avatar sx={{ bgcolor: amber[500], color: '#000' }}>XX</Avatar>
-          </IconButton>
-          <Typography sx={{ fontWeight: 700 }}>XX</Typography>
-        </Box>
-
-        {/* Mobile overflow menu icon */}
-        <Box sx={{ display: { xs: 'flex', sm: 'none' }, ml: 'auto' }}>
-          <IconButton onClick={handleMobileMenuOpen}>
-            <MoreVertIcon sx={{ color: iconColor }} />
           </IconButton>
         </Box>
       </Toolbar>
 
-      {renderMobileMenu}
       {renderProfileMenu}
     </AppBar>
   );
