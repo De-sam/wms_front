@@ -10,6 +10,7 @@ import SignUp from './pages/SignUp';
 import Auth from './pages/Auth';
 import ActivateAccount from './pages/ActivateAccount';
 import Dashboard from './pages/Dashboard';
+import ProtectedRoute from './components/auth/ProtectedRoute'; // ✅ Add this
 
 const App = () => {
   const [mode, setMode] = React.useState('light');
@@ -31,9 +32,18 @@ const App = () => {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/:shortcode/login" element={<Auth />} />  // ✅ Use `/login`, render Auth
+          <Route path="/:shortcode/login" element={<Auth />} />
           <Route path="/activate/:token" element={<ActivateAccount />} />
-          <Route path="/:shortcode/dashboard" element={<Dashboard />} />
+
+          {/* ✅ Protect the dashboard route */}
+          <Route
+            path="/:shortcode/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </ThemeProvider>
     </ColorModeContext.Provider>
