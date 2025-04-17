@@ -1,35 +1,40 @@
 import React, { useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import Sidebar from '../components/dashboard/Drawer';
 import DashHead from '../components/dashboard/DashHead';
 
 const drawerWidth = 300;
 
 const Dashboard = () => {
-  // State to control mobile drawer visibility
   const [mobileOpen, setMobileOpen] = useState(false);
   const handleDrawerToggle = () => setMobileOpen((prev) => !prev);
 
   return (
-    <Box sx={{ display: 'flex', height: '100vh' }}>
-      {/* Sidebar/Drawer - Full Height */}
+    <Box sx={{ display: 'flex', height: '100vh', bgcolor: 'background.default' }}>
       <Sidebar open={mobileOpen} onClose={handleDrawerToggle} />
 
-      {/* Main content area including header and page content */}
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          ml: { xs: 0, md: `${drawerWidth}px` },
+          width: { xs: '100%', sm: `calc(100% - ${drawerWidth}px)` },
+          ml: { xs: 0, sm: `${drawerWidth}px` },
           display: 'flex',
           flexDirection: 'column',
-          width: '100%'
         }}
       >
-        {/* Header - spans full width to the right of sidebar */}
         <DashHead handleDrawerToggle={handleDrawerToggle} />
-
-        {/* Dashboard Content */}
+        <Box
+          sx={{
+            mt: { xs: '100px', sm: '100px' },
+            px: { xs: 2, sm: 4 },
+            py: 4,
+            flexGrow: 1,
+          }}
+        >
+          <h2>Welcome to the Dashboard!</h2>
+          <p>This is where your main content will live.</p>
+        </Box>
       </Box>
     </Box>
   );
