@@ -75,26 +75,30 @@ const ActivatePage = () => {
         {status === 'error' && (
           <div style={styles.resultContainer}>
             <p style={{ ...styles.message, color: '#d32f2f' }}>{message}</p>
+
+            {message.toLowerCase().includes('expired') && (
+              <>
+                <button
+                  style={styles.resendButton}
+                  onClick={handleResend}
+                  disabled={resendStatus === 'sending'}
+                >
+                  {resendStatus === 'sending' ? 'Resending...' : 'Resend Activation Link'}
+                </button>
+
+                {resendStatus === 'sent' && (
+                  <p style={{ color: '#4caf50', marginTop: '0.5rem' }}>
+                    ✅ A new activation link has been sent!
+                  </p>
+                )}
+                {resendStatus === 'error' && (
+                  <p style={{ color: '#d32f2f', marginTop: '0.5rem' }}>
+                    ❌ Failed to resend link. Please try again.
+                  </p>
+                )}
+              </>
+            )}
           </div>
-        )}
-
-        <button
-          style={styles.resendButton}
-          onClick={handleResend}
-          disabled={resendStatus === 'sending'}
-        >
-          {resendStatus === 'sending' ? 'Resending...' : 'Resend Activation Link'}
-        </button>
-
-        {resendStatus === 'sent' && (
-          <p style={{ color: '#4caf50', marginTop: '0.5rem' }}>
-            ✅ A new activation link has been sent!
-          </p>
-        )}
-        {resendStatus === 'error' && (
-          <p style={{ color: '#d32f2f', marginTop: '0.5rem' }}>
-            ❌ Failed to resend link. Please try again.
-          </p>
         )}
       </div>
 
@@ -147,7 +151,7 @@ const styles = {
     fontWeight: 500,
   },
   resendButton: {
-    marginTop: '1.5rem',
+    marginTop: '1rem',
     padding: '10px 20px',
     backgroundColor: '#1976d2',
     color: 'white',
