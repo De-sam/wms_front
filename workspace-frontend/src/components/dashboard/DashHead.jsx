@@ -184,7 +184,7 @@ const DashHead = ({ handleDrawerToggle }) => {
           </SearchBar>
         </Box>
 
-        {/* Just the Avatar now */}
+        {/* Avatar only */}
         <Box
           sx={{
             display: 'flex',
@@ -193,7 +193,7 @@ const DashHead = ({ handleDrawerToggle }) => {
             top: '50%',
             right: 0,
             transform: 'translateY(-50%)',
-            pr: 0.5,
+            pr: 1, // added space between avatar and edge
           }}
         >
           <IconButton onClick={handleProfileClick} sx={{ p: 0 }}>
