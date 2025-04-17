@@ -93,15 +93,40 @@ const Sidebar = ({ open, onClose }) => {
           </IconButton>
         </Box>
       )}
-      <Box sx={{ pt: 2 }}>
+
+      {/* Logo + Organization Name */}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          pt: 1,
+        }}
+      >
+        <Avatar
+          variant="rounded"
+          sx={{
+            width: 64,
+            height: 64,
+            mb: 1,
+            bgcolor: theme.palette.mode === 'dark' ? 'grey.800' : 'grey.200',
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: theme.palette.text.primary,
+          }}
+        >
+          LOGO
+        </Avatar>
+
         <Typography
           variant="h6"
           fontWeight="bold"
-          sx={{ color: theme.palette.text.primary }}
+          sx={{ color: theme.palette.text.primary, textAlign: 'center' }}
         >
           {orgName}
         </Typography>
       </Box>
+
       <Box sx={{ mt: 4, pl: 2 }}>
         <Typography variant="body2" color="text.secondary">
           Workspace Management System
@@ -223,7 +248,7 @@ const Sidebar = ({ open, onClose }) => {
           },
         }}
         sx={{
-          zIndex: 1600, // 👈 ensure it's above AppBar & Slide
+          zIndex: 1600,
           display: { xs: 'block', md: 'none' },
           '& .MuiDrawer-paper': {
             width: drawerWidth,
