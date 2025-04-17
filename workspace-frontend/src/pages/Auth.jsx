@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   Box,
@@ -23,30 +23,22 @@ const Auth = () => {
   const [mode, setMode] = useState(isMobile ? 'login' : null);
   const effectiveMode = mode || 'login';
 
-  const [orgInfo, setOrgInfo] = useState(null);
+  // Login state
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginAlert, setLoginAlert] = useState({ open: false, message: '', severity: 'info' });
+
+  // NEW: Snackbar state
   const [showToast, setShowToast] = useState(false);
+
+  // Signup state
   const [signupOrg, setSignupOrg] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [signupLoading, setSignupLoading] = useState(false);
   const [signupAlert, setSignupAlert] = useState({ open: false, message: '', severity: 'info' });
 
-  useEffect(() => {
-    const fetchOrgInfo = async () => {
-      try {
-        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/organizations/${shortcode}/profile/`);
-        const data = await res.json();
-        setOrgInfo(data);
-      } catch (err) {
-        console.error('Failed to load organization info:', err);
-      }
-    };
-    fetchOrgInfo();
-  }, [shortcode]);
-
+  // LOGIN FUNCTION
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setLoginLoading(true);
@@ -135,9 +127,6 @@ const Auth = () => {
                 borderBottomRightRadius: effectiveMode === 'signup' ? theme.shape.borderRadius : 0,
               }}
             >
-              {orgInfo && (
-                <h2 style={{ marginBottom: '1rem' }}>Welcome to {orgInfo.name}</h2>
-              )}
               {effectiveMode === 'login' ? (
                 <LoginForm
                   email={loginEmail}
@@ -179,7 +168,7 @@ const Auth = () => {
                 borderBottomLeftRadius: effectiveMode === 'signup' ? theme.shape.borderRadius : 0,
               }}
             >
-              <InfoPanel isLogin={effectiveMode === 'login'} orgInfo={orgInfo} />
+              <InfoPanel isLogin={effectiveMode === 'login'} />
             </Box>
 
             <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column', height: '100%' }}>
@@ -205,7 +194,7 @@ const Auth = () => {
                   }}
                 >
                   {mode === 'login'
-                    ? `Welcome back to ${orgInfo?.name || 'your workspace'}!`
+                    ? 'Welcome back! Log in to continue.'
                     : 'Join us! Sign up to get started.'}
                 </Box>
               </Box>
