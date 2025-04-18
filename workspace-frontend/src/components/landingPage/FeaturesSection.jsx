@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Container, Typography } from '@mui/material';
 import {
   Dashboard as DashboardIcon,
-  Assignment as TasksIcon,
+  Workspaces as WorkspaceIcon,
   People as TeamIcon,
   Equalizer as AnalyticsIcon
 } from '@mui/icons-material';
@@ -15,9 +15,9 @@ const features = [
     description: 'Get a comprehensive overview of your workspace with customizable widgets and real-time updates.'
   },
   {
-    icon: <TasksIcon fontSize="large" />,
-    title: 'Task Management',
-    description: 'Organize tasks with deadlines, priorities, and assignees. Track progress and get reminders.'
+    icon: <WorkspaceIcon fontSize="large" />,
+    title: 'Workspace Management',
+    description: 'Manage your workspaces with deadlines, priorities, and assignments. Track usage and optimize every space.'
   },
   {
     icon: <TeamIcon fontSize="large" />,

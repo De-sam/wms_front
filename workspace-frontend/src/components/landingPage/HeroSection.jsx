@@ -1,3 +1,4 @@
+// src/components/landingPage/HeroSection.jsx
 import React from 'react';
 import {
   Box,
@@ -78,8 +79,7 @@ const HeroSection = () => {
               lineHeight: 1.6
             }}
           >
-            Boost productivity with our intelligent workspace management system.
-            Organize tasks, collaborate seamlessly, and analyze performance all in one place.
+            Boost productivity with iSpace, our intelligent workspace management system. Organize your workspaces, collaborate seamlessly, and optimize performance all in one place
           </Typography>
 
           <Box
@@ -143,7 +143,7 @@ const HeroSection = () => {
         >
           <motion.img
             src={myPhoto}
-            alt="Workspace Dashboard"
+            alt="iSpace Dashboard"
             style={{
               width: '100%',
               maxWidth: 750,

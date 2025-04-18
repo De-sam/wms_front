@@ -1,9 +1,9 @@
+// src/components/landingPage/Header.jsx
 import React, { useEffect, useState, useContext } from 'react';
 import {
   Box,
   Button,
   IconButton,
-  Typography,
   Drawer,
   useTheme
 } from '@mui/material';
@@ -16,6 +16,8 @@ import {
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import ColorModeContext from '../../context/ColorModeContext';
+import logoLight from '../../assets/logo_light.png';
+import logoDark from '../../assets/logo_dark.png';
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -37,9 +39,8 @@ const Header = () => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
 
-      // Only update activeItem when on the homepage.
       if (location.pathname === '/') {
-        const scrollY = window.scrollY + 120; // offset to compensate for header
+        const scrollY = window.scrollY + 120;
         let current = 'Home';
 
         for (const option of menuOptions) {
@@ -55,15 +56,12 @@ const Header = () => {
         }
         setActiveItem(current);
       } else {
-        // Clear active item when not on the homepage.
         setActiveItem('');
       }
     };
 
     window.addEventListener('scroll', handleScroll);
-    // Also call once on mount.
     handleScroll();
-
     return () => window.removeEventListener('scroll', handleScroll);
   }, [location.pathname]);
 
@@ -81,9 +79,7 @@ const Header = () => {
   };
 
   const toggleDrawer = (open) => (event) => {
-    if (event?.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
-    }
+    if (event?.type === 'keydown' && ['Tab', 'Shift'].includes(event.key)) return;
     setDrawerOpen(open);
   };
 
@@ -100,10 +96,11 @@ const Header = () => {
     if (location.pathname === '/') {
       handleScrollTo(option.id);
     } else {
-      // Navigate back to homepage with hash.
       navigate(`/#${option.id}`);
     }
   };
+
+  const logoSrc = theme.palette.mode === 'dark' ? logoDark : logoLight;
 
   return (
     <>
@@ -132,18 +129,19 @@ const Header = () => {
             width: '100%'
           }}
         >
-          <Typography
-            component={Link}
-            to="/"
-            sx={{
-              fontSize: '1.3rem',
-              fontWeight: 700,
-              color: 'text.primary',
-              textDecoration: 'none'
-            }}
-          >
-            WorkSpace
-          </Typography>
+          {/* Fixed-width logo container */}
+          <Link to="/" style={{ display: 'flex', alignItems: 'center' }}>
+            <Box
+              component="img"
+              src={logoSrc}
+              alt="Workspace Logo"
+              sx={{
+                height: 40,
+                width: 150,         // fixed width
+                objectFit: 'contain' // preserve aspect ratio
+              }}
+            />
+          </Link>
 
           {/* Desktop Menu */}
           <Box

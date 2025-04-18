@@ -18,16 +18,16 @@ const faqs = [
   {
     question: 'Can I invite multiple team members?',
     answer:
-      'Yes, you can invite as many members as your plan allows. Each member can be assigned roles and permissions.'
+      'Yes, On iSpace, you can invite as many members as your plan allows. Each member can be assigned roles and permissions.'
   },
   {
     question: 'Is there a free trial available?',
-    answer: 'Absolutely! You can try the system for free for 14 days — no credit card required.'
+    answer: 'Absolutely! You can try iSpace for free for 14 days — no credit card required.'
   },
   {
     question: 'Can I customize my workspace layout?',
     answer:
-      'Yes, you can fully customize your dashboard, themes, and widgets to suit your team’s workflow.'
+      'Yes, you can fully customize your dashboard, themes, and widgets on iSpace to suit your team’s workflow.'
   }
 ];
 
@@ -44,10 +44,13 @@ const FAQSection = () => {
         marginLeft: '-50vw',
         marginRight: '-50vw',
         py: 8,
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'light' ? '#f5f5f5' : 'background.default'
+        // glassy grey background
+        backgroundColor: 'rgba(128,128,128,0.2)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)'
       }}
     >
+      {/* Centered heading */}
       <Container maxWidth="lg">
         <Box sx={{ textAlign: 'center', mb: 6, position: 'relative' }}>
           <Typography variant="h2" sx={{ fontSize: '2rem', fontWeight: 700, mb: 2 }}>
@@ -65,11 +68,21 @@ const FAQSection = () => {
             }}
           />
         </Box>
+      </Container>
 
+      {/* Slightly narrowed accordions */}
+      <Box
+        sx={{
+          width: '90vw',
+          maxWidth: '1400px',
+          mx: 'auto'
+        }}
+      >
         {faqs.map((faq, index) => (
           <Accordion
             key={index}
             sx={{
+              width: '100%',
               mb: 2,
               boxShadow: 1,
               borderRadius: 2,
@@ -85,7 +98,7 @@ const FAQSection = () => {
             </AccordionDetails>
           </Accordion>
         ))}
-      </Container>
+      </Box>
     </Box>
   );
 };

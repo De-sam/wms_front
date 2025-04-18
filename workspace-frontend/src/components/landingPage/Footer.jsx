@@ -39,7 +39,7 @@ const Footer = () => {
           {/* Brand & Social */}
           <Grid item xs={6} md={2}>
             <Typography variant="h3" sx={{ fontSize: '1.2rem', mb: 3, fontWeight: 600 }}>
-              WorkSpace
+              iSpace
             </Typography>
             <Typography sx={{ color: 'grey.500', lineHeight: 1.6, mb: 3 }}>
               Helping teams collaborate and manage workspaces intelligently.
