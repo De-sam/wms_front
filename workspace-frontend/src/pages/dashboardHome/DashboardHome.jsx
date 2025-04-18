@@ -5,7 +5,7 @@ import { Typography } from '@mui/material';
 const DashboardHome = () => {
   return (
     <Typography variant="h4" fontWeight="bold">
-      ✅ Dashboard Home Loaded Successfully!
+      ☀️ Good morning, Admin!
     </Typography>
   );
 };
