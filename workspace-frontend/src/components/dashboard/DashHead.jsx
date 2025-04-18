@@ -118,22 +118,21 @@ const DashHead = ({ handleDrawerToggle }) => {
   );
 
   return (
-    <AppBar
-      position="fixed"
-      elevation={0}
-      sx={{
-        top: 0,
-        width: { sm: `calc(100% - ${drawerWidth}px)` },
-        ml: { sm: `${drawerWidth}px` },
-        background: theme.palette.mode === 'dark'
-          ? 'rgba(18, 18, 18, 0.6)'
-          : 'rgba(255, 255, 255, 0.6)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        borderBottom: `1px solid ${theme.palette.divider}`,
-        zIndex: theme.zIndex.drawer + 1,
-      }}
-    >
+        <AppBar
+        position="fixed"
+        elevation={0}
+        sx={{
+            top: 0,
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
+            ml: { sm: `${drawerWidth}px` },
+            background: 'rgba(255, 255, 255, 0.05)', // low opacity layer for subtle tone
+            backdropFilter: 'blur(12px)',            // apply blur to content behind
+            WebkitBackdropFilter: 'blur(12px)',
+            borderBottom: 'none',                    // remove the bottom border
+            zIndex: theme.zIndex.drawer + 1,
+        }}
+        >
+
       <Toolbar sx={{ px: 2, height: 100, position: 'relative' }}>
         {/* Mobile: Drawer toggle + search */}
         <Box
