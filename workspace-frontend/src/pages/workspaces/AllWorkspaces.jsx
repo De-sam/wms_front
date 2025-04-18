@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Container, Paper } from '@mui/material';
 
 import WorkspaceHeader from './components/WorkspaceHeader';
-import WorkspaceSearch from './components/WorkspaceSearch';
 import WorkspaceForm from './components/WorkspaceForm';
 import WorkspaceTable from './components/WorkspaceTable';
+import WorkspaceSearch from './components/.WorkspaceSearch';
 
 const initialFormState = {
   id: null,
