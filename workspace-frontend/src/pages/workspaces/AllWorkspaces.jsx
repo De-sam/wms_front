@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Container, Paper } from '@mui/material';
 
 import WorkspaceHeader from './components/WorkspaceHeader';
+import WorkspaceSearch from './components/WorkspaceSearch';
 import WorkspaceForm from './components/WorkspaceForm';
 import WorkspaceTable from './components/WorkspaceTable';
-import WorkspaceSearch from './components/WorkspaceSearch';
 
 const initialFormState = {
   id: null,
@@ -13,7 +13,7 @@ const initialFormState = {
   capacity: '',
   description: '',
   amenities: '',
-  available: true
+  available: true,
 };
 
 const AllWorkspaces = () => {
@@ -93,8 +93,16 @@ const AllWorkspaces = () => {
   );
 
   return (
-    <Container maxWidth="lg" sx={{ pt: 4, pb: 4 }}>
-      <Paper elevation={3} sx={{ p: 4 }}>
+    <Container maxWidth="xl" sx={{ px: { xs: 1, md: 3 }, pt: 2, pb: 3 }}>
+      <Paper
+        elevation={2}
+        sx={{
+          p: { xs: 2, sm: 3 },
+          mt: 2,
+          mb: 2,
+          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+        }}
+      >
         <WorkspaceHeader onAdd={handleAddNew} />
         <WorkspaceSearch value={searchText} onChange={handleSearch} />
         {(editMode || (formData !== initialFormState && currentWorkspace === null)) && (
