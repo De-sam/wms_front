@@ -33,7 +33,7 @@ const Dashboard = () => {
         {/* Page Content */}
         <Box
           sx={{
-            mt: { xs: '40px', sm: '600px' },
+            mt: { xs: '40px', sm: '60px' },
             px: { xs: 2, sm: 4 },
             py: 4,
             flexGrow: 1,
