@@ -3,38 +3,80 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableRow,
   Paper,
-  TableContainer
+  IconButton,
+  Tooltip,
+  Chip
 } from '@mui/material';
-import WorkspaceRow from './WorkspaceRow';
+import { Edit, Delete, Check, Close } from '@mui/icons-material';
 
 const WorkspaceTable = ({ workspaces, onEdit, onDelete, onToggle }) => {
   return (
-    <TableContainer component={Paper} sx={{ mt: 3 }}>
-      <Table>
+    <TableContainer
+      component={Paper}
+      sx={{
+        width: '100%',
+        mt: 4,
+        overflowX: 'auto',
+      }}
+    >
+      <Table sx={{ minWidth: 900 }} size="small" aria-label="workspace table">
         <TableHead>
           <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Type</TableCell>
-            <TableCell>Capacity</TableCell>
-            <TableCell>Description</TableCell>
-            <TableCell>Amenities</TableCell>
-            <TableCell align="center">Status</TableCell>
-            <TableCell align="center">Actions</TableCell>
+            <TableCell><strong>Name</strong></TableCell>
+            <TableCell><strong>Type</strong></TableCell>
+            <TableCell><strong>Capacity</strong></TableCell>
+            <TableCell><strong>Description</strong></TableCell>
+            <TableCell><strong>Amenities</strong></TableCell>
+            <TableCell align="center"><strong>Status</strong></TableCell>
+            <TableCell align="center"><strong>Actions</strong></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {workspaces.map((workspace) => (
-            <WorkspaceRow
-              key={workspace.id}
-              workspace={workspace}
-              onEdit={onEdit}
-              onDelete={onDelete}
-              onToggle={onToggle}
-            />
-          ))}
+          {workspaces.length > 0 ? (
+            workspaces.map((ws) => (
+              <TableRow key={ws.id} hover>
+                <TableCell>{ws.name}</TableCell>
+                <TableCell>{ws.type}</TableCell>
+                <TableCell>{ws.capacity}</TableCell>
+                <TableCell>{ws.description}</TableCell>
+                <TableCell>{ws.amenities}</TableCell>
+                <TableCell align="center">
+                  <Chip
+                    label={ws.available ? 'Available' : 'Unavailable'}
+                    color={ws.available ? 'success' : 'error'}
+                    size="small"
+                  />
+                </TableCell>
+                <TableCell align="center">
+                  <Tooltip title={ws.available ? 'Mark as Unavailable' : 'Mark as Available'}>
+                    <IconButton onClick={() => onToggle(ws.id)} color={ws.available ? 'warning' : 'success'}>
+                      {ws.available ? <Close /> : <Check />}
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Edit">
+                    <IconButton onClick={() => onEdit(ws)} color="primary">
+                      <Edit />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Delete">
+                    <IconButton onClick={() => onDelete(ws.id)} color="error">
+                      <Delete />
+                    </IconButton>
+                  </Tooltip>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={7} align="center">
+                No workspaces found.
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </TableContainer>
