@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -11,7 +11,9 @@ import {
   ListItemText,
   Tooltip,
   Typography,
+  Switch,
 } from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
 import {
   Dashboard as DashboardIcon,
   Workspaces as WorkspacesIcon,
@@ -24,14 +26,39 @@ import {
   ViewList as ViewListIcon,
   Tune as TuneIcon,
   Close as CloseIcon,
-  Brightness4 as Brightness4Icon,
   Brightness7 as Brightness7Icon,
+  Brightness4 as Brightness4Icon,
 } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ColorModeContext from '../../context/ColorModeContext';
 
 const drawerWidth = 300;
+
+// Styled Switch that shows icon / checkedIcon in the thumb
+const IconSwitch = styled(Switch)(({ theme }) => ({
+  width: 62,
+  height: 34,
+  padding: 7,
+  '& .MuiSwitch-switchBase': {
+    padding: 0,
+    margin: 1,
+    transform: 'translateX(0)',
+    '&.Mui-checked': {
+      transform: 'translateX(28px)',
+    },
+  },
+  '& .MuiSwitch-thumb': {
+    boxSizing: 'border-box',
+    width: 32,
+    height: 32,
+    backgroundColor: 'transparent',
+  },
+  '& .MuiSwitch-track': {
+    borderRadius: 20,
+    backgroundColor: theme.palette.mode === 'dark' ? '#4D4D4D' : '#E0E0E0',
+    opacity: 1,
+  },
+}));
 
 const Sidebar = ({ open, onClose }) => {
   const theme = useTheme();
@@ -41,17 +68,24 @@ const Sidebar = ({ open, onClose }) => {
 
   const orgName = localStorage.getItem('org_name') || 'Workspace';
   const shortcode = localStorage.getItem('shortcode') || '';
-
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
 
-  const handleNavigate = (path) => {
+  // decide icon colors for maximum contrast
+  const sunColor =
+    theme.palette.mode === 'light'
+      ? theme.palette.warning.dark
+      : theme.palette.warning.light;
+  const moonColor =
+    theme.palette.mode === 'dark'
+      ? theme.palette.grey[100]
+      : theme.palette.primary.dark;
+
+  const handleNavigate = (path) =>
     navigate(`/${shortcode}/dashboard/${path}`);
-  };
 
-  // Get active path segment (after /dashboard/)
-  const currentPath = location.pathname.split(`/${shortcode}/dashboard/`)[1] || '';
-
-  const isActive = (targetPath) => currentPath === targetPath;
+  const currentPath =
+    location.pathname.split(`/${shortcode}/dashboard/`)[1] || '';
+  const isActive = (target) => currentPath === target;
 
   const glassStyles = {
     background:
@@ -69,16 +103,20 @@ const Sidebar = ({ open, onClose }) => {
     color: theme.palette.text.primary,
   };
 
-  const renderProfileSection = () => (
+  const renderProfile = () => (
     <Box sx={{ display: 'flex', alignItems: 'center', ml: 2, mt: 2 }}>
       <Avatar sx={{ width: 50, height: 50, mr: 2 }}>E</Avatar>
-      <Typography variant="h6" fontWeight="bold" sx={{ color: theme.palette.text.primary }}>
+      <Typography
+        variant="h6"
+        fontWeight="bold"
+        sx={{ color: theme.palette.text.primary }}
+      >
         Employee
       </Typography>
     </Box>
   );
 
-  const renderDrawerContent = (isMobile = false) => (
+  const renderContent = (isMobile = false) => (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', p: 2 }}>
       {isMobile && (
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -88,121 +126,177 @@ const Sidebar = ({ open, onClose }) => {
         </Box>
       )}
 
-      {/* Logo + Org Name */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', pt: 1 }}>
-        <Avatar variant="rounded" sx={{
-          width: 64,
-          height: 64,
-          mb: 1,
-          bgcolor: theme.palette.mode === 'dark' ? 'grey.800' : 'grey.200',
-          fontSize: 20,
-          fontWeight: 'bold',
-          color: theme.palette.text.primary,
-        }}>
+      {/* Logo + Org */}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          pt: 1,
+        }}
+      >
+        <Avatar
+          variant="rounded"
+          sx={{
+            width: 64,
+            height: 64,
+            mb: 1,
+            bgcolor: theme.palette.mode === 'dark' ? 'grey.800' : 'grey.200',
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: theme.palette.text.primary,
+          }}
+        >
           LOGO
         </Avatar>
-        <Typography variant="h6" fontWeight="bold" sx={{ textAlign: 'center', color: theme.palette.text.primary }}>
+        <Typography
+          variant="h6"
+          fontWeight="bold"
+          sx={{ color: theme.palette.text.primary }}
+        >
           {orgName}
         </Typography>
       </Box>
 
-      <Box sx={{ mt: 4, pl: 2 }}>
-        <Typography variant="body2" color="text.secondary">Workspace Management System</Typography>
-      </Box>
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        sx={{ mt: 4, pl: 2 }}
+      >
+        Workspace Management System
+      </Typography>
 
-      <Box sx={{ mt: 2 }}>
-        <List>
-          {/* Dashboard */}
+      <List sx={{ mt: 2 }}>
+        <ListItem
+          button
+          onClick={() => navigate(`/${shortcode}/dashboard`)}
+          sx={{
+            px: 2,
+            py: 0.5,
+            mb: 1,
+            borderRadius: 1,
+            backgroundColor:
+              location.pathname === `/${shortcode}/dashboard`
+                ? 'rgba(0,150,255,0.2)'
+                : 'transparent',
+            '&:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
+          }}
+        >
+          <ListItemIcon sx={{ minWidth: 'auto', mr: 1, color: 'inherit' }}>
+            <DashboardIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary="Dashboard"
+            primaryTypographyProps={{ color: 'textPrimary' }}
+          />
+        </ListItem>
+
+        <ListItem
+          button
+          onClick={() => setWorkspaceOpen(!workspaceOpen)}
+          sx={{
+            px: 2,
+            py: 0.5,
+            mb: 1,
+            borderRadius: 1,
+            backgroundColor: workspaceOpen
+              ? 'rgba(0,150,255,0.1)'
+              : 'transparent',
+            '&:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
+          }}
+        >
+          <ListItemIcon sx={{ minWidth: 'auto', mr: 1, color: 'inherit' }}>
+            <WorkspacesIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary="Workspaces"
+            primaryTypographyProps={{ color: 'textPrimary' }}
+          />
+          {workspaceOpen ? <ExpandLess /> : <ExpandMore />}
+        </ListItem>
+
+        <Collapse in={workspaceOpen} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding sx={{ pl: 4 }}>
+            {[
+              { label: 'All Workspaces', icon: <ViewListIcon />, path: 'workspaces' },
+              { label: 'Add New Workspace', icon: <AddIcon />, path: 'workspaces/add' },
+              { label: 'Availability Settings', icon: <TuneIcon />, path: 'workspaces/availability' },
+            ].map((item) => (
+              <ListItem
+                key={item.path}
+                button
+                onClick={() => handleNavigate(item.path)}
+                selected={isActive(item.path)}
+              >
+                <ListItemIcon sx={{ color: 'inherit' }}>{item.icon}</ListItemIcon>
+                <ListItemText
+                  primary={item.label}
+                  primaryTypographyProps={{ color: 'textPrimary' }}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </Collapse>
+
+        {[
+          { label: 'Bookings', icon: <BookOnlineIcon />, path: 'bookings' },
+          { label: 'Users', icon: <PeopleIcon />, path: 'users' },
+          { label: 'Reports', icon: <BarChartIcon />, path: 'reports/revenue' },
+        ].map((item) => (
           <ListItem
+            key={item.path}
             button
-            onClick={() => navigate(`/${shortcode}/dashboard`)}
-            sx={{
-              px: 2, py: 0.5, mb: 1, borderRadius: 1,
-              backgroundColor: location.pathname === `/${shortcode}/dashboard` ? 'rgba(0,150,255,0.2)' : 'transparent',
-              '&:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
-            }}
+            onClick={() => handleNavigate(item.path)}
+            selected={isActive(item.path)}
           >
-            <ListItemIcon sx={{ minWidth: 'auto', mr: 1 }}><DashboardIcon /></ListItemIcon>
-            <ListItemText primary="Dashboard" />
+            <ListItemIcon sx={{ color: 'inherit' }}>{item.icon}</ListItemIcon>
+            <ListItemText
+              primary={item.label}
+              primaryTypographyProps={{ color: 'textPrimary' }}
+            />
           </ListItem>
+        ))}
+      </List>
 
-          {/* Workspaces */}
-          <ListItem
-            button
-            onClick={() => setWorkspaceOpen(!workspaceOpen)}
-            sx={{
-              px: 2, py: 0.5, mb: 1, borderRadius: 1,
-              backgroundColor: workspaceOpen ? 'rgba(0,150,255,0.1)' : 'transparent',
-              '&:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
-            }}
-          >
-            <ListItemIcon sx={{ minWidth: 'auto', mr: 1 }}><WorkspacesIcon /></ListItemIcon>
-            <ListItemText primary="Workspaces" />
-            {workspaceOpen ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
-
-          <Collapse in={workspaceOpen} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding sx={{ pl: 4 }}>
-              <ListItem button onClick={() => handleNavigate('workspaces')} selected={isActive('workspaces')}>
-                <ListItemIcon><ViewListIcon /></ListItemIcon>
-                <ListItemText primary="All Workspaces" />
-              </ListItem>
-              <ListItem button onClick={() => handleNavigate('workspaces/add')} selected={isActive('workspaces/add')}>
-                <ListItemIcon><AddIcon /></ListItemIcon>
-                <ListItemText primary="Add New Workspace" />
-              </ListItem>
-              <ListItem button onClick={() => handleNavigate('workspaces/availability')} selected={isActive('workspaces/availability')}>
-                <ListItemIcon><TuneIcon /></ListItemIcon>
-                <ListItemText primary="Availability Settings" />
-              </ListItem>
-            </List>
-          </Collapse>
-
-          {/* Bookings */}
-          <ListItem button onClick={() => handleNavigate('bookings')} selected={isActive('bookings')}>
-            <ListItemIcon><BookOnlineIcon /></ListItemIcon>
-            <ListItemText primary="Bookings" />
-          </ListItem>
-
-          {/* Users */}
-          <ListItem button onClick={() => handleNavigate('users')} selected={isActive('users')}>
-            <ListItemIcon><PeopleIcon /></ListItemIcon>
-            <ListItemText primary="Users" />
-          </ListItem>
-
-          {/* Reports */}
-          <ListItem button onClick={() => handleNavigate('reports/revenue')} selected={isActive('reports/revenue')}>
-            <ListItemIcon><BarChartIcon /></ListItemIcon>
-            <ListItemText primary="Reports" />
-          </ListItem>
-        </List>
-      </Box>
-
-      {/* Dark Mode */}
+      {/* Dark / Light toggle */}
       <Box sx={{ mt: 'auto' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', ml: 1 }}>
-          <Tooltip title={theme.palette.mode === 'dark' ? 'Turn on the light' : 'Turn off the light'}>
-            <IconButton onClick={colorMode.toggleColorMode} sx={{ color: theme.palette.text.primary }}>
-              {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-            </IconButton>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Tooltip
+            title={
+              theme.palette.mode === 'dark' ? 'Switch to light' : 'Switch to dark'
+            }
+          >
+            <IconSwitch
+              checked={theme.palette.mode === 'dark'}
+              onChange={colorMode.toggleColorMode}
+              icon={<Brightness7Icon sx={{ fontSize: 28, color: sunColor }} />}
+              checkedIcon={<Brightness4Icon sx={{ fontSize: 28, color: moonColor }} />}
+            />
           </Tooltip>
         </Box>
         <Box
           sx={{
-            borderTop: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
-            mt: 2, pt: 2,
+            borderTop: `1px solid ${
+              theme.palette.mode === 'dark'
+                ? 'rgba(255,255,255,0.1)'
+                : 'rgba(0,0,0,0.1)'
+            }`,
+            mt: 2,
+            pt: 2,
           }}
         />
-        {renderProfileSection()}
+        {renderProfile()}
       </Box>
     </Box>
   );
 
   return (
     <>
+      {/* Permanent Drawer (desktop) */}
       <Drawer
         variant="permanent"
         sx={{
+          zIndex: 9999,         // ← highest z-index
           display: { xs: 'none', md: 'block' },
           '& .MuiDrawer-paper': {
             width: drawerWidth,
@@ -212,25 +306,27 @@ const Sidebar = ({ open, onClose }) => {
         }}
         open
       >
-        {renderDrawerContent()}
+        {renderContent()}
       </Drawer>
 
+      {/* Temporary Drawer (mobile) */}
       <Drawer
         variant="temporary"
         open={open}
         onClose={onClose}
         ModalProps={{ keepMounted: true }}
         sx={{
-          zIndex: 1600,
+          zIndex: 9999,         // ← highest z-index
           display: { xs: 'block', md: 'none' },
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
             background: theme.palette.background.paper,
+            color: theme.palette.text.primary,
           },
         }}
       >
-        {renderDrawerContent(true)}
+        {renderContent(true)}
       </Drawer>
     </>
   );
