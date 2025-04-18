@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Box } from '@mui/material';
+import { Outlet } from 'react-router-dom'; // ✅ for nested routing
 import Sidebar from '../components/dashboard/Drawer';
 import DashHead from '../components/dashboard/DashHead';
 
@@ -7,12 +8,15 @@ const drawerWidth = 300;
 
 const Dashboard = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+
   const handleDrawerToggle = () => setMobileOpen((prev) => !prev);
 
   return (
     <Box sx={{ display: 'flex', height: '100vh', bgcolor: 'background.default' }}>
+      {/* Sidebar */}
       <Sidebar open={mobileOpen} onClose={handleDrawerToggle} />
 
+      {/* Main Area */}
       <Box
         component="main"
         sx={{
@@ -23,17 +27,20 @@ const Dashboard = () => {
           flexDirection: 'column',
         }}
       >
+        {/* Topbar */}
         <DashHead handleDrawerToggle={handleDrawerToggle} />
+
+        {/* Page Content */}
         <Box
           sx={{
             mt: { xs: '100px', sm: '100px' },
             px: { xs: 2, sm: 4 },
             py: 4,
             flexGrow: 1,
+            overflowY: 'auto',
           }}
         >
-          <h2>Welcome to the Dashboard!</h2>
-          <p>This is where your main content will live.</p>
+          <Outlet /> {/* ✅ Nested route components will render here */}
         </Box>
       </Box>
     </Box>
