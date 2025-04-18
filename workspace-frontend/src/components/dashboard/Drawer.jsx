@@ -21,10 +21,8 @@ import {
   ExpandLess,
   ExpandMore,
   Add as AddIcon,
-  Settings as SettingsIcon,
-  Widgets as WidgetsIcon,
-  Tune as TuneIcon,
   ViewList as ViewListIcon,
+  Tune as TuneIcon,
   Close as CloseIcon,
   Brightness4 as Brightness4Icon,
   Brightness7 as Brightness7Icon,
@@ -90,7 +88,15 @@ const Sidebar = ({ open, onClose }) => {
         </Box>
       )}
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', pt: 1 }}>
+      {/* Logo + Org Name */}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          pt: 1,
+        }}
+      >
         <Avatar
           variant="rounded"
           sx={{
@@ -123,6 +129,7 @@ const Sidebar = ({ open, onClose }) => {
 
       <Box sx={{ mt: 2 }}>
         <List>
+          {/* Dashboard */}
           <ListItem
             button
             onClick={() => handleListItemClick(0)}
@@ -143,6 +150,7 @@ const Sidebar = ({ open, onClose }) => {
             <ListItemText primary="Dashboard" />
           </ListItem>
 
+          {/* Workspaces (Expandable) */}
           <ListItem
             button
             onClick={() => setWorkspaceOpen(!workspaceOpen)}
@@ -178,13 +186,10 @@ const Sidebar = ({ open, onClose }) => {
                 <ListItemIcon sx={{ minWidth: 'auto', mr: 1 }}><TuneIcon /></ListItemIcon>
                 <ListItemText primary="Availability Settings" />
               </ListItem>
-              <ListItem button sx={{ py: 0.5 }}>
-                <ListItemIcon sx={{ minWidth: 'auto', mr: 1 }}><WidgetsIcon /></ListItemIcon>
-                <ListItemText primary="Amenities Management" />
-              </ListItem>
             </List>
           </Collapse>
 
+          {/* Other Main Items */}
           <ListItem button onClick={() => handleListItemClick(1)} sx={{ px: 2, py: 0.5, mb: 1 }}>
             <ListItemIcon sx={{ minWidth: 'auto', mr: 1 }}><BookOnlineIcon /></ListItemIcon>
             <ListItemText primary="Bookings" />
@@ -203,6 +208,7 @@ const Sidebar = ({ open, onClose }) => {
       </Box>
 
       <Box sx={{ mt: 'auto' }}>
+        {/* Dark mode toggle */}
         <Box sx={{ display: 'flex', alignItems: 'center', ml: 1 }}>
           <Tooltip
             title={
