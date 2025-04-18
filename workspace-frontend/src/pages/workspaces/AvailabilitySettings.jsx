@@ -2,12 +2,10 @@ import React, { useState } from 'react';
 import {
   Box,
   Container,
-  Grid,
-  Card,
-  CardContent,
-  Typography,
   Divider,
   Button,
+  Typography,
+  Paper,
 } from '@mui/material';
 
 import AvailabilityHeader from './components/AvailabilityHeader';
@@ -29,7 +27,7 @@ const AvailabilitySettings = () => {
       return;
     }
 
-    console.log('🔒 Saving settings:', {
+    console.log('🔒 Settings saved:', {
       isEnabled,
       hours,
       restrictedDays,
@@ -40,101 +38,55 @@ const AvailabilitySettings = () => {
   };
 
   return (
-    <Container maxWidth="xl" sx={{ px: { xs: 1, md: 2 }, pt: 1, pb: 4 }}>
-      <AvailabilityHeader />
+    <Container
+      maxWidth="xl"
+      disableGutters
+      sx={{ px: { xs: 1, sm: 2, md: 3 }, pt: 1, pb: 4 }}
+    >
+      <Paper
+        elevation={2}
+        sx={{
+          p: { xs: 2, sm: 3, md: 4 },
+          width: '100%',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+        }}
+      >
+        <AvailabilityHeader />
 
-      <Grid container spacing={3} mt={2}>
-        {/* Booking Toggle */}
-        <Grid item xs={12} md={6}>
-          <Card
-            variant="outlined"
-            sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-          >
-            <CardContent sx={{ flex: 1 }}>
-              <Typography variant="h6" fontWeight="bold" gutterBottom>
-                Booking Availability
-              </Typography>
-              <Divider sx={{ mb: 2 }} />
-              <AvailabilityToggle isEnabled={isEnabled} onToggle={setIsEnabled} />
-            </CardContent>
-          </Card>
-        </Grid>
+        <Divider sx={{ my: 3 }} />
 
-        {/* Booking Hours */}
-        <Grid item xs={12} md={6}>
-          <Card
-            variant="outlined"
-            sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-          >
-            <CardContent sx={{ flex: 1 }}>
-              <Typography variant="h6" fontWeight="bold" gutterBottom>
-                Booking Hours
-              </Typography>
-              <Divider sx={{ mb: 2 }} />
-              <AvailabilityHoursForm hours={hours} setHours={setHours} />
-            </CardContent>
-          </Card>
-        </Grid>
+        <AvailabilityToggle isEnabled={isEnabled} onToggle={setIsEnabled} />
 
-        {/* Restricted Days */}
-        <Grid item xs={12} md={6}>
-          <Card
-            variant="outlined"
-            sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-          >
-            <CardContent sx={{ flex: 1 }}>
-              <Typography variant="h6" fontWeight="bold" gutterBottom>
-                Restricted Days
-              </Typography>
-              <Divider sx={{ mb: 2 }} />
-              <RestrictedDaysSelector
-                restrictedDays={restrictedDays}
-                setRestrictedDays={setRestrictedDays}
-              />
-            </CardContent>
-          </Card>
-        </Grid>
+        <Divider sx={{ my: 3 }} />
 
-        {/* Max Duration */}
-        <Grid item xs={12} md={6}>
-          <Card
-            variant="outlined"
-            sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-          >
-            <CardContent sx={{ flex: 1 }}>
-              <Typography variant="h6" fontWeight="bold" gutterBottom>
-                Max Booking Duration
-              </Typography>
-              <Divider sx={{ mb: 2 }} />
-              <TimeLimitSetting maxHours={maxHours} setMaxHours={setMaxHours} />
-            </CardContent>
-          </Card>
-        </Grid>
+        <AvailabilityHoursForm hours={hours} setHours={setHours} />
 
-        {/* Summary & Save */}
-        <Grid item xs={12}>
-          <Card variant="outlined">
-            <CardContent>
-              <Typography variant="h6" fontWeight="bold" gutterBottom>
-                Summary
-              </Typography>
-              <Divider sx={{ mb: 2 }} />
-              <AvailabilitySummary
-                isEnabled={isEnabled}
-                hours={hours}
-                restrictedDays={restrictedDays}
-                maxHours={maxHours}
-              />
+        <Divider sx={{ my: 3 }} />
 
-              <Box mt={4} textAlign="right">
-                <Button variant="contained" size="large" onClick={handleSave}>
-                  Save Settings
-                </Button>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+        <RestrictedDaysSelector
+          restrictedDays={restrictedDays}
+          setRestrictedDays={setRestrictedDays}
+        />
+
+        <Divider sx={{ my: 3 }} />
+
+        <TimeLimitSetting maxHours={maxHours} setMaxHours={setMaxHours} />
+
+        <Divider sx={{ my: 3 }} />
+
+        <AvailabilitySummary
+          isEnabled={isEnabled}
+          hours={hours}
+          restrictedDays={restrictedDays}
+          maxHours={maxHours}
+        />
+
+        <Box mt={4} textAlign="right">
+          <Button variant="contained" size="large" onClick={handleSave}>
+            Save Settings
+          </Button>
+        </Box>
+      </Paper>
     </Container>
   );
 };
