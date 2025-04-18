@@ -115,6 +115,6 @@ const AllWorkspaces = () => {
       </Paper>
     </Container>
   );
+};
 
-  
 export default AllWorkspaces;
