@@ -49,18 +49,24 @@ const DashboardHome = ({
       disableGutters
       sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}
     >
-      {/* Hey Text with Emoji */}
+      {/* Hey Text */}
       <Box px={{ xs: 2, md: 4 }} py={2}>
-        <Box display="flex" alignItems="center">
-          <Typography variant="h5" fontWeight="bold">
-            Hey 👋
-          </Typography>
-        </Box>
+        <Typography
+          variant="h5"
+          fontWeight="bold"
+          sx={{ fontSize: { xs: '1.2rem', md: '1.5rem' } }}
+        >
+          Hey 👋
+        </Typography>
       </Box>
 
       {/* Greeting */}
       <Box px={{ xs: 2, md: 4 }} py={1}>
-        <Typography variant="h4" fontWeight="bold">
+        <Typography
+          variant="h4"
+          fontWeight="bold"
+          sx={{ fontSize: { xs: '1.4rem', md: '2rem' } }}
+        >
           {`${emoji} ${greeting}, Admin!`}
         </Typography>
       </Box>
@@ -71,75 +77,72 @@ const DashboardHome = ({
         display="flex"
         flexDirection="column"
         alignItems="flex-start"
-        pt={{ xs: 1, sm: 2, md: 2 }}
+        pt={{ xs: 1, sm: 2 }}
         px={{ xs: 2, md: 4 }}
       >
         {/* Section Title */}
         <Box width="100%" pb={1}>
-          <Typography variant="subtitle1" fontWeight="bold" sx={{ pl: { xs: 0, md: 0 }, fontSize: '1.2rem' }}>
+          <Typography
+            variant="subtitle1"
+            fontWeight="bold"
+            sx={{ fontSize: { xs: '1rem', md: '1.2rem' } }}
+          >
             Workspace statistics
           </Typography>
         </Box>
 
-        <Grid container spacing={3} justifyContent="flex-start" sx={{ width: '100%' }}>
+        <Grid container spacing={2} sx={{ width: '100%' }}>
           {summaryItems.map(({ label, value, Icon, color }, idx) => (
-            <Grid item key={idx}>
+            <Grid item xs={6} sm={6} md={3} key={idx}>
               <Card
                 sx={{
-                  width: { xs: '100%', sm: '320px' },
-                  height: '120px',
-                  m: { xs: 0, sm: 1 },
+                  width:  { xs: '150px', md: '320px' },
+                  height: { xs: '150px', md: '120px' },
+                  m:      { xs: 'auto', sm: 1 },
                   borderRadius: '16px',
-                  backgroundColor: 'transparent',
                   border: `1px solid ${color}`,
                   boxShadow: 'none',
                   display: 'flex',
                   flexDirection: 'column'
                 }}
               >
-                <CardContent sx={{ flex: 1, p: 2, display: 'flex', flexDirection: 'column' }}>
-                  {/* Side-by-side icon & number */}
+                <CardContent
+                  sx={{
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    p: { xs: 1.5, sm: 2 }
+                  }}
+                >
+                  {/* Centered icon & number with space */}
                   <Box
                     sx={{
-                      flex: 1,
                       display: 'flex',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center'
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      gap: 3, // Adjust spacing here
+                      mb: 1
                     }}
                   >
-                    <Box
-                      sx={{
-                        flex: 1,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}
+                    <Icon sx={{ color, fontSize: { xs: 30, sm: 40 } }} />
+                    <Typography
+                      variant="h3"
+                      fontWeight="bold"
+                      sx={{ fontSize: { xs: '1.5rem', md: '2rem' } }}
                     >
-                      <Icon sx={{ color, fontSize: 40 }} />
-                    </Box>
-                    <Box
-                      sx={{
-                        flex: 1,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}
-                    >
-                      <Typography variant="h3" fontWeight="bold" sx={{ fontSize: '2rem' }}>
-                        {value}
-                      </Typography>
-                    </Box>
+                      {value}
+                    </Typography>
                   </Box>
-                  {/* Label at bottom */}
+                  {/* Label */}
                   <Typography
                     variant="subtitle1"
                     sx={{
                       textAlign: 'center',
-                      pt: 1,
-                      fontSize: 20,
+                      fontSize: { xs: '0.9rem', sm: '1rem', md: '1.2rem' },
                       fontWeight: 500,
-                      color: theme.palette.mode === 'dark' ? '#fff' : '#000'
+                      color: theme.palette.text.primary
                     }}
                   >
                     {label}
