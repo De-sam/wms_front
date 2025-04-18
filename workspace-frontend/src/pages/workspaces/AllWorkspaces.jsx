@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { Container, Paper } from '@mui/material';
+import {
+  Container,
+  Paper,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 
 import WorkspaceHeader from './components/WorkspaceHeader';
 import WorkspaceSearch from './components/WorkspaceSearch';
@@ -27,17 +35,23 @@ const AllWorkspaces = () => {
   const [currentWorkspace, setCurrentWorkspace] = useState(null);
   const [formData, setFormData] = useState(initialFormState);
   const [searchText, setSearchText] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleAddNew = () => {
     setEditMode(false);
     setCurrentWorkspace(null);
     setFormData(initialFormState);
+    setIsModalOpen(true);
   };
 
   const handleEdit = (workspace) => {
     setEditMode(true);
     setCurrentWorkspace(workspace);
     setFormData(workspace);
+    setIsModalOpen(true);
   };
 
   const handleDelete = (id) => {
@@ -73,12 +87,14 @@ const AllWorkspaces = () => {
     setFormData(initialFormState);
     setEditMode(false);
     setCurrentWorkspace(null);
+    setIsModalOpen(false); // ✅ Close modal after submit
   };
 
   const handleCancel = () => {
     setFormData(initialFormState);
     setEditMode(false);
     setCurrentWorkspace(null);
+    setIsModalOpen(false); // ✅ Close modal on cancel
   };
 
   const handleSearch = (e) => {
@@ -93,7 +109,7 @@ const AllWorkspaces = () => {
   );
 
   return (
-    <Container maxWidth="xl" sx={{ px: { xs: 0.5, md: 3 }, pt: 0.5, pb: 3 }}>
+    <Container maxWidth="xl" sx={{ px: { xs: 1, md: 3 }, pt: 0.5, pb: 3 }}>
       <Paper
         elevation={2}
         sx={{
@@ -105,15 +121,6 @@ const AllWorkspaces = () => {
       >
         <WorkspaceHeader onAdd={handleAddNew} />
         <WorkspaceSearch value={searchText} onChange={handleSearch} />
-        {(editMode || (formData !== initialFormState && currentWorkspace === null)) && (
-          <WorkspaceForm
-            formData={formData}
-            editMode={editMode}
-            onChange={handleFormChange}
-            onSubmit={handleSubmit}
-            onCancel={handleCancel}
-          />
-        )}
         <WorkspaceTable
           workspaces={filteredWorkspaces}
           onEdit={handleEdit}
@@ -121,6 +128,28 @@ const AllWorkspaces = () => {
           onToggle={handleToggleAvailability}
         />
       </Paper>
+
+      {/* 🧩 Modal for Add/Edit Form */}
+      <Dialog
+        open={isModalOpen}
+        onClose={handleCancel}
+        fullWidth
+        fullScreen={fullScreen}
+        maxWidth="md"
+      >
+        <DialogTitle sx={{ fontWeight: 'bold', px: 3, pt: 3 }}>
+          {editMode ? 'Edit Workspace' : 'Add New Workspace'}
+        </DialogTitle>
+        <DialogContent sx={{ p: { xs: 2, sm: 3 } }}>
+          <WorkspaceForm
+            formData={formData}
+            editMode={editMode}
+            onChange={handleFormChange}
+            onSubmit={handleSubmit}
+            onCancel={handleCancel}
+          />
+        </DialogContent>
+      </Dialog>
     </Container>
   );
 };
