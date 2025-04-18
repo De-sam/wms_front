@@ -58,22 +58,10 @@ const DashHead = ({ handleDrawerToggle }) => {
 
   const handleLogout = () => {
     const shortcode = localStorage.getItem('shortcode');
-    console.log('📦 LOGOUT triggered...');
-    console.log('➡️ shortcode from localStorage:', shortcode);
-
-    if (!shortcode) {
-      console.warn('⚠️ Shortcode not found! Redirecting to landing page instead.');
-      navigate('/');
-      return;
-    }
-
     localStorage.clear();
     sessionStorage.clear();
     handleProfileClose();
-
-    const redirectPath = `/${shortcode}/login`;
-    console.log('🔁 Redirecting to:', redirectPath);
-    navigate(redirectPath);
+    navigate(shortcode ? `/${shortcode}/login` : '/');
   };
 
   const renderProfileMenu = (
@@ -187,12 +175,12 @@ const DashHead = ({ handleDrawerToggle }) => {
           </Box>
         </Slide>
 
-        {/* Desktop Search (Aligned Left) */}
+        {/* Desktop Search aligned left with padding from drawer */}
         <Box
           sx={{
             display: { xs: 'none', sm: 'flex' },
             alignItems: 'center',
-            ml: 2,
+            ml: 4,
             flexGrow: 1,
             maxWidth: 500,
           }}
@@ -207,7 +195,7 @@ const DashHead = ({ handleDrawerToggle }) => {
           </SearchBar>
         </Box>
 
-        {/* Desktop: Email + Notification + Avatar */}
+        {/* Desktop: Avatar and icons with right padding */}
         <Box
           sx={{
             display: 'flex',
@@ -216,7 +204,7 @@ const DashHead = ({ handleDrawerToggle }) => {
             top: '50%',
             right: 0,
             transform: 'translateY(-50%)',
-            pr: 1,
+            pr: 2,
           }}
         >
           {!isMobile && (
@@ -229,7 +217,7 @@ const DashHead = ({ handleDrawerToggle }) => {
               </IconButton>
             </>
           )}
-          <IconButton onClick={handleProfileClick} sx={{ p: 0 }}>
+          <IconButton onClick={handleProfileClick} sx={{ p: 0, ml: 1 }}>
             <Avatar sx={{ bgcolor: amber[500], color: '#000' }}>XX</Avatar>
           </IconButton>
         </Box>
