@@ -34,19 +34,22 @@ import ColorModeContext from '../../context/ColorModeContext';
 
 const drawerWidth = 300;
 
-// Larger Styled Switch that shows icon / checkedIcon in the thumb
+// Enhanced Styled Switch for centered thumb icons
 const IconSwitch = styled(Switch)(({ theme }) => ({
   width: 80,
   height: 44,
   padding: 9,
+
+  // position & slide logic
   '& .MuiSwitch-switchBase': {
     padding: 0,
     margin: 2,
+    zIndex: 1,
     transform: 'translateX(0)',
-    '&.Mui-checked': {
-      transform: 'translateX(36px)',
-    },
+    '&.Mui-checked': { transform: 'translateX(36px)' },
   },
+
+  // thumb container
   '& .MuiSwitch-thumb': {
     boxSizing: 'border-box',
     width: 40,
@@ -55,11 +58,42 @@ const IconSwitch = styled(Switch)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    zIndex: 1,
   },
+
+  // default (sun) icon color
+  '& .MuiSwitch-thumb svg': {
+    fontSize: 32,
+    color:
+      theme.palette.mode === 'light'
+        ? theme.palette.warning.dark     // sun in light mode
+        : theme.palette.grey[100],       // sun in dark mode (faded)
+    transition: theme.transitions.create('color'),
+  },
+
+  // checked (moon) icon color
+  '& .MuiSwitch-switchBase.Mui-checked .MuiSwitch-thumb svg': {
+    color:
+      theme.palette.mode === 'dark'
+        ? theme.palette.warning.light    // moon in dark mode
+        : theme.palette.primary.dark,    // moon in light mode (faded)
+  },
+
+  // thin, centered track
   '& .MuiSwitch-track': {
-    borderRadius: 22,
-    backgroundColor: theme.palette.mode === 'dark' ? '#4D4D4D' : '#E0E0E0',
+    position: 'absolute',
+    top: '50%',
+    left: 11,      // 9px padding + 2px margin
+    width: 36,     // exactly your slide distance
+    height: 12,
+    transform: 'translateY(-50%)',
+    borderRadius: 6,
+    backgroundColor:
+      theme.palette.mode === 'dark'
+        ? '#4D4D4D'
+        : '#E0E0E0',
     opacity: 1,
+    zIndex: 0,
   },
 }));
 
@@ -263,11 +297,14 @@ const Sidebar = ({ open, onClose }) => {
 
       {/* Dark / Light toggle */}
       <Box sx={{ mt: 'auto', mb: 2 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Tooltip
             title={
               theme.palette.mode === 'dark' ? 'Switch to light' : 'Switch to dark'
             }
+            PopperProps={{
+              sx: { zIndex: 2300 } // ensure tooltip hovers above sidebar
+            }}
           >
             <IconSwitch
               checked={theme.palette.mode === 'dark'}
@@ -300,10 +337,12 @@ const Sidebar = ({ open, onClose }) => {
         variant="permanent"
         sx={{
           display: { xs: 'none', md: 'block' },
+          zIndex: 2200,
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
             ...glassStyles,
+            zIndex: 2200,
           },
         }}
         open
@@ -319,11 +358,13 @@ const Sidebar = ({ open, onClose }) => {
         ModalProps={{ keepMounted: true }}
         sx={{
           display: { xs: 'block', md: 'none' },
+          zIndex: 2200,
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
             background: theme.palette.background.paper,
             color: theme.palette.text.primary,
+            zIndex: 2200,
           },
         }}
       >

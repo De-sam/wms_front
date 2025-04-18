@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Box } from '@mui/material';
-import { Outlet } from 'react-router-dom'; // ✅ for nested routing
+import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/dashboard/Drawer';
 import DashHead from '../components/dashboard/DashHead';
 
 const drawerWidth = 300;
+const topbarHeight = 100; // 👈 height of DashHead (Toolbar)
 
 const Dashboard = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -33,14 +34,14 @@ const Dashboard = () => {
         {/* Page Content */}
         <Box
           sx={{
-            mt: { xs: '30px', sm: '50px' },
+            pt: '80px', // Push content down by AppBar height
             px: { xs: 2, sm: 4 },
-            py: 4,
+            pb: 4,
             flexGrow: 1,
             overflowY: 'auto',
           }}
         >
-          <Outlet /> {/* ✅ Nested route components will render here */}
+          <Outlet />
         </Box>
       </Box>
     </Box>
