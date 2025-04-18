@@ -1,3 +1,4 @@
+// src/components/dashboard/DashHead.jsx
 import React, { useState } from 'react';
 import {
   AppBar,
@@ -89,7 +90,6 @@ const DashHead = ({ handleDrawerToggle }) => {
         },
       }}
     >
-      {/* Only show Messages and Notifications in mobile dropdown */}
       {isMobile && (
         <>
           <MenuItem onClick={handleProfileClose}>
@@ -98,34 +98,28 @@ const DashHead = ({ handleDrawerToggle }) => {
             </ListItemIcon>
             Messages
           </MenuItem>
-
           <MenuItem onClick={handleProfileClose}>
             <ListItemIcon>
               <NotificationsNoneIcon fontSize="small" />
             </ListItemIcon>
             Notifications
           </MenuItem>
-
           <Divider sx={{ my: 0.5 }} />
         </>
       )}
-
       <MenuItem onClick={handleProfileClose}>
         <ListItemIcon>
           <PersonIcon fontSize="small" />
         </ListItemIcon>
         Profile
       </MenuItem>
-
       <MenuItem onClick={handleProfileClose}>
         <ListItemIcon>
           <SettingsIcon fontSize="small" />
         </ListItemIcon>
         Settings
       </MenuItem>
-
       <Divider sx={{ my: 0.5 }} />
-
       <MenuItem onClick={handleLogout}>
         <ListItemIcon>
           <LogoutIcon fontSize="small" />
@@ -191,15 +185,14 @@ const DashHead = ({ handleDrawerToggle }) => {
           </Box>
         </Slide>
 
-        {/* Desktop Search */}
+        {/* Desktop Search (Aligned Left) */}
         <Box
           sx={{
-            display: { xs: 'none', sm: 'block' },
-            position: 'absolute',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: '100%',
-            maxWidth: 650,
+            display: { xs: 'none', sm: 'flex' },
+            alignItems: 'center',
+            ml: 2,
+            flexGrow: 1,
+            maxWidth: 500,
           }}
         >
           <SearchBar>
