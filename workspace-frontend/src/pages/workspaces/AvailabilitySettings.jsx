@@ -16,8 +16,19 @@ const AvailabilitySettings = () => {
   const [maxHours, setMaxHours] = useState(4);
 
   return (
-    <Container maxWidth="md" sx={{ px: { xs: 1, sm: 3 }, pt: 2, pb: 4 }}>
-      <Paper elevation={2} sx={{ p: { xs: 2, sm: 4 } }}>
+    <Container
+      maxWidth="xl"
+      disableGutters
+      sx={{ px: { xs: 1, sm: 2, md: 3 }, pt: 1, pb: 4 }}
+    >
+      <Paper
+        elevation={2}
+        sx={{
+          p: { xs: 2, sm: 3, md: 4 },
+          width: '100%',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+        }}
+      >
         <AvailabilityHeader />
 
         <Box mt={3}>
@@ -29,7 +40,10 @@ const AvailabilitySettings = () => {
         </Box>
 
         <Box mt={3}>
-          <RestrictedDaysSelector restrictedDays={restrictedDays} setRestrictedDays={setRestrictedDays} />
+          <RestrictedDaysSelector
+            restrictedDays={restrictedDays}
+            setRestrictedDays={setRestrictedDays}
+          />
         </Box>
 
         <Box mt={3}>
