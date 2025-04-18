@@ -34,27 +34,30 @@ import ColorModeContext from '../../context/ColorModeContext';
 
 const drawerWidth = 300;
 
-// Styled Switch that shows icon / checkedIcon in the thumb
+// Larger Styled Switch that shows icon / checkedIcon in the thumb
 const IconSwitch = styled(Switch)(({ theme }) => ({
-  width: 62,
-  height: 34,
-  padding: 7,
+  width: 80,
+  height: 44,
+  padding: 9,
   '& .MuiSwitch-switchBase': {
     padding: 0,
-    margin: 1,
+    margin: 2,
     transform: 'translateX(0)',
     '&.Mui-checked': {
-      transform: 'translateX(28px)',
+      transform: 'translateX(36px)',
     },
   },
   '& .MuiSwitch-thumb': {
     boxSizing: 'border-box',
-    width: 32,
-    height: 32,
+    width: 40,
+    height: 40,
     backgroundColor: 'transparent',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   '& .MuiSwitch-track': {
-    borderRadius: 20,
+    borderRadius: 22,
     backgroundColor: theme.palette.mode === 'dark' ? '#4D4D4D' : '#E0E0E0',
     opacity: 1,
   },
@@ -259,8 +262,8 @@ const Sidebar = ({ open, onClose }) => {
       </List>
 
       {/* Dark / Light toggle */}
-      <Box sx={{ mt: 'auto' }}>
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Box sx={{ mt: 'auto', mb: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Tooltip
             title={
               theme.palette.mode === 'dark' ? 'Switch to light' : 'Switch to dark'
@@ -269,8 +272,8 @@ const Sidebar = ({ open, onClose }) => {
             <IconSwitch
               checked={theme.palette.mode === 'dark'}
               onChange={colorMode.toggleColorMode}
-              icon={<Brightness7Icon sx={{ fontSize: 28, color: sunColor }} />}
-              checkedIcon={<Brightness4Icon sx={{ fontSize: 28, color: moonColor }} />}
+              icon={<Brightness7Icon sx={{ fontSize: 32, color: sunColor }} />}
+              checkedIcon={<Brightness4Icon sx={{ fontSize: 32, color: moonColor }} />}
             />
           </Tooltip>
         </Box>
@@ -296,7 +299,6 @@ const Sidebar = ({ open, onClose }) => {
       <Drawer
         variant="permanent"
         sx={{
-          zIndex: 9999,         // ← highest z-index
           display: { xs: 'none', md: 'block' },
           '& .MuiDrawer-paper': {
             width: drawerWidth,
@@ -316,7 +318,6 @@ const Sidebar = ({ open, onClose }) => {
         onClose={onClose}
         ModalProps={{ keepMounted: true }}
         sx={{
-          zIndex: 9999,         // ← highest z-index
           display: { xs: 'block', md: 'none' },
           '& .MuiDrawer-paper': {
             width: drawerWidth,
