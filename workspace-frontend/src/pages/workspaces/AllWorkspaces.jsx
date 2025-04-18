@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Paper } from '@mui/material';
-
+import { Container, Paper, Box } from '@mui/material';
 import WorkspaceHeader from './components/WorkspaceHeader';
 import WorkspaceSearch from './components/WorkspaceSearch';
 import WorkspaceForm from './components/WorkspaceForm';
@@ -13,7 +12,7 @@ const initialFormState = {
   capacity: '',
   description: '',
   amenities: '',
-  available: true,
+  available: true
 };
 
 const AllWorkspaces = () => {
@@ -93,27 +92,35 @@ const AllWorkspaces = () => {
   );
 
   return (
-    <Container maxWidth="xl" sx={{ px: { xs: 1, md: 3 }, pt: 2, pb: 3 }}>
+    <Container maxWidth="lg" sx={{ pt: { xs: 2, sm: 3 }, pb: 2 }}>
       <Paper
         elevation={2}
         sx={{
           p: { xs: 2, sm: 3 },
-          mt: 2,
+          mt: { xs: 0, sm: 0 }, // 💡 Reduce top space here
           mb: 2,
-          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
         }}
       >
-        <WorkspaceHeader onAdd={handleAddNew} />
-        <WorkspaceSearch value={searchText} onChange={handleSearch} />
+        <Box sx={{ mb: 2 }}>
+          <WorkspaceHeader onAdd={handleAddNew} />
+        </Box>
+
+        <Box sx={{ mb: 3 }}>
+          <WorkspaceSearch value={searchText} onChange={handleSearch} />
+        </Box>
+
         {(editMode || (formData !== initialFormState && currentWorkspace === null)) && (
-          <WorkspaceForm
-            formData={formData}
-            editMode={editMode}
-            onChange={handleFormChange}
-            onSubmit={handleSubmit}
-            onCancel={handleCancel}
-          />
+          <Box sx={{ mb: 3 }}>
+            <WorkspaceForm
+              formData={formData}
+              editMode={editMode}
+              onChange={handleFormChange}
+              onSubmit={handleSubmit}
+              onCancel={handleCancel}
+            />
+          </Box>
         )}
+
         <WorkspaceTable
           workspaces={filteredWorkspaces}
           onEdit={handleEdit}
