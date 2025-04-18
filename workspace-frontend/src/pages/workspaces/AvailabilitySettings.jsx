@@ -1,14 +1,13 @@
-// src/pages/workspaces/AvailabilitySettings.jsx
 import React, { useState } from 'react';
 import {
   Box,
   Container,
+  Grid,
   Card,
   CardContent,
   Typography,
-  Button,
   Divider,
-  Grid,
+  Button,
 } from '@mui/material';
 
 import AvailabilityHeader from './components/AvailabilityHeader';
@@ -45,10 +44,13 @@ const AvailabilitySettings = () => {
       <AvailabilityHeader />
 
       <Grid container spacing={3} mt={2}>
-        {/* Toggle Booking */}
+        {/* Booking Toggle */}
         <Grid item xs={12} md={6}>
-          <Card variant="outlined">
-            <CardContent>
+          <Card
+            variant="outlined"
+            sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+          >
+            <CardContent sx={{ flex: 1 }}>
               <Typography variant="h6" fontWeight="bold" gutterBottom>
                 Booking Availability
               </Typography>
@@ -60,8 +62,11 @@ const AvailabilitySettings = () => {
 
         {/* Booking Hours */}
         <Grid item xs={12} md={6}>
-          <Card variant="outlined">
-            <CardContent>
+          <Card
+            variant="outlined"
+            sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+          >
+            <CardContent sx={{ flex: 1 }}>
               <Typography variant="h6" fontWeight="bold" gutterBottom>
                 Booking Hours
               </Typography>
@@ -73,8 +78,11 @@ const AvailabilitySettings = () => {
 
         {/* Restricted Days */}
         <Grid item xs={12} md={6}>
-          <Card variant="outlined">
-            <CardContent>
+          <Card
+            variant="outlined"
+            sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+          >
+            <CardContent sx={{ flex: 1 }}>
               <Typography variant="h6" fontWeight="bold" gutterBottom>
                 Restricted Days
               </Typography>
@@ -87,12 +95,15 @@ const AvailabilitySettings = () => {
           </Card>
         </Grid>
 
-        {/* Max Booking Duration */}
+        {/* Max Duration */}
         <Grid item xs={12} md={6}>
-          <Card variant="outlined">
-            <CardContent>
+          <Card
+            variant="outlined"
+            sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+          >
+            <CardContent sx={{ flex: 1 }}>
               <Typography variant="h6" fontWeight="bold" gutterBottom>
-                Max Booking Duration (Hours)
+                Max Booking Duration
               </Typography>
               <Divider sx={{ mb: 2 }} />
               <TimeLimitSetting maxHours={maxHours} setMaxHours={setMaxHours} />
@@ -100,7 +111,7 @@ const AvailabilitySettings = () => {
           </Card>
         </Grid>
 
-        {/* Summary + Save */}
+        {/* Summary & Save */}
         <Grid item xs={12}>
           <Card variant="outlined">
             <CardContent>
@@ -115,12 +126,8 @@ const AvailabilitySettings = () => {
                 maxHours={maxHours}
               />
 
-              <Box mt={3} textAlign="right">
-                <Button
-                  variant="contained"
-                  size="large"
-                  onClick={handleSave}
-                >
+              <Box mt={4} textAlign="right">
+                <Button variant="contained" size="large" onClick={handleSave}>
                   Save Settings
                 </Button>
               </Box>
