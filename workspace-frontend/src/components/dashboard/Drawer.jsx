@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import {
   Avatar,
   Box,
@@ -28,6 +28,7 @@ import {
   Brightness7 as Brightness7Icon,
 } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ColorModeContext from '../../context/ColorModeContext';
 
 const drawerWidth = 300;
@@ -35,19 +36,22 @@ const drawerWidth = 300;
 const Sidebar = ({ open, onClose }) => {
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const orgName = localStorage.getItem('org_name') || 'Workspace';
+  const shortcode = localStorage.getItem('shortcode') || '';
 
-  const [selectedIndex, setSelectedIndex] = useState(0);
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
 
-  const handleListItemClick = (index) => {
-    setSelectedIndex(index);
+  const handleNavigate = (path) => {
+    navigate(`/${shortcode}/dashboard/${path}`);
   };
 
-  const handleToggleDarkMode = () => {
-    colorMode.toggleColorMode();
-  };
+  // Get active path segment (after /dashboard/)
+  const currentPath = location.pathname.split(`/${shortcode}/dashboard/`)[1] || '';
+
+  const isActive = (targetPath) => currentPath === targetPath;
 
   const glassStyles = {
     background:
@@ -68,11 +72,7 @@ const Sidebar = ({ open, onClose }) => {
   const renderProfileSection = () => (
     <Box sx={{ display: 'flex', alignItems: 'center', ml: 2, mt: 2 }}>
       <Avatar sx={{ width: 50, height: 50, mr: 2 }}>E</Avatar>
-      <Typography
-        variant="h6"
-        fontWeight="bold"
-        sx={{ color: theme.palette.text.primary }}
-      >
+      <Typography variant="h6" fontWeight="bold" sx={{ color: theme.palette.text.primary }}>
         Employee
       </Typography>
     </Box>
@@ -89,42 +89,25 @@ const Sidebar = ({ open, onClose }) => {
       )}
 
       {/* Logo + Org Name */}
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          pt: 1,
-        }}
-      >
-        <Avatar
-          variant="rounded"
-          sx={{
-            width: 64,
-            height: 64,
-            mb: 1,
-            bgcolor: theme.palette.mode === 'dark' ? 'grey.800' : 'grey.200',
-            fontSize: 20,
-            fontWeight: 'bold',
-            color: theme.palette.text.primary,
-          }}
-        >
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', pt: 1 }}>
+        <Avatar variant="rounded" sx={{
+          width: 64,
+          height: 64,
+          mb: 1,
+          bgcolor: theme.palette.mode === 'dark' ? 'grey.800' : 'grey.200',
+          fontSize: 20,
+          fontWeight: 'bold',
+          color: theme.palette.text.primary,
+        }}>
           LOGO
         </Avatar>
-
-        <Typography
-          variant="h6"
-          fontWeight="bold"
-          sx={{ color: theme.palette.text.primary, textAlign: 'center' }}
-        >
+        <Typography variant="h6" fontWeight="bold" sx={{ textAlign: 'center', color: theme.palette.text.primary }}>
           {orgName}
         </Typography>
       </Box>
 
       <Box sx={{ mt: 4, pl: 2 }}>
-        <Typography variant="body2" color="text.secondary">
-          Workspace Management System
-        </Typography>
+        <Typography variant="body2" color="text.secondary">Workspace Management System</Typography>
       </Box>
 
       <Box sx={{ mt: 2 }}>
@@ -132,106 +115,82 @@ const Sidebar = ({ open, onClose }) => {
           {/* Dashboard */}
           <ListItem
             button
-            onClick={() => handleListItemClick(0)}
+            onClick={() => navigate(`/${shortcode}/dashboard`)}
             sx={{
-              px: 2,
-              py: 0.5,
-              mb: 1,
-              borderRadius: 1,
-              backgroundColor: selectedIndex === 0 ? 'rgba(0,150,255,0.2)' : 'transparent',
-              '&:hover': {
-                backgroundColor: 'rgba(0,0,0,0.05)',
-              },
+              px: 2, py: 0.5, mb: 1, borderRadius: 1,
+              backgroundColor: location.pathname === `/${shortcode}/dashboard` ? 'rgba(0,150,255,0.2)' : 'transparent',
+              '&:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
             }}
           >
-            <ListItemIcon sx={{ minWidth: 'auto', mr: 1, color: theme.palette.text.primary }}>
-              <DashboardIcon />
-            </ListItemIcon>
+            <ListItemIcon sx={{ minWidth: 'auto', mr: 1 }}><DashboardIcon /></ListItemIcon>
             <ListItemText primary="Dashboard" />
           </ListItem>
 
-          {/* Workspaces (Expandable) */}
+          {/* Workspaces */}
           <ListItem
             button
             onClick={() => setWorkspaceOpen(!workspaceOpen)}
             sx={{
-              px: 2,
-              py: 0.5,
-              mb: 1,
-              borderRadius: 1,
+              px: 2, py: 0.5, mb: 1, borderRadius: 1,
               backgroundColor: workspaceOpen ? 'rgba(0,150,255,0.1)' : 'transparent',
-              '&:hover': {
-                backgroundColor: 'rgba(0,0,0,0.05)',
-              },
+              '&:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
             }}
           >
-            <ListItemIcon sx={{ minWidth: 'auto', mr: 1, color: theme.palette.text.primary }}>
-              <WorkspacesIcon />
-            </ListItemIcon>
+            <ListItemIcon sx={{ minWidth: 'auto', mr: 1 }}><WorkspacesIcon /></ListItemIcon>
             <ListItemText primary="Workspaces" />
             {workspaceOpen ? <ExpandLess /> : <ExpandMore />}
           </ListItem>
 
           <Collapse in={workspaceOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding sx={{ pl: 4 }}>
-              <ListItem button sx={{ py: 0.5 }}>
-                <ListItemIcon sx={{ minWidth: 'auto', mr: 1 }}><ViewListIcon /></ListItemIcon>
+              <ListItem button onClick={() => handleNavigate('workspaces')} selected={isActive('workspaces')}>
+                <ListItemIcon><ViewListIcon /></ListItemIcon>
                 <ListItemText primary="All Workspaces" />
               </ListItem>
-              <ListItem button sx={{ py: 0.5 }}>
-                <ListItemIcon sx={{ minWidth: 'auto', mr: 1 }}><AddIcon /></ListItemIcon>
+              <ListItem button onClick={() => handleNavigate('workspaces/add')} selected={isActive('workspaces/add')}>
+                <ListItemIcon><AddIcon /></ListItemIcon>
                 <ListItemText primary="Add New Workspace" />
               </ListItem>
-              <ListItem button sx={{ py: 0.5 }}>
-                <ListItemIcon sx={{ minWidth: 'auto', mr: 1 }}><TuneIcon /></ListItemIcon>
+              <ListItem button onClick={() => handleNavigate('workspaces/availability')} selected={isActive('workspaces/availability')}>
+                <ListItemIcon><TuneIcon /></ListItemIcon>
                 <ListItemText primary="Availability Settings" />
               </ListItem>
             </List>
           </Collapse>
 
-          {/* Other Main Items */}
-          <ListItem button onClick={() => handleListItemClick(1)} sx={{ px: 2, py: 0.5, mb: 1 }}>
-            <ListItemIcon sx={{ minWidth: 'auto', mr: 1 }}><BookOnlineIcon /></ListItemIcon>
+          {/* Bookings */}
+          <ListItem button onClick={() => handleNavigate('bookings')} selected={isActive('bookings')}>
+            <ListItemIcon><BookOnlineIcon /></ListItemIcon>
             <ListItemText primary="Bookings" />
           </ListItem>
 
-          <ListItem button onClick={() => handleListItemClick(2)} sx={{ px: 2, py: 0.5, mb: 1 }}>
-            <ListItemIcon sx={{ minWidth: 'auto', mr: 1 }}><PeopleIcon /></ListItemIcon>
+          {/* Users */}
+          <ListItem button onClick={() => handleNavigate('users')} selected={isActive('users')}>
+            <ListItemIcon><PeopleIcon /></ListItemIcon>
             <ListItemText primary="Users" />
           </ListItem>
 
-          <ListItem button onClick={() => handleListItemClick(3)} sx={{ px: 2, py: 0.5, mb: 1 }}>
-            <ListItemIcon sx={{ minWidth: 'auto', mr: 1 }}><BarChartIcon /></ListItemIcon>
+          {/* Reports */}
+          <ListItem button onClick={() => handleNavigate('reports/revenue')} selected={isActive('reports/revenue')}>
+            <ListItemIcon><BarChartIcon /></ListItemIcon>
             <ListItemText primary="Reports" />
           </ListItem>
         </List>
       </Box>
 
+      {/* Dark Mode */}
       <Box sx={{ mt: 'auto' }}>
-        {/* Dark mode toggle */}
         <Box sx={{ display: 'flex', alignItems: 'center', ml: 1 }}>
-          <Tooltip
-            title={
-              theme.palette.mode === 'dark'
-                ? 'Turn on the light'
-                : 'Turn off the light'
-            }
-            placement="top"
-          >
-            <IconButton onClick={handleToggleDarkMode} sx={{ color: theme.palette.text.primary }}>
+          <Tooltip title={theme.palette.mode === 'dark' ? 'Turn on the light' : 'Turn off the light'}>
+            <IconButton onClick={colorMode.toggleColorMode} sx={{ color: theme.palette.text.primary }}>
               {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
             </IconButton>
           </Tooltip>
         </Box>
         <Box
           sx={{
-            borderTop: `1px solid ${
-              theme.palette.mode === 'dark'
-                ? 'rgba(255,255,255,0.1)'
-                : 'rgba(0,0,0,0.1)'
-            }`,
-            mt: 2,
-            pt: 2,
+            borderTop: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+            mt: 2, pt: 2,
           }}
         />
         {renderProfileSection()}
@@ -260,12 +219,7 @@ const Sidebar = ({ open, onClose }) => {
         variant="temporary"
         open={open}
         onClose={onClose}
-        ModalProps={{
-          keepMounted: true,
-          BackdropProps: {
-            style: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
-          },
-        }}
+        ModalProps={{ keepMounted: true }}
         sx={{
           zIndex: 1600,
           display: { xs: 'block', md: 'none' },
@@ -273,7 +227,6 @@ const Sidebar = ({ open, onClose }) => {
             width: drawerWidth,
             boxSizing: 'border-box',
             background: theme.palette.background.paper,
-            backdropFilter: 'none',
           },
         }}
       >
