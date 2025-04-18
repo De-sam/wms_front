@@ -93,7 +93,7 @@ const AllWorkspaces = () => {
   );
 
   return (
-    <Container maxWidth="xl" sx={{ px: { xs: 1, md: 3 }, pt: 2, pb: 3 }}>
+    <Container maxWidth="xl" sx={{ px: { xs: 0.5, md: 3 }, pt: 0.5, pb: 3 }}>
       <Paper
         elevation={2}
         sx={{
