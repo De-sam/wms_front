@@ -1,6 +1,15 @@
 // src/pages/workspaces/AvailabilitySettings.jsx
 import React, { useState } from 'react';
-import { Box, Container, Paper } from '@mui/material';
+import {
+  Box,
+  Container,
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Divider,
+  Grid,
+} from '@mui/material';
 
 import AvailabilityHeader from './components/AvailabilityHeader';
 import AvailabilityToggle from './components/AvailabilityToggle';
@@ -15,50 +24,110 @@ const AvailabilitySettings = () => {
   const [restrictedDays, setRestrictedDays] = useState([]);
   const [maxHours, setMaxHours] = useState(4);
 
+  const handleSave = () => {
+    if (hours.start >= hours.end) {
+      alert('⛔ Start time must be before end time');
+      return;
+    }
+
+    console.log('🔒 Saving settings:', {
+      isEnabled,
+      hours,
+      restrictedDays,
+      maxHours,
+    });
+
+    alert('✅ Settings saved successfully!');
+  };
+
   return (
-    <Container
-      maxWidth="xl"
-      disableGutters
-      sx={{ px: { xs: 1, sm: 2, md: 3 }, pt: 1, pb: 4 }}
-    >
-      <Paper
-        elevation={2}
-        sx={{
-          p: { xs: 2, sm: 3, md: 4 },
-          width: '100%',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-        }}
-      >
-        <AvailabilityHeader />
+    <Container maxWidth="xl" sx={{ px: { xs: 1, md: 2 }, pt: 1, pb: 4 }}>
+      <AvailabilityHeader />
 
-        <Box mt={3}>
-          <AvailabilityToggle isEnabled={isEnabled} onToggle={setIsEnabled} />
-        </Box>
+      <Grid container spacing={3} mt={2}>
+        {/* Toggle Booking */}
+        <Grid item xs={12} md={6}>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="h6" fontWeight="bold" gutterBottom>
+                Booking Availability
+              </Typography>
+              <Divider sx={{ mb: 2 }} />
+              <AvailabilityToggle isEnabled={isEnabled} onToggle={setIsEnabled} />
+            </CardContent>
+          </Card>
+        </Grid>
 
-        <Box mt={3}>
-          <AvailabilityHoursForm hours={hours} setHours={setHours} />
-        </Box>
+        {/* Booking Hours */}
+        <Grid item xs={12} md={6}>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="h6" fontWeight="bold" gutterBottom>
+                Booking Hours
+              </Typography>
+              <Divider sx={{ mb: 2 }} />
+              <AvailabilityHoursForm hours={hours} setHours={setHours} />
+            </CardContent>
+          </Card>
+        </Grid>
 
-        <Box mt={3}>
-          <RestrictedDaysSelector
-            restrictedDays={restrictedDays}
-            setRestrictedDays={setRestrictedDays}
-          />
-        </Box>
+        {/* Restricted Days */}
+        <Grid item xs={12} md={6}>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="h6" fontWeight="bold" gutterBottom>
+                Restricted Days
+              </Typography>
+              <Divider sx={{ mb: 2 }} />
+              <RestrictedDaysSelector
+                restrictedDays={restrictedDays}
+                setRestrictedDays={setRestrictedDays}
+              />
+            </CardContent>
+          </Card>
+        </Grid>
 
-        <Box mt={3}>
-          <TimeLimitSetting maxHours={maxHours} setMaxHours={setMaxHours} />
-        </Box>
+        {/* Max Booking Duration */}
+        <Grid item xs={12} md={6}>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="h6" fontWeight="bold" gutterBottom>
+                Max Booking Duration (Hours)
+              </Typography>
+              <Divider sx={{ mb: 2 }} />
+              <TimeLimitSetting maxHours={maxHours} setMaxHours={setMaxHours} />
+            </CardContent>
+          </Card>
+        </Grid>
 
-        <Box mt={4}>
-          <AvailabilitySummary
-            isEnabled={isEnabled}
-            hours={hours}
-            restrictedDays={restrictedDays}
-            maxHours={maxHours}
-          />
-        </Box>
-      </Paper>
+        {/* Summary + Save */}
+        <Grid item xs={12}>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="h6" fontWeight="bold" gutterBottom>
+                Summary
+              </Typography>
+              <Divider sx={{ mb: 2 }} />
+              <AvailabilitySummary
+                isEnabled={isEnabled}
+                hours={hours}
+                restrictedDays={restrictedDays}
+                maxHours={maxHours}
+              />
+
+              <Box mt={3} textAlign="right">
+                <Button
+                  variant="contained"
+                  size="large"
+                  onClick={handleSave}
+                >
+                  Save Settings
+                </Button>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
     </Container>
   );
 };
