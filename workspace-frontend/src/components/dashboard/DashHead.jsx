@@ -125,8 +125,12 @@ const DashHead = ({ handleDrawerToggle }) => {
         top: 0,
         width: { sm: `calc(100% - ${drawerWidth}px)` },
         ml: { sm: `${drawerWidth}px` },
-        backgroundColor: 'transparent',
-        color: theme.palette.text.primary,
+        background: theme.palette.mode === 'dark'
+          ? 'rgba(18, 18, 18, 0.6)'
+          : 'rgba(255, 255, 255, 0.6)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        borderBottom: `1px solid ${theme.palette.divider}`,
         zIndex: theme.zIndex.drawer + 1,
       }}
     >
@@ -142,7 +146,6 @@ const DashHead = ({ handleDrawerToggle }) => {
           <IconButton onClick={handleDrawerToggle}>
             <MenuIcon />
           </IconButton>
-
           <IconButton onClick={toggleMobileSearch}>
             <SearchIcon />
           </IconButton>
@@ -173,12 +176,12 @@ const DashHead = ({ handleDrawerToggle }) => {
           </Box>
         </Slide>
 
-        {/* Desktop Search aligned left with margin from drawer */}
+        {/* Desktop Search (aligned more right from drawer) */}
         <Box
           sx={{
             display: { xs: 'none', sm: 'flex' },
             alignItems: 'center',
-            ml: 6,
+            ml: 14, // ⬅️ Increased spacing from sidebar
             flexGrow: 1,
             maxWidth: 500,
           }}
@@ -193,7 +196,7 @@ const DashHead = ({ handleDrawerToggle }) => {
           </SearchBar>
         </Box>
 
-        {/* Desktop: Avatar and icons with right padding */}
+        {/* Avatar & Notifications */}
         <Box
           sx={{
             display: 'flex',
@@ -202,7 +205,7 @@ const DashHead = ({ handleDrawerToggle }) => {
             top: '50%',
             right: 0,
             transform: 'translateY(-50%)',
-            pr: 3,
+            pr: 3.5, // ⬅️ Pushed avatar from right edge
           }}
         >
           {!isMobile && (
