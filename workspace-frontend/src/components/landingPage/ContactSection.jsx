@@ -5,7 +5,8 @@ import {
   Typography,
   List,
   ListItem,
-  ListItemIcon
+  ListItemIcon,
+  ListItemText
 } from '@mui/material';
 import {
   Email as EmailIcon,
@@ -46,24 +47,32 @@ const ContactSection = () => {
 
             <List>
               {[
-                { icon: <EmailIcon />, label: 'contact@workspace-system.com' },
-                { icon: <PhoneIcon />, label: '+1 (555) 123-4567' },
+                {
+                  icon: <EmailIcon />,
+                  primary: 'info@ispace.com',
+                  secondary: 'Email us anytime'
+                },
+                {
+                  icon: <PhoneIcon />,
+                  primary: '09033158802',
+                  secondary: 'Mon–Fri, 9AM–5PM'
+                },
                 {
                   icon: <LocationIcon />,
-                  label: (
-                    <>
-                      123 Workspace Avenue, Suite 100<br />
-                      San Francisco, CA 94107
-                    </>
-                  )
+                  primary: '17 Alhaji Masha Street, Surulere, Lagos',
+                  secondary: 'Nigeria'
                 }
-              ].map((item, i) => (
-                <ListItem key={i} disableGutters sx={{ mb: 2 }}>
-                  <ListItemIcon sx={{ minWidth: 40 }}>
+              ].map((item, index) => (
+                <ListItem key={index} disableGutters sx={{ mb: 2 }}>
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 50
+                    }}
+                  >
                     <Box
                       sx={{
-                        width: 40,
-                        height: 40,
+                        width: 48,
+                        height: 48,
                         borderRadius: '50%',
                         backgroundColor: 'primary.main',
                         color: 'white',
@@ -75,7 +84,20 @@ const ContactSection = () => {
                       {item.icon}
                     </Box>
                   </ListItemIcon>
-                  <Typography>{item.label}</Typography>
+                  <ListItemText
+                    primary={
+                      <Typography sx={{ fontWeight: 500, fontSize: '1rem' }}>
+                        {item.primary}
+                      </Typography>
+                    }
+                    secondary={
+                      item.secondary && (
+                        <Typography sx={{ fontSize: '0.875rem', color: 'text.secondary' }}>
+                          {item.secondary}
+                        </Typography>
+                      )
+                    }
+                  />
                 </ListItem>
               ))}
             </List>
@@ -90,7 +112,8 @@ const ContactSection = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              flexShrink: 0
+              flexShrink: 0,
+              borderRadius: 4
             }}
           >
             <PersonIcon sx={{ fontSize: { xs: 120, md: 220 }, color: 'grey.600' }} />
