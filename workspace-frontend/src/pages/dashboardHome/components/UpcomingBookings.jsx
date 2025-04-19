@@ -31,19 +31,23 @@ const UpcomingBookings = () => {
 
   return (
     <TableContainer
-      component={Paper}
-      elevation={0}
-      sx={{
-        backgroundColor: 'transparent',
-        border: `1px solid ${theme.palette.divider}`,
-        borderRadius: 2,
-        maxHeight: 400,
-        overflowY: 'auto',
-        '&::-webkit-scrollbar': { display: 'none' },
-        scrollbarWidth: 'none',
-        '-ms-overflow-style': 'none'
-      }}
-    >
+    component={Paper}
+    elevation={0}
+    sx={{
+      backgroundColor: 'transparent',
+      border: '1px solid', // keep the border transparent initially
+      borderRadius: 2,
+      maxHeight: 400,
+      overflowY: 'auto',
+      '&::-webkit-scrollbar': { display: 'none' },
+      scrollbarWidth: 'none',
+      '-ms-overflow-style': 'none',
+      transition: 'border 0.3s ease',
+      '&:hover': {
+        border: '1px solid #ffb300', // bright amber on hover
+      },
+    }}
+  >
       <Table
         size="small"
         stickyHeader

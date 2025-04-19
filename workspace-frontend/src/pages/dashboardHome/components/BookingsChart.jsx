@@ -11,16 +11,20 @@ const BookingsChart = () => {
   const barHeights = [30, 55, 40, 65, 20, 80, 50]; // percents
 
   return (
-    <Paper
-      elevation={0}
-      sx={{
-        backgroundColor: 'transparent',
-        border: `1px solid ${theme.palette.divider}`,
-        borderRadius: 2,
-        p: 2,
-        display: 'flex',
-        flexDirection: 'column',
-      }}
+<Paper
+    elevation={0}
+    sx={{
+    backgroundColor: 'transparent',
+    border: '1px solid', // keep the border transparent initially
+    borderRadius: 2,
+    p: 2,
+    display: 'flex',
+    flexDirection: 'column',
+    transition: 'border 0.3s ease',
+    '&:hover': {
+        border: '1px solid #ffb300', // amber color on hover
+    },
+    }}
     >
       <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 2 }}>
         Bookings

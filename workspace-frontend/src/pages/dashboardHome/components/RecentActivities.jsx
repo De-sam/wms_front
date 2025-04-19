@@ -63,17 +63,21 @@ const RecentActivities = () => {
 
   return (
     <Paper
-      elevation={0}
-      sx={{
+        elevation={0}
+        sx={{
         backgroundColor: 'transparent',
-        border: `1px solid ${theme.palette.divider}`,
+        border: '1px solid', // keep the border transparent initially
         borderRadius: 2,
         width: { xs: '100%', md: 800 },
         p: 2,
         height: 400,
         display: 'flex',
-        flexDirection: 'column'
-      }}
+        flexDirection: 'column',
+        transition: 'border 0.3s ease',
+        '&:hover': {
+            border: '1px solid #1976d2', // rich blue on hover
+        },
+        }}
     >
       <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 2 }}>
         Recent Activities

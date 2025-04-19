@@ -24,17 +24,21 @@ const TopWorkspaces = () => {
 
   return (
     <Paper
-      elevation={0}
-      sx={{
-        backgroundColor: 'transparent',
-        border: `1px solid ${theme.palette.divider}`,
-        borderRadius: 2,
-        height: 400,
-        display: 'flex',
-        flexDirection: 'column',
-        p: 2
-      }}
-    >
+    elevation={0}
+    sx={{
+      backgroundColor: 'transparent',
+      border: '1px solid', // keep the border transparent initially
+      borderRadius: 2,
+      height: 400,
+      display: 'flex',
+      flexDirection: 'column',
+      p: 2,
+      transition: 'border 0.3s ease',
+      '&:hover': {
+        border: '1px solid #1976d2', // rich blue on hover
+      },
+    }}
+  >
       <Typography
         variant="subtitle1"
         fontWeight="bold"
