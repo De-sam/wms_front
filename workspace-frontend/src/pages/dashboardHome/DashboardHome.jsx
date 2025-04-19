@@ -289,7 +289,7 @@ const DashboardHome = ({
             backgroundColor: 'transparent',
             border: `1px solid ${theme.palette.divider}`,
             borderRadius: 2,
-            width: '100%',
+            width: 800,
             mt: 4,
             p: 2
           }}
