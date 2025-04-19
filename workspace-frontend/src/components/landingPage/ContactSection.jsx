@@ -11,8 +11,7 @@ import {
 import {
   Email as EmailIcon,
   Phone as PhoneIcon,
-  LocationOn as LocationIcon,
-  Person as PersonIcon
+  LocationOn as LocationIcon
 } from '@mui/icons-material';
 
 const ContactSection = () => {
@@ -64,11 +63,7 @@ const ContactSection = () => {
                 }
               ].map((item, index) => (
                 <ListItem key={index} disableGutters sx={{ mb: 2, alignItems: 'flex-start' }}>
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 50
-                    }}
-                  >
+                  <ListItemIcon sx={{ minWidth: 50 }}>
                     <Box
                       sx={{
                         width: 48,
@@ -79,7 +74,7 @@ const ContactSection = () => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        mr: 2 // 👈 adds space between icon and text
+                        mr: 2
                       }}
                     >
                       {item.icon}
@@ -104,21 +99,20 @@ const ContactSection = () => {
             </List>
           </Box>
 
-          {/* Image */}
+          {/* Image (Online) */}
           <Box
+            component="img"
+            src="https://images.unsplash.com/photo-1598256989800-9fd7ef2c82ce?auto=format&fit=crop&w=400&q=80"
+            alt="Customer Support"
             sx={{
               width: { xs: 220, md: 400 },
               height: { xs: 220, md: 400 },
-              backgroundColor: 'grey.300',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-              borderRadius: 4
+              objectFit: 'cover',
+              borderRadius: 4,
+              boxShadow: 3,
+              flexShrink: 0
             }}
-          >
-            <PersonIcon sx={{ fontSize: { xs: 120, md: 220 }, color: 'grey.600' }} />
-          </Box>
+          />
         </Box>
       </Container>
     </Box>
