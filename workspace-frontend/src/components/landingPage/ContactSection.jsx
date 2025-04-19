@@ -63,7 +63,7 @@ const ContactSection = () => {
                   secondary: 'Nigeria'
                 }
               ].map((item, index) => (
-                <ListItem key={index} disableGutters sx={{ mb: 2 }}>
+                <ListItem key={index} disableGutters sx={{ mb: 2, alignItems: 'flex-start' }}>
                   <ListItemIcon
                     sx={{
                       minWidth: 50
@@ -78,7 +78,8 @@ const ContactSection = () => {
                         color: 'white',
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center'
+                        justifyContent: 'center',
+                        mr: 2 // 👈 adds space between icon and text
                       }}
                     >
                       {item.icon}
