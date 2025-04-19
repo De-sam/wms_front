@@ -6,7 +6,8 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  Link
 } from '@mui/material';
 import {
   Email as EmailIcon,
@@ -48,12 +49,20 @@ const ContactSection = () => {
               {[
                 {
                   icon: <EmailIcon />,
-                  primary: 'info@ispace.com',
+                  primary: (
+                    <Link href="mailto:info@ispace.com" underline="hover" color="inherit">
+                      info@ispace.com
+                    </Link>
+                  ),
                   secondary: 'Email us anytime'
                 },
                 {
                   icon: <PhoneIcon />,
-                  primary: '09033158802',
+                  primary: (
+                    <Link href="tel:09033158802" underline="hover" color="inherit">
+                      09033158802
+                    </Link>
+                  ),
                   secondary: 'Mon–Fri, 9AM–5PM'
                 },
                 {
@@ -99,7 +108,7 @@ const ContactSection = () => {
             </List>
           </Box>
 
-          {/* Image (Online) */}
+          {/* Image with Zoom Animation */}
           <Box
             component="img"
             src="https://images.unsplash.com/photo-1598256989800-9fd7ef2c82ce?auto=format&fit=crop&w=400&q=80"
@@ -110,7 +119,11 @@ const ContactSection = () => {
               objectFit: 'cover',
               borderRadius: 4,
               boxShadow: 3,
-              flexShrink: 0
+              flexShrink: 0,
+              transition: 'transform 0.4s ease-in-out',
+              '&:hover': {
+                transform: 'scale(1.05)'
+              }
             }}
           />
         </Box>
