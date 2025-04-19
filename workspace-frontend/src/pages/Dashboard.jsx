@@ -34,7 +34,7 @@ const Dashboard = () => {
         {/* Page Content */}
         <Box
           sx={{
-            pt: '80px', // Push content down by AppBar height
+            pt: '100px', // Push content down by AppBar height
             px: { xs: 2, sm: 4 },
             pb: 4,
             flexGrow: 1,
