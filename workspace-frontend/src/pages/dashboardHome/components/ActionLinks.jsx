@@ -14,15 +14,10 @@ const ActionLinks = () => {
   return (
     <Box
       sx={{
-        width: '100%',
         display: 'grid',
-        gridTemplateColumns: {
-          xs: '1fr 1fr',       // 2 per row on phones
-          sm: '1fr 1fr',       // 2 per row on small tablets
-          md: 'repeat(4, 1fr)' // all 4 in one row on md+
-        },
-        gap: 1.5,
-        alignItems: 'stretch'
+        gridTemplateColumns: { xs: '1fr 1fr', md: '1fr 1fr' },
+        gap: 1,
+        width: '100%',
       }}
     >
       {links.map((link, i) => (
@@ -31,15 +26,12 @@ const ActionLinks = () => {
           elevation={0}
           sx={{
             backgroundColor: 'transparent',
-            border: '1px solid transparent',
-            p: 0.5,
-            transition: 'border 0.3s ease',
-            height: '100%', // makes sure all cards align
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            border: '1px solid',
+            borderColor: 'divider',
+            transition: 'all 0.3s ease',
             '&:hover': {
-              borderImage: 'linear-gradient(to right, #ffa000, #1976d2) 1',
+              background: 'linear-gradient(90deg, #ffb300, #1976d2)', // amber → blue
+              borderColor: 'transparent',
             },
           }}
         >
@@ -47,13 +39,16 @@ const ActionLinks = () => {
             href={link.href}
             underline="none"
             sx={{
+              display: 'block',
               width: '100%',
+              py: 1.5,
               textAlign: 'center',
               fontWeight: 500,
-              fontSize: { xs: '0.75rem', sm: '0.85rem', md: '0.9rem' },
               color: theme.palette.text.primary,
-              py: 1,
-              px: 1
+              transition: 'color 0.3s ease',
+              '&:hover': {
+                color: '#fff', // make text white on hover
+              },
             }}
           >
             {link.label}
