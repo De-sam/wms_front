@@ -54,7 +54,7 @@ const DashboardHome = ({
           occupancyRate={occupancyRate}
         />
 
-        {/* Flex layout: Left (70%) | Right (30%) */}
+        {/* Flex layout: Left (60%) | Right (40%) */}
         <Box
           display="flex"
           flexDirection="row"
@@ -63,7 +63,7 @@ const DashboardHome = ({
           width="100%"
         >
           {/* Left - Chart + Actions */}
-          <Box sx={{ width: '70%' }}>
+          <Box sx={{ width: '60%' }}>
             <Paper elevation={0} sx={{ p: 2, height: 400, width: '100%' }}>
               <Box display="flex" flexDirection="column" gap={2} height="100%">
                 <ActionLinks />
@@ -73,10 +73,10 @@ const DashboardHome = ({
           </Box>
 
           {/* Right - Recent Activities */}
-          <Box sx={{ width: '30%' }}>
-            <Box sx={{ height: 400, width: '100%' }}>
+          <Box sx={{ width: '40%' }}>
+            <Paper elevation={0} sx={{ p: 2, height: 400, width: '100%' }}>
               <RecentActivities />
-            </Box>
+            </Paper>
           </Box>
         </Box>
       </Box>
