@@ -57,38 +57,32 @@ const DashboardHome = ({
 
         {/* TOP GRID SECTION: ActionLinks + Chart | RecentActivities */}
         <Grid container spacing={3} mt={4}>
-          {/* 70% LEFT - ActionLinks + Chart */}
-          <Grid item xs={12} md={8.4}>
-            <Paper elevation={1} sx={{ p: 2, height: '100%' }}>
-              <Box display="flex" flexDirection="column" gap={2}>
+          {/* LEFT COLUMN (≈ 66.7%) */}
+          <Grid item xs={12} md={8}>
+            <Paper elevation={0} sx={{ p: 2, height: 400, width: '100%' }}>
+              <Box display="flex" flexDirection="column" gap={2} height="100%">
                 <ActionLinks />
                 <BookingsChart />
               </Box>
             </Paper>
           </Grid>
 
-          {/* 30% RIGHT - Recent Activities */}
-          <Grid item xs={12} md={3.6}>
-            <Paper elevation={1} sx={{ p: 2, height: '100%' }}>
-              <RecentActivities />
-            </Paper>
+          {/* RIGHT COLUMN (≈ 33.3%) */}
+          <Grid item xs={12} md={4}>
+            <RecentActivities />
           </Grid>
         </Grid>
 
         {/* BOTTOM GRID SECTION: UpcomingBookings | TopWorkspaces */}
         <Grid container spacing={3} mt={1}>
-          {/* 70% LEFT - Upcoming Bookings */}
-          <Grid item xs={12} md={8.4}>
-            <Paper elevation={1} sx={{ p: 2, height: '100%' }}>
-              <UpcomingBookings />
-            </Paper>
+          {/* LEFT COLUMN (≈ 66.7%) */}
+          <Grid item xs={12} md={8}>
+            <UpcomingBookings />
           </Grid>
 
-          {/* 30% RIGHT - Top Workspaces */}
-          <Grid item xs={12} md={3.6}>
-            <Paper elevation={1} sx={{ p: 2, height: '100%' }}>
-              <TopWorkspaces />
-            </Paper>
+          {/* RIGHT COLUMN (≈ 33.3%) */}
+          <Grid item xs={12} md={4}>
+            <TopWorkspaces />
           </Grid>
         </Grid>
       </Box>
