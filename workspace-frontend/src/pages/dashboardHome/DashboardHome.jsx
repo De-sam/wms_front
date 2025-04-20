@@ -47,6 +47,7 @@ const DashboardHome = ({
           </Typography>
         </Box>
 
+        {/* Summary Cards */}
         <SummaryCards
           totalWorkspaces={totalWorkspaces}
           totalUsers={totalUsers}
@@ -54,17 +55,37 @@ const DashboardHome = ({
           occupancyRate={occupancyRate}
         />
 
-        {/* Bookings Chart & Action Links (moved up) */}
-        <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} gap={2} mt={4}>
-          <Box sx={{ width: { xs: '100%', md: '800px' } }}>
-            <BookingsChart />
-          </Box>
-          <Box sx={{ width: { xs: '100%', md: '650px' } }}>
+        {/* Action Links on top of Bookings Chart */}
+        <Box
+          sx={{
+            width: '100%',
+            mt: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              px: { xs: 0, md: 2 }
+            }}
+          >
             <ActionLinks />
+          </Box>
+
+          <Box
+            sx={{
+              width: '100%',
+              mt: 1
+            }}
+          >
+            <BookingsChart />
           </Box>
         </Box>
 
-        {/* Upcoming Bookings & Recent Activities (switched places) */}
+        {/* Upcoming Bookings + Recent Activities (Switched) */}
         <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} gap={2} mt={4}>
           <Box width={{ xs: '100%', md: '800px' }}>
             <UpcomingBookings />
@@ -74,7 +95,7 @@ const DashboardHome = ({
           </Box>
         </Box>
 
-        {/* Top Workspaces (moved down here) */}
+        {/* Top Workspaces moved down here */}
         <Box mt={4} width="100%">
           <TopWorkspaces />
         </Box>
