@@ -13,38 +13,29 @@ const DashboardHome = ({
   occupancyRate = 0
 }) => {
   return (
-    <Container
-      maxWidth="xl"
-      disableGutters
-      sx={{
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        overflowX: 'hidden'
-      }}
+    <Box
+      width="100%"
+      maxWidth="100vw" // 🛑 This prevents horizontal overflow
+      overflowX="hidden" // 🧼 This removes scrollbars
     >
       {/* Header */}
       <GreetingHeader />
 
       <Box
-        flexGrow={1}
+        width="100%"
         display="flex"
         flexDirection="column"
-        alignItems="flex-start"
-        pt={{ xs: 1, sm: 2 }}
         px={{ xs: 2, md: 4 }}
-        width="100%"
+        py={3}
       >
         {/* Workspace statistics */}
-        <Box width="100%" pb={1}>
-          <Typography
-            variant="subtitle1"
-            fontWeight="bold"
-            sx={{ fontSize: { xs: '1rem', md: '1.2rem' } }}
-          >
-            Workspace statistics
-          </Typography>
-        </Box>
+        <Typography
+          variant="subtitle1"
+          fontWeight="bold"
+          sx={{ fontSize: { xs: '1rem', md: '1.2rem' }, mb: 2 }}
+        >
+          Workspace statistics
+        </Typography>
 
         {/* Summary Cards */}
         <SummaryCards
@@ -54,16 +45,16 @@ const DashboardHome = ({
           occupancyRate={occupancyRate}
         />
 
-        {/* Flex layout: Left (60%) | Right (40%) */}
+        {/* Responsive layout: 60% / 40% on desktop, stacked on mobile */}
         <Box
-          display="flex"
-          flexDirection="row"
-          gap={3}
           mt={4}
+          display="flex"
+          flexDirection={{ xs: 'column', md: 'row' }}
+          gap={3}
           width="100%"
         >
-          {/* Left - Chart + Actions */}
-          <Box sx={{ width: '60%' }}>
+          {/* Left section */}
+          <Box width={{ xs: '100%', md: '60%' }}>
             <Paper elevation={0} sx={{ p: 2, height: 400, width: '100%' }}>
               <Box display="flex" flexDirection="column" gap={2} height="100%">
                 <ActionLinks />
@@ -72,15 +63,15 @@ const DashboardHome = ({
             </Paper>
           </Box>
 
-          {/* Right - Recent Activities */}
-          <Box sx={{ width: '40%' }}>
+          {/* Right section */}
+          <Box width={{ xs: '100%', md: '40%' }}>
             <Paper elevation={0} sx={{ p: 2, height: 400, width: '100%' }}>
               <RecentActivities />
             </Paper>
           </Box>
         </Box>
       </Box>
-    </Container>
+    </Box>
   );
 };
 
