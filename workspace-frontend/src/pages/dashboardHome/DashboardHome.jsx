@@ -46,7 +46,7 @@ const DashboardHome = ({
           mt={1}
           display="flex"
           flexDirection={{ xs: 'column', md: 'row' }}
-          gap={0.5} // ✅ Tiny spacing (4px) for all screen sizes
+          gap={1} // ✅ Tiny spacing (4px) for all screen sizes
           width="100%"
         >
           {/* LEFT: Quick Links + Chart */}
