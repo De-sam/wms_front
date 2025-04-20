@@ -41,7 +41,7 @@ const DashboardHome = ({
           occupancyRate={occupancyRate}
         />
 
-        {/* Responsive Flex Layout: Left (Chart + Links), Right (Recent Activities) */}
+        {/* Responsive layout: 60% / 40% on desktop, stacked on mobile */}
         <Box
           mt={4}
           display="flex"
@@ -49,19 +49,19 @@ const DashboardHome = ({
           gap={3}
           width="100%"
         >
-          {/* Left Side (Chart + Quick Links) */}
-          <Box width={{ xs: '100%', md: '50%' }}>
-            <Paper elevation={0} sx={{ p: 2, height: '100%', width: '100%' }}>
-              <Box display="flex" flexDirection="column" gap={2}>
+          {/* Left section (Chart + Quick Links) */}
+          <Box width={{ xs: '100%', md: '60%' }}>
+            <Paper elevation={0} sx={{ p: 2, height: 400, width: '100%' }}>
+              <Box display="flex" flexDirection="column" gap={2} height="100%">
                 <ActionLinks />
                 <BookingsChart />
               </Box>
             </Paper>
           </Box>
 
-          {/* Right Side (Recent Activities) */}
-          <Box width={{ xs: '100%', md: '50%' }}>
-            <Paper elevation={0} sx={{ p: 2, height: '100%', width: '100%' }}>
+          {/* Right section (Recent Activities) */}
+          <Box width={{ xs: '100%', md: '40%' }}>
+            <Paper elevation={0} sx={{ p: 2, height: 400, width: '100%' }}>
               <RecentActivities />
             </Paper>
           </Box>
