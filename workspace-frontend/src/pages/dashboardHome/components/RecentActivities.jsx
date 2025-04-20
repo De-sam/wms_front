@@ -61,21 +61,12 @@ const RecentActivities = () => {
   const theme = useTheme();
 
   return (
-    <Paper
-      elevation={0}
+    <Box
       sx={{
-        backgroundColor: 'transparent',
-        border: '1px solid',
-        borderRadius: 2,
-        p: 2,
-        width: '100%', // ✅ Let Grid control width
-        height: 320,    // ✅ Align with left card
         display: 'flex',
         flexDirection: 'column',
-        transition: 'border 0.3s ease',
-        '&:hover': {
-          borderColor: '#1976d2',
-        }
+        width: '100%',
+        height: '100%',
       }}
     >
       <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 2 }}>
@@ -118,7 +109,7 @@ const RecentActivities = () => {
           ))}
         </List>
       </Box>
-    </Paper>
+    </Box>
   );
 };
 
