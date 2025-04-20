@@ -46,7 +46,7 @@ const DashboardHome = ({
           mt={1}
           display="flex"
           flexDirection={{ xs: 'column', md: 'row' }}
-          gap={{ xs: 0.5, md: 0 }} // 4px space on mobile only
+          gap={0.5} // ✅ Tiny spacing (4px) for all screen sizes
           width="100%"
         >
           {/* LEFT: Quick Links + Chart */}
@@ -60,7 +60,7 @@ const DashboardHome = ({
                 display: 'flex',
                 flexDirection: 'column',
                 border: '1px solid',
-                borderColor: 'divider', // subtle neutral border
+                borderColor: 'divider',
                 borderRadius: 2
               }}
             >
