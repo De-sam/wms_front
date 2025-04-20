@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Box, Typography, Grid, Paper } from '@mui/material';
+import { Container, Box, Typography, Paper } from '@mui/material';
 import GreetingHeader from './components/GreetingHeader';
 import SummaryCards from './components/SummaryCards';
 import BookingsChart from './components/BookingsChart';
@@ -13,38 +13,25 @@ const DashboardHome = ({
   occupancyRate = 0
 }) => {
   return (
-    <Container
-      maxWidth="xl"
-      disableGutters
-      sx={{
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        overflowX: 'hidden'
-      }}
-    >
+    <Box width="100vw" overflow="hidden">
       {/* Header */}
       <GreetingHeader />
 
       <Box
-        flexGrow={1}
+        width="100%"
         display="flex"
         flexDirection="column"
-        alignItems="flex-start"
-        pt={{ xs: 1, sm: 2 }}
         px={{ xs: 2, md: 4 }}
-        width="100%"
+        py={3}
       >
         {/* Workspace statistics */}
-        <Box width="100%" pb={1}>
-          <Typography
-            variant="subtitle1"
-            fontWeight="bold"
-            sx={{ fontSize: { xs: '1rem', md: '1.2rem' } }}
-          >
-            Workspace statistics
-          </Typography>
-        </Box>
+        <Typography
+          variant="subtitle1"
+          fontWeight="bold"
+          sx={{ fontSize: { xs: '1rem', md: '1.2rem' }, mb: 2 }}
+        >
+          Workspace statistics
+        </Typography>
 
         {/* Summary Cards */}
         <SummaryCards
@@ -54,27 +41,33 @@ const DashboardHome = ({
           occupancyRate={occupancyRate}
         />
 
-        {/* Responsive Grid Row */}
-        <Grid container spacing={3} mt={4}>
-          {/* LEFT (Chart + Actions) */}
-          <Grid item xs={12} md={6}>
+        {/* Responsive Flex Layout: Left (Chart + Links), Right (Recent Activities) */}
+        <Box
+          mt={4}
+          display="flex"
+          flexDirection={{ xs: 'column', md: 'row' }}
+          gap={3}
+          width="100%"
+        >
+          {/* Left Side (Chart + Quick Links) */}
+          <Box width={{ xs: '100%', md: '50%' }}>
             <Paper elevation={0} sx={{ p: 2, height: '100%', width: '100%' }}>
               <Box display="flex" flexDirection="column" gap={2}>
                 <ActionLinks />
                 <BookingsChart />
               </Box>
             </Paper>
-          </Grid>
+          </Box>
 
-          {/* RIGHT (Recent Activities) */}
-          <Grid item xs={12} md={6}>
+          {/* Right Side (Recent Activities) */}
+          <Box width={{ xs: '100%', md: '50%' }}>
             <Paper elevation={0} sx={{ p: 2, height: '100%', width: '100%' }}>
               <RecentActivities />
             </Paper>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       </Box>
-    </Container>
+    </Box>
   );
 };
 
