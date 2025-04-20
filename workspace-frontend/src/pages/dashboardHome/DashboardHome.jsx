@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Box, Typography, Grid } from '@mui/material';
+import { Container, Box, Typography, Grid, Paper } from '@mui/material';
 import GreetingHeader from './components/GreetingHeader';
 import SummaryCards from './components/SummaryCards';
 import UpcomingBookings from './components/UpcomingBookings';
@@ -55,32 +55,40 @@ const DashboardHome = ({
           occupancyRate={occupancyRate}
         />
 
-        {/* Top Section: ActionLinks + RecentActivities */}
+        {/* Top Grid Section */}
         <Grid container spacing={3} mt={4}>
-          {/* LEFT SIDE - ActionLinks and BookingsChart */}
-          <Grid item xs={12} md={8}>
-            <Box display="flex" flexDirection="column" gap={2}>
-              <ActionLinks />
-              <BookingsChart />
-            </Box>
+          {/* LEFT COLUMN (60%) */}
+          <Grid item xs={12} md={7.2}>
+            <Paper elevation={1} sx={{ p: 2, height: '100%' }}>
+              <Box display="flex" flexDirection="column" gap={2}>
+                <ActionLinks />
+                <BookingsChart />
+              </Box>
+            </Paper>
           </Grid>
 
-          {/* RIGHT SIDE - Recent Activities */}
-          <Grid item xs={12} md={4}>
-            <RecentActivities />
+          {/* RIGHT COLUMN (40%) */}
+          <Grid item xs={12} md={4.8}>
+            <Paper elevation={1} sx={{ p: 2, height: '100%' }}>
+              <RecentActivities />
+            </Paper>
           </Grid>
         </Grid>
 
-        {/* Bottom Section: UpcomingBookings + TopWorkspaces */}
+        {/* Bottom Grid Section */}
         <Grid container spacing={3} mt={1}>
-          {/* LEFT - Upcoming Bookings */}
-          <Grid item xs={12} md={8}>
-            <UpcomingBookings />
+          {/* LEFT COLUMN (60%) */}
+          <Grid item xs={12} md={7.2}>
+            <Paper elevation={1} sx={{ p: 2, height: '100%' }}>
+              <UpcomingBookings />
+            </Paper>
           </Grid>
 
-          {/* RIGHT - Top Workspaces */}
-          <Grid item xs={12} md={4}>
-            <TopWorkspaces />
+          {/* RIGHT COLUMN (40%) */}
+          <Grid item xs={12} md={4.8}>
+            <Paper elevation={1} sx={{ p: 2, height: '100%' }}>
+              <TopWorkspaces />
+            </Paper>
           </Grid>
         </Grid>
       </Box>
