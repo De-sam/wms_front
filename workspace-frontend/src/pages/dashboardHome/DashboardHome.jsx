@@ -25,14 +25,14 @@ const DashboardHome = ({
         width="100%"
         display="flex"
         flexDirection="column"
-        px={{ xs: 1, md: 4 }} // tighter padding on mobile
-        py={{ xs: 2, md: 3 }}
+        px={0} // 🔽 No horizontal padding
+        py={0} // 🔽 No vertical padding
       >
         {/* Workspace statistics */}
         <Typography
           variant="subtitle1"
           fontWeight="bold"
-          sx={{ fontSize: { xs: '0.95rem', md: '1.2rem' }, mb: { xs: 1, md: 2 } }}
+          sx={{ fontSize: { xs: '0.9rem', md: '1rem' }, mb: 0.5 }}
         >
           Workspace statistics
         </Typography>
@@ -45,25 +45,25 @@ const DashboardHome = ({
           occupancyRate={occupancyRate}
         />
 
-        {/* Responsive Card Row */}
+        {/* Responsive 60/40 layout */}
         <Box
-          mt={{ xs: 2, md: 4 }}
+          mt={1}
           display="flex"
           flexDirection={{ xs: 'column', md: 'row' }}
-          gap={0}
+          gap={0} // 🔽 No gap between sections
           width="100%"
         >
-          {/* Left: Chart + Quick Links */}
+          {/* Left: Quick Links + Chart */}
           <Box width={{ xs: '100%', md: '60%' }}>
             <Paper
               elevation={0}
               sx={{
-                p: { xs: 1, md: 2 }, // tighter padding on mobile
+                p: 0.5, // 🔽 Tiny padding inside card
                 height: 400,
                 width: '100%',
               }}
             >
-              <Box display="flex" flexDirection="column" gap={2} height="100%">
+              <Box display="flex" flexDirection="column" gap={1} height="100%">
                 <ActionLinks />
                 <BookingsChart />
               </Box>
@@ -75,7 +75,7 @@ const DashboardHome = ({
             <Paper
               elevation={0}
               sx={{
-                p: { xs: 1, md: 2 }, // tighter padding on mobile
+                p: 0.5, // 🔽 Tiny padding inside card
                 height: 400,
                 width: '100%',
               }}
