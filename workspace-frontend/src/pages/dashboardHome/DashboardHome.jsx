@@ -2,9 +2,6 @@ import React from 'react';
 import { Container, Box, Typography, Grid, Paper } from '@mui/material';
 import GreetingHeader from './components/GreetingHeader';
 import SummaryCards from './components/SummaryCards';
-import UpcomingBookings from './components/UpcomingBookings';
-import TopWorkspaces from './components/TopWorkspaces';
-import RecentActivities from './components/RecentActivities';
 import BookingsChart from './components/BookingsChart';
 import ActionLinks from './components/ActionLinks';
 
@@ -55,36 +52,15 @@ const DashboardHome = ({
           occupancyRate={occupancyRate}
         />
 
-        {/* TOP GRID SECTION: ActionLinks + Chart | RecentActivities */}
-        <Grid container spacing={3} mt={4}>
-          {/* LEFT COLUMN (≈ 66.7%) */}
-          <Grid item xs={12} md={8}>
-            <Paper elevation={0} sx={{ p: 2, height: 400, width: '100%' }}>
-              <Box display="flex" flexDirection="column" gap={2} height="100%">
-                <ActionLinks />
-                <BookingsChart />
-              </Box>
-            </Paper>
-          </Grid>
-
-          {/* RIGHT COLUMN (≈ 33.3%) */}
-          <Grid item xs={12} md={4}>
-            <RecentActivities />
-          </Grid>
-        </Grid>
-
-        {/* BOTTOM GRID SECTION: UpcomingBookings | TopWorkspaces */}
-        <Grid container spacing={3} mt={1}>
-          {/* LEFT COLUMN (≈ 66.7%) */}
-          <Grid item xs={12} md={8}>
-            <UpcomingBookings />
-          </Grid>
-
-          {/* RIGHT COLUMN (≈ 33.3%) */}
-          <Grid item xs={12} md={4}>
-            <TopWorkspaces />
-          </Grid>
-        </Grid>
+        {/* Quick Actions + Bookings Chart */}
+        <Box mt={4} width="100%">
+          <Paper elevation={0} sx={{ p: 2, width: '100%' }}>
+            <Box display="flex" flexDirection="column" gap={2}>
+              <ActionLinks />
+              <BookingsChart />
+            </Box>
+          </Paper>
+        </Box>
       </Box>
     </Container>
   );
