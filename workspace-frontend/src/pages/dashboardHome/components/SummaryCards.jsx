@@ -50,19 +50,19 @@ const SummaryCards = ({
   ];
 
   return (
-    <Grid container spacing={1.5} sx={{ width: '100%' }}>
+    <Grid container spacing={2} sx={{ width: '100%' }}>
       {summaryItems.map(({ label, value, Icon, color }, idx) => (
-        <Grid item xs={12} sm={6} lg={3} key={idx}>
+        <Grid item xs={12} sm={6} md={3} key={idx}>
           <Card
             sx={{
-              height: { xs: 120, sm: 140, md: 130 },
+              height: 130,
               borderRadius: 2,
-              backgroundColor: 'transparent',
               border: `1px solid ${color}`,
+              backgroundColor: 'transparent',
               boxShadow: 'none',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'center'
+              justifyContent: 'center',
             }}
           >
             <CardContent
@@ -72,13 +72,13 @@ const SummaryCards = ({
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                p: 2
+                p: 2,
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-                <Icon sx={{ color, fontSize: { xs: 30, sm: 40 } }} />
+                <Icon sx={{ color, fontSize: 32 }} />
                 <Typography
-                  variant="h3"
+                  variant="h4"
                   fontWeight="bold"
                   sx={{ fontSize: { xs: '1.5rem', md: '2rem' } }}
                 >
@@ -86,12 +86,12 @@ const SummaryCards = ({
                 </Typography>
               </Box>
               <Typography
-                variant="subtitle1"
+                variant="subtitle2"
                 sx={{
                   textAlign: 'center',
                   fontSize: { xs: '0.9rem', sm: '1rem' },
                   fontWeight: 500,
-                  color: theme.palette.text.primary
+                  color: theme.palette.text.primary,
                 }}
               >
                 {label}
