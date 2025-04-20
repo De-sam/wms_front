@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Paper, Typography, useTheme } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 
 const BookingsChart = () => {
   const theme = useTheme();
@@ -9,7 +9,14 @@ const BookingsChart = () => {
   const barHeights = [30, 55, 40, 65, 20, 80, 50]; // percent
 
   return (
-    <Box sx={{ width: '100%', flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+    <Box
+      sx={{
+        width: '100%',
+        flexGrow: 1,
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       <Typography
         variant="subtitle1"
         fontWeight="bold"
@@ -22,12 +29,12 @@ const BookingsChart = () => {
       <Box
         sx={{
           display: 'flex',
-          justifyContent: 'space-between',
-          gap: { xs: 1, md: 2 },
-          px: { xs: 0.5, md: 1 },
+          justifyContent: 'space-around', // ✅ improved spacing
+          gap: { xs: 0.5, md: 1 },         // 🔽 minimal spacing
+          px: 0,                           // 🔽 no side padding
           width: '100%',
           overflowX: 'auto',
-          flexGrow: 1 // <-- this makes the chart stretch within its container
+          flexGrow: 1,
         }}
       >
         {fullDays.map((day, idx) => (
@@ -37,7 +44,7 @@ const BookingsChart = () => {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              flex: 1,
+              flex: 1, // ✅ stretch evenly
             }}
           >
             <Box
