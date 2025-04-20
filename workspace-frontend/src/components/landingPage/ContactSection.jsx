@@ -15,6 +15,8 @@ import {
   LocationOn as LocationIcon
 } from '@mui/icons-material';
 
+import contactImage from '../../assets/contact.jpg';
+
 const ContactSection = () => {
   return (
     <Box
@@ -108,24 +110,32 @@ const ContactSection = () => {
             </List>
           </Box>
 
-          {/* Image with Zoom Animation */}
+          {/* Fixed‐size Card with Image Inside */}
           <Box
-            component="img"
-            src="https://images.unsplash.com/photo-1598256989800-9fd7ef2c82ce?auto=format&fit=crop&w=400&q=80"
-            alt="Customer Support"
             sx={{
-              width: { xs: 220, md: 400 },
-              height: { xs: 220, md: 400 },
-              objectFit: 'cover',
+              width: '100%',
+              maxWidth: { md: 400 },
+              height: { xs: 300, md: 400 },
               borderRadius: 4,
               boxShadow: 3,
-              flexShrink: 0,
-              transition: 'transform 0.4s ease-in-out',
-              '&:hover': {
-                transform: 'scale(1.05)'
-              }
+              overflow: 'hidden',
+              flexShrink: 0
             }}
-          />
+          >
+            <Box
+              component="img"
+              src={contactImage}
+              alt="Contact illustration"
+              sx={{
+                width: 400,
+                height: '100%',
+                transition: 'transform 0.4s ease-in-out',
+                '&:hover': {
+                  transform: 'scale(1.05)'
+                }
+              }}
+            />
+          </Box>
         </Box>
       </Container>
     </Box>
