@@ -77,9 +77,7 @@ const IconSwitch = styled(Switch)(({ theme }) => ({
     transform: 'translateY(-50%)',
     borderRadius: 6,
     backgroundColor:
-      theme.palette.mode === 'dark'
-        ? '#4D4D4D'
-        : '#E0E0E0',
+      theme.palette.mode === 'dark' ? '#4D4D4D' : '#E0E0E0',
     opacity: 1,
   },
 }));
@@ -94,12 +92,13 @@ const Sidebar = ({ open, onClose }) => {
   const shortcode = localStorage.getItem('shortcode') || '';
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
 
-  const handleNavigate = (path) =>
-    navigate(`/${shortcode}/dashboard/${path}`);
+  const isActive = (target) =>
+    location.pathname.split(`/${shortcode}/dashboard/`)[1] === target;
 
-  const currentPath =
-    location.pathname.split(`/${shortcode}/dashboard/`)[1] || '';
-  const isActive = (target) => currentPath === target;
+  const handleNavigate = (path) => {
+    navigate(`/${shortcode}/dashboard/${path}`);
+    if (open && onClose) onClose(); // ✅ Close mobile drawer
+  };
 
   const glassStyles = {
     background:
@@ -127,7 +126,7 @@ const Sidebar = ({ open, onClose }) => {
         </Box>
       )}
 
-      {/* Logo + Org with sky blue */}
+      {/* Logo + Org Name */}
       <Box
         sx={{
           display: 'flex',
@@ -172,9 +171,10 @@ const Sidebar = ({ open, onClose }) => {
       </Typography>
 
       <List sx={{ mt: 2 }}>
+        {/* Dashboard */}
         <ListItem
           button
-          onClick={() => navigate(`/${shortcode}/dashboard`)}
+          onClick={() => handleNavigate('')}
           sx={{
             px: 2,
             py: 0.5,
@@ -196,6 +196,7 @@ const Sidebar = ({ open, onClose }) => {
           />
         </ListItem>
 
+        {/* Workspaces collapsible */}
         <ListItem
           button
           onClick={() => setWorkspaceOpen(!workspaceOpen)}
@@ -213,10 +214,7 @@ const Sidebar = ({ open, onClose }) => {
           <ListItemIcon sx={{ minWidth: 'auto', mr: 1, color: 'inherit' }}>
             <WorkspacesIcon />
           </ListItemIcon>
-          <ListItemText
-            primary="Workspaces"
-            primaryTypographyProps={{ color: 'textPrimary' }}
-          />
+          <ListItemText primary="Workspaces" />
           {workspaceOpen ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
 
@@ -242,15 +240,13 @@ const Sidebar = ({ open, onClose }) => {
                 }}
               >
                 <ListItemIcon sx={{ color: 'inherit' }}>{item.icon}</ListItemIcon>
-                <ListItemText
-                  primary={item.label}
-                  primaryTypographyProps={{ color: 'textPrimary' }}
-                />
+                <ListItemText primary={item.label} />
               </ListItem>
             ))}
           </List>
         </Collapse>
 
+        {/* Static Links */}
         {[
           { label: 'Bookings', icon: <BookOnlineIcon />, path: 'bookings' },
           { label: 'Users', icon: <PeopleIcon />, path: 'users' },
@@ -271,48 +267,32 @@ const Sidebar = ({ open, onClose }) => {
             }}
           >
             <ListItemIcon sx={{ color: 'inherit' }}>{item.icon}</ListItemIcon>
-            <ListItemText
-              primary={item.label}
-              primaryTypographyProps={{ color: 'textPrimary' }}
-            />
+            <ListItemText primary={item.label} />
           </ListItem>
         ))}
       </List>
 
-      {/* Dark / Light toggle */}
+      {/* Theme toggle + footer */}
       <Box sx={{ mt: 'auto', mb: 2 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Tooltip
-            title={
-              theme.palette.mode === 'dark' ? 'Switch to light' : 'Switch to dark'
-            }
-          >
-            <IconSwitch
-              checked={theme.palette.mode === 'dark'}
-              onChange={colorMode.toggleColorMode}
-              icon={<Brightness7Icon />}
-              checkedIcon={<Brightness4Icon />}
-            />
-          </Tooltip>
-        </Box>
+        <Tooltip title="Toggle theme">
+          <IconSwitch
+            checked={theme.palette.mode === 'dark'}
+            onChange={colorMode.toggleColorMode}
+            icon={<Brightness7Icon />}
+            checkedIcon={<Brightness4Icon />}
+          />
+        </Tooltip>
+
         <Box
           sx={{
-            borderTop: `1px solid ${
-              theme.palette.mode === 'dark'
-                ? 'rgba(255,255,255,0.1)'
-                : 'rgba(0,0,0,0.1)'
-            }`,
+            borderTop: `1px solid ${theme.palette.divider}`,
             mt: 2,
             pt: 2,
           }}
         />
         <Box sx={{ display: 'flex', alignItems: 'center', ml: 2, mt: 2 }}>
           <Avatar sx={{ width: 50, height: 50, mr: 2 }}>E</Avatar>
-          <Typography
-            variant="h6"
-            fontWeight="bold"
-            sx={{ color: theme.palette.text.primary }}
-          >
+          <Typography variant="h6" fontWeight="bold">
             Employee
           </Typography>
         </Box>
@@ -322,11 +302,11 @@ const Sidebar = ({ open, onClose }) => {
 
   return (
     <>
+      {/* Permanent Drawer (desktop) */}
       <Drawer
         variant="permanent"
         sx={{
           display: { xs: 'none', md: 'block' },
-          zIndex: 2200,
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
@@ -338,14 +318,15 @@ const Sidebar = ({ open, onClose }) => {
         {renderContent()}
       </Drawer>
 
+      {/* Temporary Drawer (mobile) */}
       <Drawer
         variant="temporary"
         open={open}
         onClose={onClose}
         ModalProps={{ keepMounted: true }}
+        transitionDuration={300} // ✅ Smooth slide
         sx={{
           display: { xs: 'block', md: 'none' },
-          zIndex: 2200,
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
