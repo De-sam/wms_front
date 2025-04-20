@@ -13,11 +13,7 @@ const DashboardHome = ({
   occupancyRate = 0
 }) => {
   return (
-    <Box
-      width="100%"
-      maxWidth="100vw"
-      overflowX="hidden"
-    >
+    <Box width="100%" maxWidth="100vw" overflowX="hidden">
       {/* Header */}
       <GreetingHeader />
 
@@ -45,24 +41,27 @@ const DashboardHome = ({
           occupancyRate={occupancyRate}
         />
 
-        {/* Responsive 60/40 layout for chart and recent activities */}
+        {/* Chart + Recent Activities layout */}
         <Box
           mt={1}
           display="flex"
           flexDirection={{ xs: 'column', md: 'row' }}
-          gap={0}
+          gap={{ xs: 0.5, md: 0 }} // 4px space on mobile only
           width="100%"
         >
-          {/* LEFT: Action Links + Bookings Chart */}
+          {/* LEFT: Quick Links + Chart */}
           <Box width={{ xs: '100%', md: '60%' }}>
             <Paper
               elevation={0}
               sx={{
                 p: 0.5,
-                height: 320, // 📏 fixed height for both cards
+                height: 320,
                 width: '100%',
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                border: '1px solid',
+                borderColor: 'divider', // subtle neutral border
+                borderRadius: 2
               }}
             >
               <ActionLinks />
@@ -71,16 +70,16 @@ const DashboardHome = ({
           </Box>
 
           {/* RIGHT: Recent Activities */}
-          <Box
-            width={{ xs: '100%', md: '40%' }}
-            sx={{ mt: { xs: 0.5, md: 0 } }}
-          >
+          <Box width={{ xs: '100%', md: '40%' }}>
             <Paper
               elevation={0}
               sx={{
                 p: 0.5,
-                height: 320, // 📏 same height
+                height: 320,
                 width: '100%',
+                border: '1px solid',
+                borderColor: 'divider',
+                borderRadius: 2
               }}
             >
               <RecentActivities />
