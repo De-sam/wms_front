@@ -50,15 +50,16 @@ const SummaryCards = ({
   ];
 
   return (
-    <Grid container spacing={2} sx={{ width: '100%' }}>
+    <Grid container spacing={2} sx={{ width: '100%', margin: 0 }}>
       {summaryItems.map(({ label, value, Icon, color }, idx) => (
         <Grid item xs={12} sm={6} md={3} key={idx}>
           <Card
             sx={{
-              height: '100%',
+              height: 130,
               borderRadius: 2,
               border: `1px solid ${color}`,
               boxShadow: 'none',
+              backgroundColor: 'transparent',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
@@ -68,11 +69,12 @@ const SummaryCards = ({
             <CardContent
               sx={{
                 width: '100%',
+                flex: 1,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                p: 2
+                p: 2,
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>

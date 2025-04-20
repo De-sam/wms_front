@@ -31,8 +31,8 @@ const DashboardHome = ({
           </Typography>
         </Box>
 
-        {/* Summary Cards */}
-        <Box mt={1} mb={2} px={{ xs: 2, sm: 3, md: 4 }}>
+        {/* Summary Cards - full width, no outer padding */}
+        <Box mt={1} mb={2}>
           <SummaryCards
             totalWorkspaces={totalWorkspaces}
             totalUsers={totalUsers}
