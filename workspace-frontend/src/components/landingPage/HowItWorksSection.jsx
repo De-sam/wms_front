@@ -276,48 +276,69 @@ const DesktopStep = ({ step, index, circleRef, shouldSpin, onSpinComplete, isAct
   const [animateText, setAnimateText] = useState(false);
   const containerRef = useRef(null);
 
+  // Fade in text as soon as spinner starts
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => setAnimateText(entry.isIntersecting),
-      { threshold: 0.5 }
-    );
-    if (containerRef.current) observer.observe(containerRef.current);
-    return () => observer.disconnect();
-  }, []);
+    if (shouldSpin && isActive) {
+      setAnimateText(true);
+    }
+  }, [shouldSpin, isActive]);
 
-  const TextContainer = () => (
+  return (
     <Box
+      ref={containerRef}
       sx={{
-        maxWidth: 220,
-        textAlign: 'center',
-        mt: 2,
-        px: 1,
-        opacity: animateText ? 1 : 0,
-        transform: animateText ? 'translateX(0)' : 'translateX(20px)',
-        transition: 'opacity 0.8s ease, transform 0.8s ease',
-        transitionDelay: animateText ? '0.5s' : '0s'
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        mx: 2
       }}
     >
-  
+      {/* Spinner */}
+      <Box ref={circleRef} sx={{ width: 80, height: 80 }}>
+        {isActive && (
+          <DoubleCircleIndicator
+            number={index + 1}
+            shouldSpin={shouldSpin}
+            isActive={isActive}
+            onSpinComplete={onSpinComplete}
+            spinnerDuration="0.5s"
+          />
+        )}
+      </Box>
+
+      {/* Text fades in while spinner is spinning */}
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: 1,
-          color: theme.palette.primary.main
+          maxWidth: 220,
+          textAlign: 'center',
+          mt: 2,
+          px: 1,
+          opacity: animateText ? 1 : 0,
+          transform: animateText ? 'translateY(0)' : 'translateY(10px)',
+          transition: 'opacity 0.6s ease, transform 0.6s ease'
         }}
       >
-        {React.cloneElement(step.icon, { sx: { color: theme.palette.primary.main } })}
-        <Typography variant="h6" sx={{ fontWeight: 600, color: theme.palette.primary.main }}>
-          {step.label}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 1,
+            color: theme.palette.primary.main
+          }}
+        >
+          {React.cloneElement(step.icon, { sx: { color: theme.palette.primary.main } })}
+          <Typography variant="h6" sx={{ fontWeight: 600, color: theme.palette.primary.main }}>
+            {step.label}
+          </Typography>
+        </Box>
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 1, lineHeight: 1.6 }}>
+          {step.description}
         </Typography>
       </Box>
-      <Typography variant="body2" color="text.secondary" sx={{ mt: 1, lineHeight: 1.6 }}>
-        {step.description}
-      </Typography>
     </Box>
   );
+};
 
   return (
     <Box ref={containerRef} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mx: 2 }}>
