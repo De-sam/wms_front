@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Paper,
   Box,
   Typography,
   List,
@@ -69,9 +68,20 @@ const RecentActivities = () => {
         height: '100%',
       }}
     >
-      <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 2 }}>
-        Recent Activities
-      </Typography>
+      {/* Section Heading with divider */}
+      <Box
+        sx={{
+          width: '100%',
+          borderBottom: '1px solid',
+          borderColor: 'divider',
+          pb: 1,
+          mb: 2,
+        }}
+      >
+        <Typography variant="subtitle1" fontWeight="bold">
+          Recent Activities
+        </Typography>
+      </Box>
 
       <Box
         sx={{

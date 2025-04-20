@@ -17,13 +17,7 @@ const DashboardHome = ({
       {/* Header */}
       <GreetingHeader />
 
-      <Box
-        width="100%"
-        display="flex"
-        flexDirection="column"
-        px={0}
-        py={0}
-      >
+      <Box width="100%" display="flex" flexDirection="column" px={0} py={0}>
         {/* Workspace statistics */}
         <Typography
           variant="subtitle1"
@@ -46,10 +40,10 @@ const DashboardHome = ({
           mt={1}
           display="flex"
           flexDirection={{ xs: 'column', md: 'row' }}
-          gap={1} // ✅ Tiny spacing (4px) for all screen sizes
+          gap={1} // 8px spacing for both views
           width="100%"
         >
-          {/* LEFT: Quick Links + Chart */}
+          {/* LEFT: Chart + Quick Links */}
           <Box width={{ xs: '100%', md: '60%' }}>
             <Paper
               elevation={0}
@@ -61,11 +55,11 @@ const DashboardHome = ({
                 flexDirection: 'column',
                 border: '1px solid',
                 borderColor: 'divider',
-                borderRadius: 2
+                borderRadius: 2,
               }}
             >
-              <ActionLinks />
-              <BookingsChart />
+              <BookingsChart />      {/* Chart now comes first */}
+              <ActionLinks />        {/* Buttons moved below chart */}
             </Paper>
           </Box>
 
@@ -79,7 +73,7 @@ const DashboardHome = ({
                 width: '100%',
                 border: '1px solid',
                 borderColor: 'divider',
-                borderRadius: 2
+                borderRadius: 2,
               }}
             >
               <RecentActivities />
