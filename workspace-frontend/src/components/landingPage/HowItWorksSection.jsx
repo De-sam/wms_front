@@ -294,9 +294,11 @@ const DesktopStep = ({ step, index, circleRef, shouldSpin, onSpinComplete, isAct
         px: 1,
         opacity: animateText ? 1 : 0,
         transform: animateText ? 'translateX(0)' : 'translateX(20px)',
-        transition: 'opacity 0.5s ease, transform 0.5s ease'
+        transition: 'opacity 0.8s ease, transform 0.8s ease',
+        transitionDelay: animateText ? '0.5s' : '0s'
       }}
     >
+  
       <Box
         sx={{
           display: 'flex',
