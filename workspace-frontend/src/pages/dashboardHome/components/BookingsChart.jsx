@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { amber } from '@mui/material/colors';
 
 const BookingsChart = () => {
   const fullDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const shortDays = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-  const barHeights = [30, 55, 40, 65, 20, 80, 50]; // percent
+  const barHeights = [30, 55, 40, 65, 20, 80, 50]; // % height
+
+  // Used to trigger animation after mount
+  const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setAnimate(true), 50); // slight delay
+    return () => clearTimeout(timeout);
+  }, []);
 
   return (
     <Box
@@ -24,11 +32,10 @@ const BookingsChart = () => {
         Bookings
       </Typography>
 
-      {/* Bar chart row */}
       <Box
         sx={{
           display: 'flex',
-          justifyContent: 'space-around', // better stretch
+          justifyContent: 'space-around',
           gap: { xs: 0.5, md: 1 },
           px: 0,
           width: '100%',
@@ -46,10 +53,10 @@ const BookingsChart = () => {
               flex: 1,
             }}
           >
-            {/* Bar */}
+            {/* Bar container */}
             <Box
               sx={{
-                height: { xs: 80, md: 130 },
+                height: { xs: 100, md: 180 }, // ✅ Taller bar container
                 display: 'flex',
                 alignItems: 'flex-end',
                 mb: 1,
@@ -58,16 +65,17 @@ const BookingsChart = () => {
               <Box
                 sx={{
                   width: { xs: 16, md: 23 },
-                  height: `${barHeights[idx]}%`,
-                  backgroundColor: amber[400], // Amber color
+                  height: animate ? `${barHeights[idx]}%` : 0, // ✅ Animate height
+                  backgroundColor: amber[400],
                   border: '1px solid rgba(255,255,255,0.3)',
                   backdropFilter: 'blur(4px)',
                   borderRadius: 1,
+                  transition: 'height 0.8s ease-in-out', // ✅ Slide animation
                 }}
               />
             </Box>
 
-            {/* Label */}
+            {/* Labels */}
             <Typography
               variant="body2"
               sx={{
