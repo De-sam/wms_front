@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Box, Typography } from '@mui/material';
+import { Container, Box, Typography, Grid } from '@mui/material';
 import GreetingHeader from './components/GreetingHeader';
 import SummaryCards from './components/SummaryCards';
 import UpcomingBookings from './components/UpcomingBookings';
@@ -55,50 +55,34 @@ const DashboardHome = ({
           occupancyRate={occupancyRate}
         />
 
-        {/* Action Links on top of Bookings Chart */}
-        <Box
-          sx={{
-            width: '100%',
-            mt: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 2
-          }}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              px: { xs: 0, md: 2 }
-            }}
-          >
-            <ActionLinks />
-          </Box>
+        {/* Top Section: ActionLinks + RecentActivities */}
+        <Grid container spacing={3} mt={4}>
+          {/* LEFT SIDE - ActionLinks and BookingsChart */}
+          <Grid item xs={12} md={8}>
+            <Box display="flex" flexDirection="column" gap={2}>
+              <ActionLinks />
+              <BookingsChart />
+            </Box>
+          </Grid>
 
-          <Box
-            sx={{
-              width: '100%',
-              mt: 1
-            }}
-          >
-            <BookingsChart />
-          </Box>
-        </Box>
-
-        {/* Upcoming Bookings + Recent Activities (Switched) */}
-        <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} gap={2} mt={4}>
-          <Box width={{ xs: '100%', md: '800px' }}>
-            <UpcomingBookings />
-          </Box>
-          <Box width={{ xs: '100%', md: '650px' }}>
+          {/* RIGHT SIDE - Recent Activities */}
+          <Grid item xs={12} md={4}>
             <RecentActivities />
-          </Box>
-        </Box>
+          </Grid>
+        </Grid>
 
-        {/* Top Workspaces moved down here */}
-        <Box mt={4} width="100%">
-          <TopWorkspaces />
-        </Box>
+        {/* Bottom Section: UpcomingBookings + TopWorkspaces */}
+        <Grid container spacing={3} mt={1}>
+          {/* LEFT - Upcoming Bookings */}
+          <Grid item xs={12} md={8}>
+            <UpcomingBookings />
+          </Grid>
+
+          {/* RIGHT - Top Workspaces */}
+          <Grid item xs={12} md={4}>
+            <TopWorkspaces />
+          </Grid>
+        </Grid>
       </Box>
     </Container>
   );
