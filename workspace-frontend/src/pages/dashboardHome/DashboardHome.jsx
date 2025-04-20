@@ -45,7 +45,7 @@ const DashboardHome = ({
           gap={1}
           width="100%"
         >
-          {/* LEFT: Chart + Quick Links + Upcoming Bookings */}
+          {/* LEFT: Chart + Quick Links */}
           <Box width={{ xs: '100%', md: '60%' }}>
             <Paper
               elevation={0}
@@ -57,20 +57,15 @@ const DashboardHome = ({
                 flexDirection: 'column',
                 border: '1px solid',
                 borderColor: 'divider',
-                borderRadius: 1, // ✅ Reduced border radius
+                borderRadius: 1,
               }}
             >
               <BookingsChart />
               <ActionLinks />
             </Paper>
-
-            {/* Upcoming Bookings (same width) */}
-            <Box mt={1}>
-              <UpcomingBookings />
-            </Box>
           </Box>
 
-          {/* RIGHT: Recent Activities + Top Workspaces */}
+          {/* RIGHT: Recent Activities */}
           <Box width={{ xs: '100%', md: '40%' }}>
             <Paper
               elevation={0}
@@ -80,16 +75,52 @@ const DashboardHome = ({
                 width: '100%',
                 border: '1px solid',
                 borderColor: 'divider',
-                borderRadius: 1, // ✅ Reduced border radius
+                borderRadius: 1,
               }}
             >
               <RecentActivities />
             </Paper>
+          </Box>
+        </Box>
 
-            {/* Top Workspaces (same width) */}
-            <Box mt={1}>
+        {/* Bottom row: Upcoming Bookings + Top Workspaces */}
+        <Box
+          mt={1}
+          display="flex"
+          flexDirection={{ xs: 'column', md: 'row' }}
+          gap={1}
+          width="100%"
+        >
+          {/* LEFT: Upcoming Bookings */}
+          <Box width={{ xs: '100%', md: '60%' }}>
+            <Paper
+              elevation={0}
+              sx={{
+                p: 0.5,
+                width: '100%',
+                border: '1px solid',
+                borderColor: 'divider',
+                borderRadius: 1,
+              }}
+            >
+              <UpcomingBookings />
+            </Paper>
+          </Box>
+
+          {/* RIGHT: Top Workspaces */}
+          <Box width={{ xs: '100%', md: '40%' }}>
+            <Paper
+              elevation={0}
+              sx={{
+                p: 0.5,
+                width: '100%',
+                border: '1px solid',
+                borderColor: 'divider',
+                borderRadius: 1,
+              }}
+            >
               <TopWorkspaces />
-            </Box>
+            </Paper>
           </Box>
         </Box>
       </Box>
