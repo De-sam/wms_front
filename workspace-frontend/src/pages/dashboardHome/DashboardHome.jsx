@@ -20,30 +20,34 @@ const DashboardHome = ({
       <GreetingHeader />
 
       <Box width="100%" display="flex" flexDirection="column" px={0} py={0}>
-        {/* Workspace statistics */}
-        <Typography
-          variant="subtitle1"
-          fontWeight="bold"
-          sx={{ fontSize: { xs: '0.9rem', md: '1rem' }, mb: 0.5 }}
-        >
-          Workspace statistics
-        </Typography>
+        {/* Workspace statistics heading */}
+        <Box px={{ xs: 2, sm: 3, md: 4 }} mt={2}>
+          <Typography
+            variant="subtitle1"
+            fontWeight="bold"
+            sx={{ fontSize: { xs: '0.9rem', md: '1rem' }, mb: 0.5 }}
+          >
+            Workspace statistics
+          </Typography>
+        </Box>
 
         {/* Summary Cards */}
-        <SummaryCards
-          totalWorkspaces={totalWorkspaces}
-          totalUsers={totalUsers}
-          bookingsToday={bookingsToday}
-          occupancyRate={occupancyRate}
-        />
+        <Box mt={1} mb={2} px={{ xs: 2, sm: 3, md: 4 }}>
+          <SummaryCards
+            totalWorkspaces={totalWorkspaces}
+            totalUsers={totalUsers}
+            bookingsToday={bookingsToday}
+            occupancyRate={occupancyRate}
+          />
+        </Box>
 
         {/* Top row: Chart + Activities */}
         <Box
-          mt={1}
+          mt={0}
           display="flex"
           flexDirection={{ xs: 'column', md: 'row' }}
           gap={1}
-          width="100%"
+          px={{ xs: 2, sm: 3, md: 4 }}
         >
           {/* LEFT: Chart + Quick Links */}
           <Box width={{ xs: '100%', md: '60%' }}>
@@ -89,7 +93,8 @@ const DashboardHome = ({
           display="flex"
           flexDirection={{ xs: 'column', md: 'row' }}
           gap={1}
-          width="100%"
+          px={{ xs: 2, sm: 3, md: 4 }}
+          mb={3}
         >
           {/* LEFT: Upcoming Bookings */}
           <Box width={{ xs: '100%', md: '60%' }}>
