@@ -25,7 +25,7 @@ const DashboardHome = ({
         width="100%"
         display="flex"
         flexDirection="column"
-        px={0} // 🧼 No outer padding
+        px={0}
         py={0}
       >
         {/* Workspace statistics */}
@@ -45,7 +45,7 @@ const DashboardHome = ({
           occupancyRate={occupancyRate}
         />
 
-        {/* Chart + Recent Activities */}
+        {/* Responsive 60/40 layout for chart and recent activities */}
         <Box
           mt={1}
           display="flex"
@@ -53,35 +53,33 @@ const DashboardHome = ({
           gap={0}
           width="100%"
         >
-          {/* Left: Chart + Quick Links */}
+          {/* LEFT: Action Links + Bookings Chart */}
           <Box width={{ xs: '100%', md: '60%' }}>
             <Paper
               elevation={0}
               sx={{
                 p: 0.5,
-                height: 400,
+                height: 320, // 📏 fixed height for both cards
                 width: '100%',
+                display: 'flex',
+                flexDirection: 'column'
               }}
             >
-              <Box display="flex" flexDirection="column" gap={1} height="100%">
-                <ActionLinks />
-                <BookingsChart />
-              </Box>
+              <ActionLinks />
+              <BookingsChart />
             </Paper>
           </Box>
 
-          {/* Right: Recent Activities */}
+          {/* RIGHT: Recent Activities */}
           <Box
             width={{ xs: '100%', md: '40%' }}
-            sx={{
-              mt: { xs: 0.5, md: 0 }, // 🧼 Tiny spacing on mobile only
-            }}
+            sx={{ mt: { xs: 0.5, md: 0 } }}
           >
             <Paper
               elevation={0}
               sx={{
                 p: 0.5,
-                height: 400,
+                height: 320, // 📏 same height
                 width: '100%',
               }}
             >
