@@ -34,22 +34,18 @@ import ColorModeContext from '../../context/ColorModeContext';
 
 const drawerWidth = 300;
 
-// Enhanced Styled Switch for centered thumb icons
 const IconSwitch = styled(Switch)(({ theme }) => ({
   width: 80,
   height: 44,
   padding: 9,
-
-  // position & slide logic
   '& .MuiSwitch-switchBase': {
     padding: 0,
     margin: 2,
-    zIndex: 1,
     transform: 'translateX(0)',
-    '&.Mui-checked': { transform: 'translateX(36px)' },
+    '&.Mui-checked': {
+      transform: 'translateX(36px)',
+    },
   },
-
-  // thumb container
   '& .MuiSwitch-thumb': {
     boxSizing: 'border-box',
     width: 40,
@@ -58,33 +54,25 @@ const IconSwitch = styled(Switch)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 1,
   },
-
-  // default (sun) icon color
   '& .MuiSwitch-thumb svg': {
     fontSize: 32,
     color:
       theme.palette.mode === 'light'
-        ? theme.palette.warning.dark     // sun in light mode
-        : theme.palette.grey[100],       // sun in dark mode (faded)
-    transition: theme.transitions.create('color'),
+        ? theme.palette.warning.dark
+        : theme.palette.grey[100],
   },
-
-  // checked (moon) icon color
   '& .MuiSwitch-switchBase.Mui-checked .MuiSwitch-thumb svg': {
     color:
       theme.palette.mode === 'dark'
-        ? theme.palette.warning.light    // moon in dark mode
-        : theme.palette.primary.dark,    // moon in light mode (faded)
+        ? theme.palette.warning.light
+        : theme.palette.primary.dark,
   },
-
-  // thin, centered track
   '& .MuiSwitch-track': {
     position: 'absolute',
     top: '50%',
-    left: 11,      // 9px padding + 2px margin
-    width: 36,     // exactly your slide distance
+    left: 11,
+    width: 36,
     height: 12,
     transform: 'translateY(-50%)',
     borderRadius: 6,
@@ -93,7 +81,6 @@ const IconSwitch = styled(Switch)(({ theme }) => ({
         ? '#4D4D4D'
         : '#E0E0E0',
     opacity: 1,
-    zIndex: 0,
   },
 }));
 
@@ -106,16 +93,6 @@ const Sidebar = ({ open, onClose }) => {
   const orgName = localStorage.getItem('org_name') || 'Workspace';
   const shortcode = localStorage.getItem('shortcode') || '';
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
-
-  // decide icon colors for maximum contrast
-  const sunColor =
-    theme.palette.mode === 'light'
-      ? theme.palette.warning.dark
-      : theme.palette.warning.light;
-  const moonColor =
-    theme.palette.mode === 'dark'
-      ? theme.palette.grey[100]
-      : theme.palette.primary.dark;
 
   const handleNavigate = (path) =>
     navigate(`/${shortcode}/dashboard/${path}`);
@@ -140,19 +117,6 @@ const Sidebar = ({ open, onClose }) => {
     color: theme.palette.text.primary,
   };
 
-  const renderProfile = () => (
-    <Box sx={{ display: 'flex', alignItems: 'center', ml: 2, mt: 2 }}>
-      <Avatar sx={{ width: 50, height: 50, mr: 2 }}>E</Avatar>
-      <Typography
-        variant="h6"
-        fontWeight="bold"
-        sx={{ color: theme.palette.text.primary }}
-      >
-        Employee
-      </Typography>
-    </Box>
-  );
-
   const renderContent = (isMobile = false) => (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', p: 2 }}>
       {isMobile && (
@@ -163,13 +127,17 @@ const Sidebar = ({ open, onClose }) => {
         </Box>
       )}
 
-      {/* Logo + Org */}
+      {/* Logo + Org with sky blue */}
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          pt: 1,
+          pt: 2,
+          pb: 2,
+          mb: 2,
+          borderRadius: 2,
+          backgroundColor: 'skyblue',
         }}
       >
         <Avatar
@@ -178,10 +146,10 @@ const Sidebar = ({ open, onClose }) => {
             width: 64,
             height: 64,
             mb: 1,
-            bgcolor: theme.palette.mode === 'dark' ? 'grey.800' : 'grey.200',
+            bgcolor: 'white',
             fontSize: 20,
             fontWeight: 'bold',
-            color: theme.palette.text.primary,
+            color: theme.palette.primary.main,
           }}
         >
           LOGO
@@ -189,7 +157,7 @@ const Sidebar = ({ open, onClose }) => {
         <Typography
           variant="h6"
           fontWeight="bold"
-          sx={{ color: theme.palette.text.primary }}
+          sx={{ color: theme.palette.primary.contrastText }}
         >
           {orgName}
         </Typography>
@@ -198,7 +166,7 @@ const Sidebar = ({ open, onClose }) => {
       <Typography
         variant="body2"
         color="text.secondary"
-        sx={{ mt: 4, pl: 2 }}
+        sx={{ mt: 2, pl: 2 }}
       >
         Workspace Management System
       </Typography>
@@ -214,7 +182,7 @@ const Sidebar = ({ open, onClose }) => {
             borderRadius: 1,
             backgroundColor:
               location.pathname === `/${shortcode}/dashboard`
-                ? 'rgba(0,150,255,0.2)'
+                ? theme.palette.warning.light
                 : 'transparent',
             '&:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
           }}
@@ -237,7 +205,7 @@ const Sidebar = ({ open, onClose }) => {
             mb: 1,
             borderRadius: 1,
             backgroundColor: workspaceOpen
-              ? 'rgba(0,150,255,0.1)'
+              ? theme.palette.warning.light
               : 'transparent',
             '&:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
           }}
@@ -264,6 +232,14 @@ const Sidebar = ({ open, onClose }) => {
                 button
                 onClick={() => handleNavigate(item.path)}
                 selected={isActive(item.path)}
+                sx={{
+                  borderRadius: 1,
+                  mb: 0.5,
+                  backgroundColor: isActive(item.path)
+                    ? theme.palette.warning.light
+                    : 'transparent',
+                  '&:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
+                }}
               >
                 <ListItemIcon sx={{ color: 'inherit' }}>{item.icon}</ListItemIcon>
                 <ListItemText
@@ -285,6 +261,14 @@ const Sidebar = ({ open, onClose }) => {
             button
             onClick={() => handleNavigate(item.path)}
             selected={isActive(item.path)}
+            sx={{
+              borderRadius: 1,
+              mb: 1,
+              backgroundColor: isActive(item.path)
+                ? theme.palette.warning.light
+                : 'transparent',
+              '&:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
+            }}
           >
             <ListItemIcon sx={{ color: 'inherit' }}>{item.icon}</ListItemIcon>
             <ListItemText
@@ -302,15 +286,12 @@ const Sidebar = ({ open, onClose }) => {
             title={
               theme.palette.mode === 'dark' ? 'Switch to light' : 'Switch to dark'
             }
-            PopperProps={{
-              sx: { zIndex: 2300 } // ensure tooltip hovers above sidebar
-            }}
           >
             <IconSwitch
               checked={theme.palette.mode === 'dark'}
               onChange={colorMode.toggleColorMode}
-              icon={<Brightness7Icon sx={{ fontSize: 32, color: sunColor }} />}
-              checkedIcon={<Brightness4Icon sx={{ fontSize: 32, color: moonColor }} />}
+              icon={<Brightness7Icon />}
+              checkedIcon={<Brightness4Icon />}
             />
           </Tooltip>
         </Box>
@@ -325,14 +306,22 @@ const Sidebar = ({ open, onClose }) => {
             pt: 2,
           }}
         />
-        {renderProfile()}
+        <Box sx={{ display: 'flex', alignItems: 'center', ml: 2, mt: 2 }}>
+          <Avatar sx={{ width: 50, height: 50, mr: 2 }}>E</Avatar>
+          <Typography
+            variant="h6"
+            fontWeight="bold"
+            sx={{ color: theme.palette.text.primary }}
+          >
+            Employee
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );
 
   return (
     <>
-      {/* Permanent Drawer (desktop) */}
       <Drawer
         variant="permanent"
         sx={{
@@ -342,7 +331,6 @@ const Sidebar = ({ open, onClose }) => {
             width: drawerWidth,
             boxSizing: 'border-box',
             ...glassStyles,
-            zIndex: 2200,
           },
         }}
         open
@@ -350,7 +338,6 @@ const Sidebar = ({ open, onClose }) => {
         {renderContent()}
       </Drawer>
 
-      {/* Temporary Drawer (mobile) */}
       <Drawer
         variant="temporary"
         open={open}
@@ -364,7 +351,6 @@ const Sidebar = ({ open, onClose }) => {
             boxSizing: 'border-box',
             background: theme.palette.background.paper,
             color: theme.palette.text.primary,
-            zIndex: 2200,
           },
         }}
       >
