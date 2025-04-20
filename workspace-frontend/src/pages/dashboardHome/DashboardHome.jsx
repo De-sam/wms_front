@@ -13,25 +13,38 @@ const DashboardHome = ({
   occupancyRate = 0
 }) => {
   return (
-    <Box width="100vw" overflow="hidden">
+    <Container
+      maxWidth="xl"
+      disableGutters
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        overflowX: 'hidden'
+      }}
+    >
       {/* Header */}
       <GreetingHeader />
 
       <Box
-        width="100%"
+        flexGrow={1}
         display="flex"
         flexDirection="column"
+        alignItems="flex-start"
+        pt={{ xs: 1, sm: 2 }}
         px={{ xs: 2, md: 4 }}
-        py={3}
+        width="100%"
       >
         {/* Workspace statistics */}
-        <Typography
-          variant="subtitle1"
-          fontWeight="bold"
-          sx={{ fontSize: { xs: '1rem', md: '1.2rem' }, mb: 2 }}
-        >
-          Workspace statistics
-        </Typography>
+        <Box width="100%" pb={1}>
+          <Typography
+            variant="subtitle1"
+            fontWeight="bold"
+            sx={{ fontSize: { xs: '1rem', md: '1.2rem' } }}
+          >
+            Workspace statistics
+          </Typography>
+        </Box>
 
         {/* Summary Cards */}
         <SummaryCards
@@ -41,16 +54,16 @@ const DashboardHome = ({
           occupancyRate={occupancyRate}
         />
 
-        {/* Responsive layout: 60% / 40% on desktop, stacked on mobile */}
+        {/* Flex layout: Left (60%) | Right (40%) */}
         <Box
-          mt={4}
           display="flex"
-          flexDirection={{ xs: 'column', md: 'row' }}
+          flexDirection="row"
           gap={3}
+          mt={4}
           width="100%"
         >
-          {/* Left section (Chart + Quick Links) */}
-          <Box width={{ xs: '100%', md: '60%' }}>
+          {/* Left - Chart + Actions */}
+          <Box sx={{ width: '60%' }}>
             <Paper elevation={0} sx={{ p: 2, height: 400, width: '100%' }}>
               <Box display="flex" flexDirection="column" gap={2} height="100%">
                 <ActionLinks />
@@ -59,15 +72,15 @@ const DashboardHome = ({
             </Paper>
           </Box>
 
-          {/* Right section (Recent Activities) */}
-          <Box width={{ xs: '100%', md: '40%' }}>
+          {/* Right - Recent Activities */}
+          <Box sx={{ width: '40%' }}>
             <Paper elevation={0} sx={{ p: 2, height: 400, width: '100%' }}>
               <RecentActivities />
             </Paper>
           </Box>
         </Box>
       </Box>
-    </Box>
+    </Container>
   );
 };
 
