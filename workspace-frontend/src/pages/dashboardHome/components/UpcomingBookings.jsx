@@ -1,4 +1,3 @@
-// components/UpcomingBookings.jsx
 import React from 'react';
 import {
   Table,
@@ -31,27 +30,30 @@ const UpcomingBookings = () => {
 
   return (
     <TableContainer
-    component={Paper}
-    elevation={0}
-    sx={{
-      backgroundColor: 'transparent',
-      border: '1px solid', // keep the border transparent initially
-      borderRadius: 2,
-      maxHeight: 400,
-      overflowY: 'auto',
-      '&::-webkit-scrollbar': { display: 'none' },
-      scrollbarWidth: 'none',
-      '-ms-overflow-style': 'none',
-      transition: 'border 0.3s ease',
-      '&:hover': {
-        border: '1px solid #ffb300', // bright amber on hover
-      },
-    }}
-  >
+      component={Paper}
+      elevation={0}
+      sx={{
+        backgroundColor: 'transparent',
+        border: '1px solid',
+        borderRadius: 2,
+        p: 1,
+        maxHeight: 400,
+        width: '100%', // ✅ Ensures it fills parent grid column
+        overflowY: 'auto',
+        '&::-webkit-scrollbar': { display: 'none' },
+        scrollbarWidth: 'none',
+        '-ms-overflow-style': 'none',
+        transition: 'border 0.3s ease',
+        '&:hover': {
+          borderColor: '#ffb300', // amber on hover
+        },
+      }}
+    >
       <Table
         size="small"
         stickyHeader
         sx={{
+          width: '100%', // ✅ Ensures full width inside container
           '& caption': {
             captionSide: 'top',
             textAlign: 'left',

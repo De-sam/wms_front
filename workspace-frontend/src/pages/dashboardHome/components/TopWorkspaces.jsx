@@ -1,4 +1,3 @@
-// components/TopWorkspaces.jsx
 import React from 'react';
 import {
   Paper,
@@ -24,21 +23,22 @@ const TopWorkspaces = () => {
 
   return (
     <Paper
-    elevation={0}
-    sx={{
-      backgroundColor: 'transparent',
-      border: '1px solid', // keep the border transparent initially
-      borderRadius: 2,
-      height: 400,
-      display: 'flex',
-      flexDirection: 'column',
-      p: 2,
-      transition: 'border 0.3s ease',
-      '&:hover': {
-        border: '1px solid #1976d2', // rich blue on hover
-      },
-    }}
-  >
+      elevation={0}
+      sx={{
+        backgroundColor: 'transparent',
+        border: '1px solid',
+        borderRadius: 2,
+        height: 400,         // ✅ Match UpcomingBookings
+        width: '100%',       // ✅ Ensure full width of Grid column
+        display: 'flex',
+        flexDirection: 'column',
+        p: 2,
+        transition: 'border 0.3s ease',
+        '&:hover': {
+          borderColor: '#1976d2',
+        }
+      }}
+    >
       <Typography
         variant="subtitle1"
         fontWeight="bold"

@@ -1,4 +1,3 @@
-// components/RecentActivities.jsx
 import React from 'react';
 import {
   Paper,
@@ -63,21 +62,21 @@ const RecentActivities = () => {
 
   return (
     <Paper
-        elevation={0}
-        sx={{
+      elevation={0}
+      sx={{
         backgroundColor: 'transparent',
-        border: '1px solid', // keep the border transparent initially
+        border: '1px solid',
         borderRadius: 2,
-        width: { xs: '100%', md: 800 },
         p: 2,
-        height: 400,
+        width: '100%', // ✅ Let Grid control width
+        height: 400,    // ✅ Align with left card
         display: 'flex',
         flexDirection: 'column',
         transition: 'border 0.3s ease',
         '&:hover': {
-            border: '1px solid #1976d2', // rich blue on hover
-        },
-        }}
+          borderColor: '#1976d2',
+        }
+      }}
     >
       <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 2 }}>
         Recent Activities
@@ -107,7 +106,7 @@ const RecentActivities = () => {
               <item.Icon
                 sx={{
                   mr: 2,
-                  fontSize: { xs: 30, sm: 36, md: 40 },
+                  fontSize: { xs: 28, sm: 34, md: 38 },
                   color: item.color
                 }}
               />
