@@ -55,7 +55,7 @@ const DashboardHome = ({
               elevation={0}
               sx={{
                 p: 0.5,
-                height: 320,
+                height: 350,
                 width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
@@ -75,7 +75,7 @@ const DashboardHome = ({
               elevation={0}
               sx={{
                 p: 0.5,
-                height: 320,
+                height: 350,
                 width: '100%',
                 border: '1px solid',
                 borderColor: 'divider',
