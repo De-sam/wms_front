@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Box, Typography, Grid, Paper } from '@mui/material';
+import { Container, Box, Typography, Paper } from '@mui/material';
 import GreetingHeader from './components/GreetingHeader';
 import SummaryCards from './components/SummaryCards';
 import BookingsChart from './components/BookingsChart';
@@ -20,7 +20,7 @@ const DashboardHome = ({
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        overflowX: { xs: 'auto', md: 'visible' }
+        overflowX: 'hidden'
       }}
     >
       {/* Header */}
@@ -54,34 +54,31 @@ const DashboardHome = ({
           occupancyRate={occupancyRate}
         />
 
-        {/* Chart + ActionLinks | Recent Activities */}
-        <Grid container spacing={0} mt={4}>
-          {/* LEFT COLUMN (≈ 66.7%) */}
-          <Grid item xs={12} md={8}>
-            <Paper elevation={0} sx={{ p: 2, width: '100%', height: 400 }}>
+        {/* Flex layout: Left (70%) | Right (30%) */}
+        <Box
+          display="flex"
+          flexDirection="row"
+          gap={3}
+          mt={4}
+          width="100%"
+        >
+          {/* Left - Chart + Actions */}
+          <Box sx={{ width: '70%' }}>
+            <Paper elevation={0} sx={{ p: 2, height: 400, width: '100%' }}>
               <Box display="flex" flexDirection="column" gap={2} height="100%">
                 <ActionLinks />
                 <BookingsChart />
               </Box>
             </Paper>
-          </Grid>
+          </Box>
 
-          {/* RIGHT COLUMN (≈ 33.3%) */}
-          <Grid
-            item
-            xs={12}
-            md={4}
-            sx={{
-              pl: 1,     // add space only on the left for separation
-              pr: 0,     // ensure no padding on the right
-              ml: 'auto' // ensures it aligns flush right
-            }}
-          >
+          {/* Right - Recent Activities */}
+          <Box sx={{ width: '30%' }}>
             <Box sx={{ height: 400, width: '100%' }}>
               <RecentActivities />
             </Box>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       </Box>
     </Container>
   );
