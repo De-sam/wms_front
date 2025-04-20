@@ -25,8 +25,8 @@ const DashboardHome = ({
         width="100%"
         display="flex"
         flexDirection="column"
-        px={0} // 🔽 No horizontal padding
-        py={0} // 🔽 No vertical padding
+        px={0} // 🧼 No outer padding
+        py={0}
       >
         {/* Workspace statistics */}
         <Typography
@@ -45,20 +45,20 @@ const DashboardHome = ({
           occupancyRate={occupancyRate}
         />
 
-        {/* Responsive 60/40 layout */}
+        {/* Chart + Recent Activities */}
         <Box
           mt={1}
           display="flex"
           flexDirection={{ xs: 'column', md: 'row' }}
-          gap={0} // 🔽 No gap between sections
+          gap={0}
           width="100%"
         >
-          {/* Left: Quick Links + Chart */}
+          {/* Left: Chart + Quick Links */}
           <Box width={{ xs: '100%', md: '60%' }}>
             <Paper
               elevation={0}
               sx={{
-                p: 0.5, // 🔽 Tiny padding inside card
+                p: 0.5,
                 height: 400,
                 width: '100%',
               }}
@@ -71,11 +71,16 @@ const DashboardHome = ({
           </Box>
 
           {/* Right: Recent Activities */}
-          <Box width={{ xs: '100%', md: '40%' }}>
+          <Box
+            width={{ xs: '100%', md: '40%' }}
+            sx={{
+              mt: { xs: 0.5, md: 0 }, // 🧼 Tiny spacing on mobile only
+            }}
+          >
             <Paper
               elevation={0}
               sx={{
-                p: 0.5, // 🔽 Tiny padding inside card
+                p: 0.5,
                 height: 400,
                 width: '100%',
               }}
