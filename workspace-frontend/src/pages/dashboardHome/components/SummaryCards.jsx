@@ -55,51 +55,39 @@ const SummaryCards = ({
         <Grid item xs={12} sm={6} md={3} key={idx}>
           <Card
             sx={{
-              height: '100%', // ensures consistent height
+              height: '100%',
               borderRadius: 2,
-              backgroundColor: 'transparent',
               border: `1px solid ${color}`,
               boxShadow: 'none',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
             <CardContent
               sx={{
-                flex: 1,
+                width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'center',
                 alignItems: 'center',
-                textAlign: 'center',
+                justifyContent: 'center',
                 p: 2
               }}
             >
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 2,
-                  mb: 1
-                }}
-              >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
                 <Icon sx={{ color, fontSize: 32 }} />
-                <Typography
-                  variant="h4"
-                  fontWeight="bold"
-                  sx={{ fontSize: { xs: '1.5rem', md: '2rem' } }}
-                >
+                <Typography variant="h4" fontWeight="bold">
                   {value}
                 </Typography>
               </Box>
               <Typography
                 variant="subtitle2"
                 sx={{
+                  textAlign: 'center',
                   fontSize: { xs: '0.9rem', sm: '1rem' },
                   fontWeight: 500,
-                  color: theme.palette.text.primary
+                  color: theme.palette.text.primary,
                 }}
               >
                 {label}
