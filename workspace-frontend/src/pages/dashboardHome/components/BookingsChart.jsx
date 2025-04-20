@@ -9,18 +9,14 @@ const BookingsChart = () => {
   const barHeights = [30, 55, 40, 65, 20, 80, 50]; // percent
 
   return (
-    <Box
-      sx={{
-        width: '100%', // Ensures it matches 70% column width
-      }}
-    >
+    <Box sx={{ width: '100%' }}>
       <Paper
         elevation={0}
         sx={{
           backgroundColor: 'transparent',
           border: '1px solid',
           borderRadius: 2,
-          p: 2,
+          p: 0.5, // 🔽 minimal padding
           width: '100%',
           transition: 'border 0.3s ease',
           '&:hover': {
@@ -31,12 +27,12 @@ const BookingsChart = () => {
         <Typography
           variant="subtitle1"
           fontWeight="bold"
-          sx={{ mb: 2 }}
+          sx={{ mb: 1, fontSize: '0.9rem' }}
         >
           Bookings
         </Typography>
 
-        {/* Flex filler for where real chart would go */}
+        {/* Flex filler (can be replaced with chart later) */}
         <Box sx={{ flexGrow: 1 }} />
 
         {/* Footer bar chart */}
@@ -45,7 +41,7 @@ const BookingsChart = () => {
             display: 'flex',
             justifyContent: 'space-between',
             gap: { xs: 1, md: 2 },
-            mb: 2,
+            mb: 0, // ✅ no bottom margin
             px: { xs: 0.5, md: 1 },
             width: '100%',
             overflowX: 'auto',
@@ -58,7 +54,7 @@ const BookingsChart = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                flex: 1, // <-- This helps distribute evenly
+                flex: 1,
               }}
             >
               <Box
@@ -80,6 +76,8 @@ const BookingsChart = () => {
                   }}
                 />
               </Box>
+
+              {/* Day labels */}
               <Typography
                 variant="body2"
                 sx={{
