@@ -33,6 +33,7 @@ const DashboardHome = ({
         alignItems="flex-start"
         pt={{ xs: 1, sm: 2 }}
         px={{ xs: 2, md: 4 }}
+        width="100%"
       >
         {/* Workspace statistics */}
         <Box width="100%" pb={1}>
@@ -54,8 +55,8 @@ const DashboardHome = ({
         />
 
         {/* Chart + ActionLinks | Recent Activities */}
-        <Grid container spacing={3} mt={4}>
-          {/* LEFT (70%) */}
+        <Grid container spacing={0} mt={4}>
+          {/* LEFT COLUMN (≈ 66.7%) */}
           <Grid item xs={12} md={8}>
             <Paper elevation={0} sx={{ p: 2, width: '100%', height: 400 }}>
               <Box display="flex" flexDirection="column" gap={2} height="100%">
@@ -65,9 +66,20 @@ const DashboardHome = ({
             </Paper>
           </Grid>
 
-          {/* RIGHT (30%) */}
-          <Grid item xs={12} md={4}>
-            <RecentActivities />
+          {/* RIGHT COLUMN (≈ 33.3%) */}
+          <Grid
+            item
+            xs={12}
+            md={4}
+            sx={{
+              pl: 1,     // add space only on the left for separation
+              pr: 0,     // ensure no padding on the right
+              ml: 'auto' // ensures it aligns flush right
+            }}
+          >
+            <Box sx={{ height: 400, width: '100%' }}>
+              <RecentActivities />
+            </Box>
           </Grid>
         </Grid>
       </Box>
