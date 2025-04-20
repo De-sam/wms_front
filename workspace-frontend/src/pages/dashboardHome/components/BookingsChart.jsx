@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
+import { amber } from '@mui/material/colors';
 
 const BookingsChart = () => {
   const theme = useTheme();
@@ -25,16 +26,16 @@ const BookingsChart = () => {
         Bookings
       </Typography>
 
-      {/* Footer bar chart */}
+      {/* Stretch bar chart */}
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'space-around', // ✅ improved spacing
-          gap: { xs: 0.5, md: 1 },         // 🔽 minimal spacing
-          px: 0,                           // 🔽 no side padding
-          width: '100%',
-          overflowX: 'auto',
           flexGrow: 1,
+          display: 'flex',
+          justifyContent: 'space-around',
+          alignItems: 'flex-end',
+          gap: { xs: 0.5, md: 1 },
+          px: 0,
+          width: '100%',
         }}
       >
         {fullDays.map((day, idx) => (
@@ -42,33 +43,18 @@ const BookingsChart = () => {
             key={day}
             sx={{
               display: 'flex',
-              flexDirection: 'column',
+              flexDirection: 'column-reverse',
               alignItems: 'center',
-              flex: 1, // ✅ stretch evenly
+              justifyContent: 'flex-end',
+              height: '100%',
+              flex: 1,
             }}
           >
-            <Box
-              sx={{
-                height: { xs: 80, md: 130 },
-                display: 'flex',
-                alignItems: 'flex-end',
-                mb: 1,
-              }}
-            >
-              <Box
-                sx={{
-                  width: { xs: 16, md: 23 },
-                  height: `${barHeights[idx]}%`,
-                  backgroundColor: 'rgba(33, 150, 243, 0.2)',
-                  border: '1px solid rgba(255,255,255,0.3)',
-                  backdropFilter: 'blur(4px)',
-                  borderRadius: 1,
-                }}
-              />
-            </Box>
+            {/* Day label */}
             <Typography
               variant="body2"
               sx={{
+                mt: 0.5,
                 display: { xs: 'none', md: 'block' },
                 fontSize: '0.8rem',
               }}
@@ -78,12 +64,26 @@ const BookingsChart = () => {
             <Typography
               variant="body2"
               sx={{
+                mt: 0.5,
                 display: { xs: 'block', md: 'none' },
                 fontSize: '0.75rem',
               }}
             >
               {shortDays[idx]}
             </Typography>
+
+            {/* Bar */}
+            <Box
+              sx={{
+                width: { xs: 16, md: 23 },
+                height: `${barHeights[idx]}%`,
+                backgroundColor: amber[400], // 🟧 Amber bar
+                border: '1px solid rgba(255,255,255,0.3)',
+                backdropFilter: 'blur(4px)',
+                borderRadius: 1,
+                mb: 0,
+              }}
+            />
           </Box>
         ))}
       </Box>
