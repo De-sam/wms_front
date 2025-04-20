@@ -1,4 +1,3 @@
-// dashboardHome.jsx
 import React from 'react';
 import { Container, Box, Typography } from '@mui/material';
 import GreetingHeader from './components/GreetingHeader';
@@ -55,31 +54,29 @@ const DashboardHome = ({
           occupancyRate={occupancyRate}
         />
 
-        {/* Upcoming & Top Workspaces */}
+        {/* Bookings Chart & Action Links (moved up) */}
+        <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} gap={2} mt={4}>
+          <Box sx={{ width: { xs: '100%', md: '800px' } }}>
+            <BookingsChart />
+          </Box>
+          <Box sx={{ width: { xs: '100%', md: '650px' } }}>
+            <ActionLinks />
+          </Box>
+        </Box>
+
+        {/* Upcoming Bookings & Recent Activities (switched places) */}
         <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} gap={2} mt={4}>
           <Box width={{ xs: '100%', md: '800px' }}>
             <UpcomingBookings />
           </Box>
           <Box width={{ xs: '100%', md: '650px' }}>
-            <TopWorkspaces />
+            <RecentActivities />
           </Box>
         </Box>
 
-        {/* Recent Activities & Bookings + Links */}
-        <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} gap={2} mt={4}>
-          <RecentActivities />
-
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 2,
-              width: { xs: '100%', md: '650px' }
-            }}
-          >
-            <BookingsChart />
-            <ActionLinks />
-          </Box>
+        {/* Top Workspaces (moved down here) */}
+        <Box mt={4} width="100%">
+          <TopWorkspaces />
         </Box>
       </Box>
     </Container>
