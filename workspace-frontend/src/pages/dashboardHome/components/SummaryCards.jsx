@@ -55,14 +55,14 @@ const SummaryCards = ({
         <Grid item xs={12} sm={6} md={3} key={idx}>
           <Card
             sx={{
-              height: 130,
+              height: '100%', // ensures consistent height
               borderRadius: 2,
-              border: `1px solid ${color}`,
               backgroundColor: 'transparent',
+              border: `1px solid ${color}`,
               boxShadow: 'none',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'center',
+              justifyContent: 'center'
             }}
           >
             <CardContent
@@ -72,10 +72,19 @@ const SummaryCards = ({
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                p: 2,
+                textAlign: 'center',
+                p: 2
               }}
             >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 2,
+                  mb: 1
+                }}
+              >
                 <Icon sx={{ color, fontSize: 32 }} />
                 <Typography
                   variant="h4"
@@ -88,10 +97,9 @@ const SummaryCards = ({
               <Typography
                 variant="subtitle2"
                 sx={{
-                  textAlign: 'center',
                   fontSize: { xs: '0.9rem', sm: '1rem' },
                   fontWeight: 500,
-                  color: theme.palette.text.primary,
+                  color: theme.palette.text.primary
                 }}
               >
                 {label}
