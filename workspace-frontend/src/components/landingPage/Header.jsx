@@ -1,4 +1,3 @@
-// src/components/landingPage/Header.jsx
 import React, { useEffect, useState, useContext } from 'react';
 import {
   Box,
@@ -125,11 +124,11 @@ const Header = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            px: 3,
+            px: { xs: 2, sm: 3 },
             width: '100%'
           }}
         >
-          {/* Fixed-width logo container */}
+          {/* Logo tight to the left */}
           <Link to="/" style={{ display: 'flex', alignItems: 'center' }}>
             <Box
               component="img"
@@ -137,13 +136,13 @@ const Header = () => {
               alt="Workspace Logo"
               sx={{
                 height: 40,
-                width: 150,         // fixed width
-                objectFit: 'contain' // preserve aspect ratio
+                width: 150,
+                objectFit: 'contain'
               }}
             />
           </Link>
 
-          {/* Desktop Menu */}
+          {/* Desktop Menu aligned right */}
           <Box
             sx={{
               display: { xs: 'none', md: 'flex' },
@@ -276,7 +275,7 @@ const Header = () => {
 
           <Button
             component={Link}
-            to="/auth"
+            to="/signup"
             variant="contained"
             color="warning"
             sx={{
