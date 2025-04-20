@@ -26,26 +26,33 @@ const TopWorkspaces = () => {
       elevation={0}
       sx={{
         backgroundColor: 'transparent',
-        border: '1px solid',
-        borderRadius: 2,
-        height: 400,         // ✅ Match UpcomingBookings
-        width: '100%',       // ✅ Ensure full width of Grid column
+        border: 'none',
+        borderRadius: 0,
+        height: 400,
+        width: '100%',
         display: 'flex',
         flexDirection: 'column',
         p: 2,
-        transition: 'border 0.3s ease',
-        '&:hover': {
-          borderColor: '#1976d2',
-        }
       }}
     >
-      <Typography
-        variant="subtitle1"
-        fontWeight="bold"
-        sx={{ mb: 2, fontSize: { xs: '1rem', md: '1.2rem' } }}
+      {/* Heading with divider */}
+      <Box
+        sx={{
+          width: '100%',
+          borderBottom: '1px solid',
+          borderColor: 'divider',
+          pb: 1,
+          mb: 2,
+        }}
       >
-        Top Booked Workspaces
-      </Typography>
+        <Typography
+          variant="subtitle1"
+          fontWeight="bold"
+          sx={{ fontSize: { xs: '1rem', md: '1.2rem' } }}
+        >
+          Top Booked Workspaces
+        </Typography>
+      </Box>
 
       <Box
         sx={{

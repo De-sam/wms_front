@@ -7,7 +7,9 @@ import {
   TableHead,
   TableRow,
   Paper,
-  useTheme
+  useTheme,
+  Box,
+  Typography,
 } from '@mui/material';
 
 const dummyBookings = [
@@ -34,41 +36,46 @@ const UpcomingBookings = () => {
       elevation={0}
       sx={{
         backgroundColor: 'transparent',
-        border: '1px solid',
-        borderRadius: 2,
-        p: 1,
+        border: 'none',
+        borderRadius: 0,
+        p: 0,
         maxHeight: 400,
-        width: '100%', // ✅ Ensures it fills parent grid column
+        width: '100%',
         overflowY: 'auto',
         '&::-webkit-scrollbar': { display: 'none' },
         scrollbarWidth: 'none',
         '-ms-overflow-style': 'none',
-        transition: 'border 0.3s ease',
-        '&:hover': {
-          borderColor: '#ffb300', // amber on hover
-        },
       }}
     >
+      {/* Sticky Heading with Divider */}
+      <Box
+        sx={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 2,
+          backgroundColor: theme.palette.background.default,
+          borderBottom: '1px solid',
+          borderColor: 'divider',
+          px: 1.5,
+          py: 1.2,
+        }}
+      >
+        <Typography variant="subtitle1" fontWeight="bold">
+          Upcoming Bookings
+        </Typography>
+      </Box>
+
       <Table
         size="small"
         stickyHeader
         sx={{
-          width: '100%', // ✅ Ensures full width inside container
-          '& caption': {
-            captionSide: 'top',
-            textAlign: 'left',
-            typography: 'subtitle1',
-            fontWeight: 'bold',
-            fontSize: { xs: '1rem', md: '1.2rem' },
-            mb: 1
-          },
+          width: '100%',
           '& .MuiTableCell-root': {
             py: { xs: 2, sm: 2.5 },
             px: { xs: 1, sm: 1.5 }
           }
         }}
       >
-        <caption>Upcoming Bookings</caption>
         <TableHead>
           <TableRow>
             <TableCell sx={{ fontWeight: 'bold' }}>Time</TableCell>

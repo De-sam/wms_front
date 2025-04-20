@@ -6,7 +6,7 @@ import BookingsChart from './components/BookingsChart';
 import ActionLinks from './components/ActionLinks';
 import RecentActivities from './components/RecentActivities';
 import UpcomingBookings from './components/UpcomingBookings';
-import TopWorkspaces from './components/TopWorkspaces'; // ✅ Add this
+import TopWorkspaces from './components/TopWorkspaces';
 
 const DashboardHome = ({
   totalWorkspaces = 0,
@@ -57,7 +57,7 @@ const DashboardHome = ({
                 flexDirection: 'column',
                 border: '1px solid',
                 borderColor: 'divider',
-                borderRadius: 2,
+                borderRadius: 1, // ✅ Reduced border radius
               }}
             >
               <BookingsChart />
@@ -80,13 +80,13 @@ const DashboardHome = ({
                 width: '100%',
                 border: '1px solid',
                 borderColor: 'divider',
-                borderRadius: 2,
+                borderRadius: 1, // ✅ Reduced border radius
               }}
             >
               <RecentActivities />
             </Paper>
 
-            {/* ✅ Top Workspaces (same width) */}
+            {/* Top Workspaces (same width) */}
             <Box mt={1}>
               <TopWorkspaces />
             </Box>
