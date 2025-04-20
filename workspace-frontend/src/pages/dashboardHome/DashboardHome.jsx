@@ -5,6 +5,8 @@ import SummaryCards from './components/SummaryCards';
 import BookingsChart from './components/BookingsChart';
 import ActionLinks from './components/ActionLinks';
 import RecentActivities from './components/RecentActivities';
+import UpcomingBookings from './components/UpcomingBookings';
+import TopWorkspaces from './components/TopWorkspaces'; // ✅ Add this
 
 const DashboardHome = ({
   totalWorkspaces = 0,
@@ -35,15 +37,15 @@ const DashboardHome = ({
           occupancyRate={occupancyRate}
         />
 
-        {/* Chart + Recent Activities layout */}
+        {/* Top row: Chart + Activities */}
         <Box
           mt={1}
           display="flex"
           flexDirection={{ xs: 'column', md: 'row' }}
-          gap={1} // 8px spacing for both views
+          gap={1}
           width="100%"
         >
-          {/* LEFT: Chart + Quick Links */}
+          {/* LEFT: Chart + Quick Links + Upcoming Bookings */}
           <Box width={{ xs: '100%', md: '60%' }}>
             <Paper
               elevation={0}
@@ -58,12 +60,17 @@ const DashboardHome = ({
                 borderRadius: 2,
               }}
             >
-              <BookingsChart />      {/* Chart now comes first */}
-              <ActionLinks />        {/* Buttons moved below chart */}
+              <BookingsChart />
+              <ActionLinks />
             </Paper>
+
+            {/* Upcoming Bookings (same width) */}
+            <Box mt={1}>
+              <UpcomingBookings />
+            </Box>
           </Box>
 
-          {/* RIGHT: Recent Activities */}
+          {/* RIGHT: Recent Activities + Top Workspaces */}
           <Box width={{ xs: '100%', md: '40%' }}>
             <Paper
               elevation={0}
@@ -78,6 +85,11 @@ const DashboardHome = ({
             >
               <RecentActivities />
             </Paper>
+
+            {/* ✅ Top Workspaces (same width) */}
+            <Box mt={1}>
+              <TopWorkspaces />
+            </Box>
           </Box>
         </Box>
       </Box>
