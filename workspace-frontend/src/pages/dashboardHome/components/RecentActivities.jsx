@@ -69,7 +69,7 @@ const RecentActivities = () => {
         borderRadius: 2,
         p: 2,
         width: '100%', // ✅ Let Grid control width
-        height: 300,    // ✅ Align with left card
+        height: 320,    // ✅ Align with left card
         display: 'flex',
         flexDirection: 'column',
         transition: 'border 0.3s ease',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Box, Typography, Paper } from '@mui/material';
+import { Box, Typography, Paper } from '@mui/material';
 import GreetingHeader from './components/GreetingHeader';
 import SummaryCards from './components/SummaryCards';
 import BookingsChart from './components/BookingsChart';
@@ -15,8 +15,8 @@ const DashboardHome = ({
   return (
     <Box
       width="100%"
-      maxWidth="100vw" // 🛑 This prevents horizontal overflow
-      overflowX="hidden" // 🧼 This removes scrollbars
+      maxWidth="100vw"
+      overflowX="hidden"
     >
       {/* Header */}
       <GreetingHeader />
@@ -45,15 +45,15 @@ const DashboardHome = ({
           occupancyRate={occupancyRate}
         />
 
-        {/* Responsive layout: 60% / 40% on desktop, stacked on mobile */}
+        {/* Chart + Recent Activities */}
         <Box
           mt={4}
           display="flex"
           flexDirection={{ xs: 'column', md: 'row' }}
-          gap={3}
+          gap={0} // ❌ no spacing between the cards
           width="100%"
         >
-          {/* Left section */}
+          {/* Left: Chart + Actions */}
           <Box width={{ xs: '100%', md: '60%' }}>
             <Paper elevation={0} sx={{ p: 2, height: 400, width: '100%' }}>
               <Box display="flex" flexDirection="column" gap={2} height="100%">
@@ -63,7 +63,7 @@ const DashboardHome = ({
             </Paper>
           </Box>
 
-          {/* Right section */}
+          {/* Right: Recent Activities */}
           <Box width={{ xs: '100%', md: '40%' }}>
             <Paper elevation={0} sx={{ p: 2, height: 400, width: '100%' }}>
               <RecentActivities />
