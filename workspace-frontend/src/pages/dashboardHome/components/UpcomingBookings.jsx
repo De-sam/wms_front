@@ -31,33 +31,15 @@ const UpcomingBookings = () => {
   const theme = useTheme();
 
   return (
-    <TableContainer
-      component={Paper}
-      elevation={0}
-      sx={{
-        backgroundColor: 'transparent',
-        border: 'none',
-        borderRadius: 0,
-        p: 0,
-        maxHeight: 400,
-        width: '100%',
-        overflowY: 'auto',
-        '&::-webkit-scrollbar': { display: 'none' },
-        scrollbarWidth: 'none',
-        '-ms-overflow-style': 'none',
-      }}
-    >
-      {/* Sticky Heading with Divider */}
+    <Box width="100%">
+      {/* Heading OUTSIDE scroll area */}
       <Box
         sx={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 2,
-          backgroundColor: theme.palette.background.default,
+          width: '100%',
           borderBottom: '1px solid',
           borderColor: 'divider',
-          px: 1.5,
-          py: 1.2,
+          pb: 1,
+          mb: 2,
         }}
       >
         <Typography variant="subtitle1" fontWeight="bold">
@@ -65,37 +47,55 @@ const UpcomingBookings = () => {
         </Typography>
       </Box>
 
-      <Table
-        size="small"
-        stickyHeader
+      {/* Scrollable table container */}
+      <TableContainer
+        component={Paper}
+        elevation={0}
         sx={{
+          backgroundColor: 'transparent',
+          border: 'none',
+          borderRadius: 0,
+          p: 0,
+          maxHeight: 360,
           width: '100%',
-          '& .MuiTableCell-root': {
-            py: { xs: 2, sm: 2.5 },
-            px: { xs: 1, sm: 1.5 }
-          }
+          overflowY: 'auto',
+          '&::-webkit-scrollbar': { display: 'none' },
+          scrollbarWidth: 'none',
+          '-ms-overflow-style': 'none',
         }}
       >
-        <TableHead>
-          <TableRow>
-            <TableCell sx={{ fontWeight: 'bold' }}>Time</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }}>User</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }}>Workspace</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }}>Duration</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {dummyBookings.map((b, i) => (
-            <TableRow key={i}>
-              <TableCell>{b.time}</TableCell>
-              <TableCell>{b.user}</TableCell>
-              <TableCell>{b.workspace}</TableCell>
-              <TableCell>{b.duration}</TableCell>
+        <Table
+          size="small"
+          stickyHeader
+          sx={{
+            width: '100%',
+            '& .MuiTableCell-root': {
+              py: { xs: 2, sm: 2.5 },
+              px: { xs: 1, sm: 1.5 }
+            }
+          }}
+        >
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ fontWeight: 'bold' }}>Time</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>User</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Workspace</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Duration</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {dummyBookings.map((b, i) => (
+              <TableRow key={i}>
+                <TableCell>{b.time}</TableCell>
+                <TableCell>{b.user}</TableCell>
+                <TableCell>{b.workspace}</TableCell>
+                <TableCell>{b.duration}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 };
 
