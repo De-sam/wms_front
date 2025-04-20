@@ -5,7 +5,7 @@ import { amber } from '@mui/material/colors';
 const BookingsChart = () => {
   const fullDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const shortDays = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-  const barHeights = [30, 55, 40, 65, 20, 80, 50]; // in %
+  const barHeights = [30, 55, 40, 65, 20, 80, 50]; // percent
 
   return (
     <Box
@@ -19,19 +19,21 @@ const BookingsChart = () => {
       <Typography
         variant="subtitle1"
         fontWeight="bold"
-        sx={{ fontSize: '0.9rem', mb: 0.5 }}
+        sx={{ mb: 1, fontSize: '0.9rem' }}
       >
         Bookings
       </Typography>
 
+      {/* Bar chart row */}
       <Box
         sx={{
-          flexGrow: 1,
           display: 'flex',
-          justifyContent: 'space-around',
-          alignItems: 'flex-end',
+          justifyContent: 'space-around', // better stretch
+          gap: { xs: 0.5, md: 1 },
           px: 0,
           width: '100%',
+          flexGrow: 1,
+          alignItems: 'flex-end',
         }}
       >
         {fullDays.map((day, idx) => (
@@ -39,35 +41,51 @@ const BookingsChart = () => {
             key={day}
             sx={{
               display: 'flex',
-              flexDirection: 'column-reverse',
+              flexDirection: 'column',
               alignItems: 'center',
-              justifyContent: 'flex-end',
               flex: 1,
-              height: '100%',
-              minWidth: 0, // Prevents shrinking issues
             }}
           >
-            {/* Day label */}
+            {/* Bar */}
+            <Box
+              sx={{
+                height: { xs: 80, md: 130 },
+                display: 'flex',
+                alignItems: 'flex-end',
+                mb: 1,
+              }}
+            >
+              <Box
+                sx={{
+                  width: { xs: 16, md: 23 },
+                  height: `${barHeights[idx]}%`,
+                  backgroundColor: amber[400], // Amber color
+                  border: '1px solid rgba(255,255,255,0.3)',
+                  backdropFilter: 'blur(4px)',
+                  borderRadius: 1,
+                }}
+              />
+            </Box>
+
+            {/* Label */}
             <Typography
               variant="body2"
               sx={{
-                fontSize: { xs: '0.75rem', md: '0.8rem' },
-                pt: 0.5,
+                display: { xs: 'none', md: 'block' },
+                fontSize: '0.8rem',
               }}
             >
               {day}
             </Typography>
-
-            {/* Bar */}
-            <Box
+            <Typography
+              variant="body2"
               sx={{
-                width: { xs: 16, md: 22 },
-                height: `${barHeights[idx]}%`,
-                backgroundColor: amber[400],
-                borderRadius: 1,
-                mt: 0, // 🔽 Remove vertical spacing
+                display: { xs: 'block', md: 'none' },
+                fontSize: '0.75rem',
               }}
-            />
+            >
+              {shortDays[idx]}
+            </Typography>
           </Box>
         ))}
       </Box>
