@@ -1,8 +1,7 @@
 import React from 'react';
 import {
   Grid,
-  Card,
-  CardContent,
+  Paper,
   Typography,
   Box,
   useTheme
@@ -53,49 +52,38 @@ const SummaryCards = ({
     <Grid container spacing={2} sx={{ width: '100%' }}>
       {summaryItems.map(({ label, value, Icon, color }, idx) => (
         <Grid item xs={12} sm={6} md={3} key={idx}>
-          <Card
+          <Paper
+            elevation={0}
             sx={{
               height: 130,
               borderRadius: 1,
               border: `1px solid ${color}`,
-              boxShadow: 'none',
               backgroundColor: 'transparent',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
+              p: 2,
             }}
           >
-            <CardContent
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+              <Icon sx={{ color, fontSize: 32 }} />
+              <Typography variant="h4" fontWeight="bold">
+                {value}
+              </Typography>
+            </Box>
+            <Typography
+              variant="subtitle2"
               sx={{
-                width: '100%',
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                p: 2,
+                textAlign: 'center',
+                fontSize: { xs: '0.9rem', sm: '1rem' },
+                fontWeight: 500,
+                color: theme.palette.text.primary,
               }}
             >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-                <Icon sx={{ color, fontSize: 32 }} />
-                <Typography variant="h4" fontWeight="bold">
-                  {value}
-                </Typography>
-              </Box>
-              <Typography
-                variant="subtitle2"
-                sx={{
-                  textAlign: 'center',
-                  fontSize: { xs: '0.9rem', sm: '1rem' },
-                  fontWeight: 500,
-                  color: theme.palette.text.primary,
-                }}
-              >
-                {label}
-              </Typography>
-            </CardContent>
-          </Card>
+              {label}
+            </Typography>
+          </Paper>
         </Grid>
       ))}
     </Grid>
