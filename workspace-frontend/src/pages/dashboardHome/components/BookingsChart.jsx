@@ -5,7 +5,7 @@ import { amber } from '@mui/material/colors';
 const BookingsChart = () => {
   const fullDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const shortDays = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-  const barHeights = [30, 55, 40, 65, 20, 80, 50]; // % height
+  const barHeights = [70, 85, 75, 90, 60, 100, 80]; // boosted for taller bars ✅
 
   // Used to trigger animation after mount
   const [animate, setAnimate] = useState(false);
