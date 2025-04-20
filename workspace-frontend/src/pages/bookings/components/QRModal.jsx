@@ -9,7 +9,6 @@ import {
   Divider,
   Box,
 } from '@mui/material';
-import { QRCodeSVG } from 'qrcode.react';
 
 const QRModal = ({ open, onClose, bookingId }) => {
   if (!bookingId) return null;
@@ -26,7 +25,11 @@ const QRModal = ({ open, onClose, bookingId }) => {
           flexDirection="column"
           py={3}
         >
-          <QRCodeSVG value={`booking:${bookingId}`} size={200} />
+          <img
+            src={`https://api.qrserver.com/v1/create-qr-code/?data=booking:${bookingId}&size=200x200`}
+            alt="Booking QR"
+            style={{ width: 200, height: 200 }}
+          />
           <Box mt={2} fontSize={14} color="text.secondary">
             Booking ID: {bookingId}
           </Box>
