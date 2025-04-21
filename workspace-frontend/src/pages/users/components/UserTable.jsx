@@ -1,9 +1,6 @@
 // File: src/pages/users/components/UserTable.jsx
-
 import React, { useState } from 'react';
 import {
-  Box,
-  Button,
   Typography,
   Table,
   TableBody,
@@ -18,114 +15,70 @@ import {
   useMediaQuery
 } from '@mui/material';
 import { useTheme, alpha } from '@mui/material/styles';
-import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import RoleFilter from './RoleFilter';
+import AddUserButton from './AddUserButton';
 import UserFormModal from './UserFormModal';
 import StatusBadge from './StatusBadge';
 import UserActions from './UserActions';
 
-export default function UserTable({ initialUsers = [
-  {
-    name: 'Alice Johnson',
-    email: 'alice@example.com',
-    role: 'Admin',
-    status: 'Active'
-  },
-  {
-    name: 'Bob Smith',
-    email: 'bob@example.com',
-    role: 'Editor',
-    status: 'Inactive'
-  },
-  {
-    name: 'Charlie Brown',
-    email: 'charlie@example.com',
-    role: 'Viewer',
-    status: 'Active'
-  },
-  {
-    name: 'Diana Prince',
-    email: 'diana@example.com',
-    role: 'Admin',
-    status: 'Active'
-  },
-  {
-    name: 'Ethan Hunt',
-    email: 'ethan@example.com',
-    role: 'Editor',
-    status: 'Inactive'
-  }
-] }) {
+export default function UserTable({
+  initialUsers = [
+    { name: 'Alice Johnson',   email: 'alice@example.com',   role: 'Admin',  status: 'Active'   },
+    { name: 'Bob Smith',       email: 'bob@example.com',     role: 'Editor', status: 'Inactive' },
+    { name: 'Charlie Brown',   email: 'charlie@example.com', role: 'Viewer', status: 'Active'   },
+    { name: 'Diana Prince',    email: 'diana@example.com',   role: 'Admin',  status: 'Active'   },
+    { name: 'Ethan Hunt',      email: 'ethan@example.com',   role: 'Editor', status: 'Inactive' }
+  ]
+}) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // Local state for users
-  const [users, setUsers] = useState(initialUsers);
-  const [filterRole, setFilterRole] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [modalOpen, setModalOpen] = useState(false);
+  // component state
+  const [users, setUsers]               = useState(initialUsers);
+  const [filterRole, setFilterRole]     = useState('');
+  const [searchTerm, setSearchTerm]     = useState('');
+  const [modalOpen, setModalOpen]       = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  // Glassy background
-  const glassBg =
-    theme.palette.mode === 'light'
-      ? alpha(theme.palette.background.paper, 0.6)
-      : alpha(theme.palette.background.default, 0.4);
+  // glassy bg styling
+  const glassBg = theme.palette.mode === 'light'
+    ? alpha(theme.palette.background.paper, 0.6)
+    : alpha(theme.palette.background.default, 0.4);
 
-  // Modal controls
-  const openAddModal = () => {
-    setSelectedUser(null);
-    setModalOpen(true);
-  };
-  const openEditModal = (user) => {
-    setSelectedUser(user);
-    setModalOpen(true);
-  };
-  const closeModal = () => setModalOpen(false);
+  // modal handlers
+  const openAddModal  = () => { setSelectedUser(null);        setModalOpen(true); };
+  const openEditModal = user => { setSelectedUser(user);      setModalOpen(true); };
+  const closeModal    = ()   => setModalOpen(false);
 
-  // Core actions
-  const handleAddUser = (data) => {
-    setUsers([
-      ...users,
-      { ...data, status: 'Active' } // new users start as Active
-    ]);
+  // CRUD actions
+  const handleAddUser      = data => setUsers([...users, { ...data, status: 'Active' }]);
+  const handleEditUser     = data => {
+    setUsers(users.map(u =>
+      u.email === selectedUser.email ? { ...u, ...data } : u
+    ));
   };
-  const handleEditUser = (data) => {
-    setUsers(
-      users.map(u =>
-        u.email === selectedUser.email
-          ? { ...u, ...data } // merge updated fields
-          : u
-      )
-    );
-  };
-  const handleDeleteUser = (user) => {
-    setUsers(users.filter(u => u.email !== user.email));
-  };
-  const handleToggleStatus = (user) => {
-    setUsers(
-      users.map(u =>
-        u.email === user.email
-          ? { ...u, status: u.status === 'Active' ? 'Inactive' : 'Active' }
-          : u
-      )
-    );
+  const handleDeleteUser   = user => setUsers(users.filter(u => u.email !== user.email));
+  const handleToggleStatus = user => {
+    setUsers(users.map(u =>
+      u.email === user.email
+        ? { ...u, status: u.status === 'Active' ? 'Inactive' : 'Active' }
+        : u
+    ));
   };
 
-  // Search + filter
+  // filter + search pipeline
   const filtered = users
-    .filter(u => (filterRole ? u.role === filterRole : true))
+    .filter(u => filterRole ? u.role === filterRole : true)
     .filter(u =>
       `${u.name} ${u.email}`
         .toLowerCase()
         .includes(searchTerm.trim().toLowerCase())
     );
 
-  // Form submission
-  const handleSubmit = (formData) => {
-    if (selectedUser) handleEditUser(formData);
-    else handleAddUser(formData);
+  // form submit (add vs edit)
+  const handleSubmit = data => {
+    selectedUser ? handleEditUser(data) : handleAddUser(data);
     closeModal();
   };
 
@@ -139,34 +92,37 @@ export default function UserTable({ initialUsers = [
         border: `1px solid ${theme.palette.divider}`
       }}
     >
-      {/* Header: title + controls */}
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
-        <Typography variant="h6" sx={{ fontWeight: 600, color: theme.palette.text.primary }}>
+      {/* Header */}
+      <Stack
+        direction={isMobile ? 'column' : 'row'}
+        alignItems="center"
+        justifyContent="space-between"
+        spacing={isMobile ? 1 : 2}
+        mb={2}
+      >
+        <Typography
+          variant="h6"
+          sx={{ fontWeight: 600, color: theme.palette.text.primary }}
+        >
           Users
         </Typography>
-
-        <Stack direction="row" spacing={1}>
-          <RoleFilter filterRole={filterRole} setFilterRole={setFilterRole} />
-          <Button
-            variant="contained"
-            size={isMobile ? 'small' : 'medium'}
-            startIcon={<AddIcon />}
-            onClick={openAddModal}
-            sx={{
-              textTransform: 'none',
-              background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
-              boxShadow: theme.shadows[4],
-              '&:hover': { boxShadow: theme.shadows[8] }
-            }}
-          >
-            Add User
-          </Button>
+        <Stack
+          direction={isMobile ? 'column' : 'row'}
+          spacing={1}
+          alignItems="center"
+          width={isMobile ? '100%' : 'auto'}
+        >
+          <RoleFilter
+            filterRole={filterRole}
+            setFilterRole={setFilterRole}
+          />
+          <AddUserButton onClick={openAddModal} isMobile={isMobile} />
         </Stack>
       </Stack>
 
-      {/* Search bar */}
+      {/* Search */}
       <TextField
-        size="big"
+        size={isMobile ? 'small' : 'medium'}
         fullWidth
         placeholder="Search by name or email…"
         value={searchTerm}
@@ -200,7 +156,13 @@ export default function UserTable({ initialUsers = [
           overflowX: 'auto'
         }}
       >
-        <Table stickyHeader sx={{ minWidth: { xs: 600, sm: 720 }, tableLayout: 'fixed' }}>
+        <Table
+          stickyHeader
+          sx={{
+            minWidth: 720,
+            tableLayout: 'fixed'
+          }}
+        >
           <TableHead>
             <TableRow>
               {['Name', 'Email', 'Role', 'Status', 'Actions'].map(header => (
@@ -219,26 +181,22 @@ export default function UserTable({ initialUsers = [
               ))}
             </TableRow>
           </TableHead>
-
           <TableBody>
             {filtered.map(user => (
               <TableRow
                 key={user.email}
                 sx={{
                   '&:hover': {
-                    backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity)
+                    backgroundColor: alpha(
+                      theme.palette.primary.main,
+                      theme.palette.action.hoverOpacity
+                    )
                   }
                 }}
               >
-                <TableCell align="center" sx={{ color: theme.palette.text.primary }}>
-                  {user.name}
-                </TableCell>
-                <TableCell align="center" sx={{ color: theme.palette.text.primary }}>
-                  {user.email}
-                </TableCell>
-                <TableCell align="center" sx={{ color: theme.palette.text.primary }}>
-                  {user.role}
-                </TableCell>
+                <TableCell align="center">{user.name}</TableCell>
+                <TableCell align="center">{user.email}</TableCell>
+                <TableCell align="center">{user.role}</TableCell>
                 <TableCell align="center">
                   <StatusBadge status={user.status} />
                 </TableCell>
@@ -256,7 +214,7 @@ export default function UserTable({ initialUsers = [
         </Table>
       </TableContainer>
 
-      {/* User form modal */}
+      {/* Form Modal */}
       <UserFormModal
         open={modalOpen}
         onClose={closeModal}

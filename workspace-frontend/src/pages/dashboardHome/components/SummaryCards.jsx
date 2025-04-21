@@ -49,14 +49,39 @@ const SummaryCards = ({
   ];
 
   return (
-    <Grid container spacing={4} sx={{ width: '100%' }}>
+    <Grid
+      container
+      spacing={4}
+      sx={{
+        width: '100%',
+        justifyContent: { xs: 'center', sm: 'flex-start' }
+      }}
+    >
       {summaryItems.map(({ label, value, Icon, color }, idx) => (
-        <Grid item xs={12} sm={6} md={3} key={idx}>
+        <Grid
+          item
+          key={idx}
+          xs={12}    // 1 per row on mobile
+          sm={6}     // 2 per row on tablet+
+          sx={{
+            display: 'flex',
+            justifyContent: {
+              xs: 'center',    // center the fixed‑width mobile card
+              sm: 'flex-start',
+              md: 'center'     // center the fixed‑width desktop card
+            }
+          }}
+        >
           <Paper
             elevation={0}
             sx={{
+              width: {
+                xs: 390,     // mobile: original 390px
+                sm: '100%',  // tablet: fill its 50% grid cell
+                md: 330      // desktop: fixed 350px
+              },
+              minWidth: 0,
               height: 130,
-              width: 390, 
               borderRadius: 2,
               border: `1px solid ${color}`,
               backgroundColor: 'transparent',

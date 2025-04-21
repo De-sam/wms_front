@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Container, Button } from '@mui/material';
 import RoleFilter from './components/RoleFilter';
 import UserTable from './components/UserTable';
-import UserFormModal from './components/UserFormModal';
+import UserFormModal from './components/AddUserButton';
 
 const initialUsers = [
   { name: 'John Doe', email: 'john@example.com', role: 'Admin', status: 'Active' },

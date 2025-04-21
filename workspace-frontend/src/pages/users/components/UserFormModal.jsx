@@ -1,42 +1,39 @@
+// File: src/pages/users/components/UserFormModal.jsx
 import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  TextField,
   Button,
+  TextField,
+  Stack,
   FormControl,
   InputLabel,
   Select,
-  MenuItem,
-  Typography,
-  Box,
-  useMediaQuery
+  MenuItem
 } from '@mui/material';
 import { useTheme, alpha } from '@mui/material/styles';
 
-export default function UserFormModal({ open, onClose, onSubmit, initialData }) {
+export default function UserFormModal({
+  open,
+  onClose,
+  onSubmit,
+  initialData = null
+}) {
   const theme = useTheme();
-  // only go full‑screen on extra‑small, so small phones stay a bit narrower
-  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [form, setForm] = useState({ name: '', email: '', role: '' });
 
-  const [form, setForm] = useState({
-    name: '',
-    email: '',
-    role: 'Employee',
-    password: ''
-  });
-
+  // Populate form when editing
   useEffect(() => {
     if (initialData) {
       setForm({
         name: initialData.name,
         email: initialData.email,
-        role: initialData.role,
-        password: ''
+        role: initialData.role
       });
+    } else {
+      setForm({ name: '', email: '', role: '' });
     }
   }, [initialData]);
 
@@ -45,113 +42,73 @@ export default function UserFormModal({ open, onClose, onSubmit, initialData }) 
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = () => {
+  const handleSave = () => {
+    // simple validation
+    if (!form.name || !form.email || !form.role) return;
     onSubmit(form);
-    onClose();
   };
-
-  const glassBg =
-    theme.palette.mode === 'light'
-      ? alpha(theme.palette.common.white, 0.6)
-      : alpha(theme.palette.common.black, 0.4);
 
   return (
     <Dialog
       open={open}
       onClose={onClose}
-      fullScreen={fullScreen}
+      fullWidth
+      BackdropProps={{
+        style: {
+          backdropFilter: 'blur(10px)',
+          backgroundColor: 'rgba(255,255,255,0.2)'
+        }
+      }}
       PaperProps={{
         sx: {
-          width: fullScreen
-            ? '100%'
-            : { xs: '90%', sm: '70%', md: '50%', lg: '40%' },
-          bgcolor: glassBg,
-          backdropFilter: 'blur(20px)',
-          borderRadius: 3,
-          p: 3,
-          boxShadow: theme.shadows[10]
+          backgroundColor: alpha(theme.palette.background.paper, 0.4),
+          backdropFilter: 'blur(10px)'
         }
       }}
     >
       <DialogTitle>
-        <Typography variant="h5" sx={{ fontWeight: 600 }}>
-          {initialData ? 'Edit User' : 'Add New User'}
-        </Typography>
+        {initialData ? 'Edit User' : 'Add New User'}
       </DialogTitle>
 
-      <DialogContent dividers>
-        <Box component="form" noValidate autoComplete="off" sx={{ mt: 2 }}>
+      <DialogContent>
+        <Stack spacing={2} mt={1}>
           <TextField
             name="name"
-            label="Full Name"
+            label="Name"
+            fullWidth
             value={form.name}
             onChange={handleChange}
-            fullWidth
-            margin="normal"
           />
-
           <TextField
             name="email"
-            label="Email Address"
+            label="Email"
             type="email"
+            fullWidth
             value={form.email}
             onChange={handleChange}
-            fullWidth
-            margin="normal"
           />
-
-          {/* Role select now auto‑sizes on sm‑down */}
-          <FormControl
-            margin="normal"
-            fullWidth={!isMobile}
-            sx={{
-              width: isMobile ? 'auto' : '100%'
-            }}
-          >
-            <InputLabel>Role</InputLabel>
+          <FormControl fullWidth>
+            <InputLabel id="role-label">Role</InputLabel>
             <Select
+              labelId="role-label"
               name="role"
               value={form.role}
               label="Role"
               onChange={handleChange}
-              sx={{
-                [theme => theme.breakpoints.down('sm')]: {
-                  width: 'auto'
-                }
-              }}
             >
-              {['Super Admin', 'Admin', 'Manager', 'Employee'].map(role => (
-                <MenuItem key={role} value={role}>
-                  {role}
-                </MenuItem>
-              ))}
+              <MenuItem value="Super Admin">Super Admin</MenuItem>
+              <MenuItem value="Admin">Admin</MenuItem>
+              <MenuItem value="Manager">Manager</MenuItem>
+              <MenuItem value="Employee">Employee</MenuItem>
             </Select>
           </FormControl>
-
-          <TextField
-            name="password"
-            label="Temporary Password"
-            type="password"
-            value={form.password}
-            onChange={handleChange}
-            fullWidth
-            margin="dense"
-            helperText="Leave blank to auto-generate"
-          />
-        </Box>
+        </Stack>
       </DialogContent>
 
-      <DialogActions sx={{ px: 3, py: 2 }}>
-        <Button onClick={onClose} sx={{ textTransform: 'none' }}>
-          Cancel
-        </Button>
-        <Button
-          variant="contained"
-          onClick={handleSubmit}
-          disableElevation
-          sx={{ textTransform: 'none' }}
-        >
-          Submit
+      <DialogActions sx={{ px: 3, pb: 2 }}>
+        <Button onClick={onClose}>Cancel</Button>
+        <Button variant="contained" onClick={handleSave}>
+          {initialData ? 'Update' : 'Create'}
         </Button>
       </DialogActions>
     </Dialog>

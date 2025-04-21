@@ -335,12 +335,12 @@ const Sidebar = ({ open, onClose }) => {
         transitionDuration={300}
         sx={{
           display: { xs: 'block', md: 'none' },
+          zIndex: (theme) => theme.zIndex.drawer + 1,  // ensure overlay is on top
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
             background: theme.palette.background.paper,
             color: theme.palette.text.primary,
-            zIndex: 2000,
           },
         }}
       >

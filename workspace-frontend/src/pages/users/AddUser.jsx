@@ -1,34 +1,79 @@
-/* File: src/pages/users/AddUser.jsx */
+// File: src/pages/users/AddUser.jsx
 import React, { useState } from 'react';
-import { Container, Button } from '@mui/material';
+import { Container } from '@mui/material';
+
 import RoleFilter from './components/RoleFilter';
+import AddUserButton from './components/AddUserButton';
 import UserTable from './components/UserTable';
 import UserFormModal from './components/UserFormModal';
 
 const initialUsers = [
-  { name: 'John Doe', email: 'john@example.com', role: 'Admin', status: 'Active' },
-  { name: 'Mary James', email: 'mary@company.com', role: 'Employee', status: 'Inactive' }
+  { name: 'John Doe',    email: 'john@example.com',  role: 'Admin',    status: 'Active'   },
+  { name: 'Mary James',  email: 'mary@company.com',  role: 'Employee', status: 'Inactive' }
 ];
 
-function AddUser() {
-  const [users, setUsers] = useState(initialUsers);
+export default function AddUserPage() {
+  const [users, setUsers]         = useState(initialUsers);
   const [filterRole, setFilterRole] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
-  const [editUser, setEditUser] = useState(null);
+  const [editUser, setEditUser]   = useState(null);
 
-  const openAdd = () => { setEditUser(null); setModalOpen(true); };
-  const openEdit = (user) => { setEditUser(user); setModalOpen(true); };
-  const toggleStatus = (user) => setUsers(users.map(u => u.email === user.email ? { ...u, status: u.status === 'Active' ? 'Inactive' : 'Active' } : u));
-  const deleteUser = (user) => { if (window.confirm('Confirm delete?')) setUsers(users.filter(u => u.email !== user.email)); };
-  const submitForm = (data) => {
-    if (editUser) setUsers(users.map(u => u.email === editUser.email ? { ...u, ...data } : u));
-    else setUsers([...users, { ...data, status: 'Active' }]);
+  // open empty form
+  const openAdd = () => {
+    setEditUser(null);
+    setModalOpen(true);
+  };
+  // open for edit
+  const openEdit = user => {
+    setEditUser(user);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => setModalOpen(false);
+
+  // toggle active/inactive
+  const toggleStatus = user =>
+    setUsers(users.map(u =>
+      u.email === user.email
+        ? { ...u, status: u.status === 'Active' ? 'Inactive' : 'Active' }
+        : u
+    ));
+
+  // delete with confirmation
+  const deleteUser = user => {
+    if (window.confirm('Confirm delete?')) {
+      setUsers(users.filter(u => u.email !== user.email));
+    }
+  };
+
+  // handle both add & edit from the modal form
+  const submitForm = data => {
+    if (editUser) {
+      // edit
+      setUsers(users.map(u =>
+        u.email === editUser.email ? { ...u, ...data } : u
+      ));
+    } else {
+      // add new
+      setUsers([...users, { ...data, status: 'Active' }]);
+    }
+    closeModal();
   };
 
   return (
     <Container sx={{ py: 4 }}>
-      <Button variant="contained" onClick={openAdd} sx={{ mb: 2 }}>Add User</Button>
-      <RoleFilter filterRole={filterRole} setFilterRole={setFilterRole} />
+      {/* top controls */}
+      <RoleFilter
+        filterRole={filterRole}
+        setFilterRole={setFilterRole}
+      />
+      <AddUserButton
+        isMobile={false /* or pull from theme/useMediaQuery here */}
+        onClick={openAdd}
+        sx={{ mb: 2 }}
+      />
+
+      {/* table */}
       <UserTable
         users={users}
         filterRole={filterRole}
@@ -36,14 +81,14 @@ function AddUser() {
         onDelete={deleteUser}
         onToggleStatus={toggleStatus}
       />
+
+      {/* modal */}
       <UserFormModal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
+        onClose={closeModal}
         onSubmit={submitForm}
         initialData={editUser}
       />
     </Container>
   );
 }
-
-export default AddUser;
