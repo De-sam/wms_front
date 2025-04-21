@@ -13,23 +13,15 @@ const initialUsers = [
 function AddUser() {
   const [users, setUsers] = useState(initialUsers);
   const [filterRole, setFilterRole] = useState('');
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editUser, setEditUser] = useState(null);
 
-  const openAdd = () => { setEditUser(null); setModalOpen(true); };
   const openEdit = user => { setEditUser(user); setModalOpen(true); };
   const toggleStatus = user => setUsers(users.map(u => u.email === user.email ? { ...u, status: u.status === 'Active' ? 'Inactive' : 'Active' } : u));
   const deleteUser = user => { if (window.confirm('Confirm delete?')) setUsers(users.filter(u => u.email !== user.email)); };
-  const submitForm = data => {
-    if (editUser) setUsers(users.map(u => u.email === editUser.email ? { ...u, ...data } : u));
-    else setUsers([...users, { ...data, status: 'Active' }]);
-    setModalOpen(false);
-  };
+
 
   return (
     <Container sx={{ py: 4 }}>
-      <Button variant="contained" onClick={openAdd} sx={{ mb: 2 }}>Add User</Button>
-      <RoleFilter filterRole={filterRole} setFilterRole={setFilterRole} />
+
       <UserTable
         users={users}
         filterRole={filterRole}
@@ -37,12 +29,7 @@ function AddUser() {
         onDelete={deleteUser}
         onToggleStatus={toggleStatus}
       />
-      <UserFormModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onSubmit={submitForm}
-        initialData={editUser}
-      />
+
     </Container>
   );
 }

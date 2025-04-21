@@ -1,3 +1,5 @@
+// File: src/pages/users/components/Sidebar.jsx
+
 import React, { useContext, useState } from 'react';
 import {
   Avatar,
@@ -97,7 +99,7 @@ const Sidebar = ({ open, onClose }) => {
 
   const handleNavigate = (path) => {
     navigate(`/${shortcode}/dashboard/${path}`);
-    if (open && onClose) onClose(); // ✅ Close mobile drawer
+    if (open && onClose) onClose();
   };
 
   const glassStyles = {
@@ -114,6 +116,7 @@ const Sidebar = ({ open, onClose }) => {
         : '1px solid rgba(255,255,255,0.3)',
     borderRadius: 2,
     color: theme.palette.text.primary,
+    zIndex: 2000,
   };
 
   const renderContent = (isMobile = false) => (
@@ -126,7 +129,6 @@ const Sidebar = ({ open, onClose }) => {
         </Box>
       )}
 
-      {/* Logo + Org Name */}
       <Box
         sx={{
           display: 'flex',
@@ -162,16 +164,11 @@ const Sidebar = ({ open, onClose }) => {
         </Typography>
       </Box>
 
-      <Typography
-        variant="body2"
-        color="text.secondary"
-        sx={{ mt: 2, pl: 2 }}
-      >
+      <Typography variant="body2" color="text.secondary" sx={{ mt: 2, pl: 2 }}>
         Workspace Management System
       </Typography>
 
       <List sx={{ mt: 2 }}>
-        {/* Dashboard */}
         <ListItem
           button
           onClick={() => handleNavigate('')}
@@ -184,7 +181,10 @@ const Sidebar = ({ open, onClose }) => {
               location.pathname === `/${shortcode}/dashboard`
                 ? theme.palette.warning.light
                 : 'transparent',
-            '&:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
+            '&:hover': {
+              backgroundColor: 'rgba(0,0,0,0.05)',
+              zIndex: 2001,
+            },
           }}
         >
           <ListItemIcon sx={{ minWidth: 'auto', mr: 1, color: 'inherit' }}>
@@ -196,7 +196,6 @@ const Sidebar = ({ open, onClose }) => {
           />
         </ListItem>
 
-        {/* Workspaces collapsible */}
         <ListItem
           button
           onClick={() => setWorkspaceOpen(!workspaceOpen)}
@@ -208,7 +207,10 @@ const Sidebar = ({ open, onClose }) => {
             backgroundColor: workspaceOpen
               ? theme.palette.warning.light
               : 'transparent',
-            '&:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
+            '&:hover': {
+              backgroundColor: 'rgba(0,0,0,0.05)',
+              zIndex: 2001,
+            },
           }}
         >
           <ListItemIcon sx={{ minWidth: 'auto', mr: 1, color: 'inherit' }}>
@@ -236,7 +238,10 @@ const Sidebar = ({ open, onClose }) => {
                   backgroundColor: isActive(item.path)
                     ? theme.palette.warning.light
                     : 'transparent',
-                  '&:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
+                  '&:hover': {
+                    backgroundColor: 'rgba(0,0,0,0.05)',
+                    zIndex: 2001,
+                  },
                 }}
               >
                 <ListItemIcon sx={{ color: 'inherit' }}>{item.icon}</ListItemIcon>
@@ -246,7 +251,6 @@ const Sidebar = ({ open, onClose }) => {
           </List>
         </Collapse>
 
-        {/* Static Links */}
         {[
           { label: 'Bookings', icon: <BookOnlineIcon />, path: 'bookings' },
           { label: 'Users', icon: <PeopleIcon />, path: 'users' },
@@ -263,7 +267,10 @@ const Sidebar = ({ open, onClose }) => {
               backgroundColor: isActive(item.path)
                 ? theme.palette.warning.light
                 : 'transparent',
-              '&:hover': { backgroundColor: 'rgba(0,0,0,0.05)' },
+              '&:hover': {
+                backgroundColor: 'rgba(0,0,0,0.05)',
+                zIndex: 2001,
+              },
             }}
           >
             <ListItemIcon sx={{ color: 'inherit' }}>{item.icon}</ListItemIcon>
@@ -274,7 +281,10 @@ const Sidebar = ({ open, onClose }) => {
 
       {/* Theme toggle + footer */}
       <Box sx={{ mt: 'auto', mb: 2 }}>
-        <Tooltip title="Toggle theme">
+        <Tooltip
+          title="Toggle theme"
+          PopperProps={{ style: { zIndex: 2002 } }}
+        >
           <IconSwitch
             checked={theme.palette.mode === 'dark'}
             onChange={colorMode.toggleColorMode}
@@ -302,7 +312,6 @@ const Sidebar = ({ open, onClose }) => {
 
   return (
     <>
-      {/* Permanent Drawer (desktop) */}
       <Drawer
         variant="permanent"
         sx={{
@@ -318,13 +327,12 @@ const Sidebar = ({ open, onClose }) => {
         {renderContent()}
       </Drawer>
 
-      {/* Temporary Drawer (mobile) */}
       <Drawer
         variant="temporary"
         open={open}
         onClose={onClose}
         ModalProps={{ keepMounted: true }}
-        transitionDuration={300} // ✅ Smooth slide
+        transitionDuration={300}
         sx={{
           display: { xs: 'block', md: 'none' },
           '& .MuiDrawer-paper': {
@@ -332,6 +340,7 @@ const Sidebar = ({ open, onClose }) => {
             boxSizing: 'border-box',
             background: theme.palette.background.paper,
             color: theme.palette.text.primary,
+            zIndex: 2000,
           },
         }}
       >

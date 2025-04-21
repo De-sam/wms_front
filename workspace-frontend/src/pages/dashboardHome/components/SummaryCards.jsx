@@ -49,14 +49,15 @@ const SummaryCards = ({
   ];
 
   return (
-    <Grid container spacing={2} sx={{ width: '100%' }}>
+    <Grid container spacing={4} sx={{ width: '100%' }}>
       {summaryItems.map(({ label, value, Icon, color }, idx) => (
         <Grid item xs={12} sm={6} md={3} key={idx}>
           <Paper
             elevation={0}
             sx={{
               height: 130,
-              borderRadius: 1,
+              width: 390, 
+              borderRadius: 2,
               border: `1px solid ${color}`,
               backgroundColor: 'transparent',
               display: 'flex',
