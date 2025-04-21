@@ -9,19 +9,19 @@ import {
   Paper,
   IconButton,
   Tooltip,
-  Chip
+  Chip,
+  Typography,
 } from '@mui/material';
 import { Edit, Delete, Check, Close } from '@mui/icons-material';
 
-const WorkspaceTable = ({ workspaces, onEdit, onDelete, onToggle }) => {
+const WorkspaceTable = ({ workspaces = [], onEdit, onDelete, onToggle }) => {
+  // Ensure workspaces is always an array
+  const items = Array.isArray(workspaces) ? workspaces : [];
+
   return (
     <TableContainer
       component={Paper}
-      sx={{
-        width: '100%',
-        mt: 4,
-        overflowX: 'auto',
-      }}
+      sx={{ width: '100%', mt: 2, overflowX: 'auto' }}
     >
       <Table sx={{ minWidth: 900 }} size="small" aria-label="workspace table">
         <TableHead>
@@ -36,8 +36,8 @@ const WorkspaceTable = ({ workspaces, onEdit, onDelete, onToggle }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {workspaces.length > 0 ? (
-            workspaces.map((ws) => (
+          {items.length > 0 ? (
+            items.map((ws) => (
               <TableRow key={ws.id} hover>
                 <TableCell>{ws.name}</TableCell>
                 <TableCell>{ws.type}</TableCell>
@@ -53,7 +53,10 @@ const WorkspaceTable = ({ workspaces, onEdit, onDelete, onToggle }) => {
                 </TableCell>
                 <TableCell align="center">
                   <Tooltip title={ws.available ? 'Mark as Unavailable' : 'Mark as Available'}>
-                    <IconButton onClick={() => onToggle(ws.id)} color={ws.available ? 'warning' : 'success'}>
+                    <IconButton
+                      onClick={() => onToggle(ws.id)}
+                      color={ws.available ? 'warning' : 'success'}
+                    >
                       {ws.available ? <Close /> : <Check />}
                     </IconButton>
                   </Tooltip>
@@ -72,8 +75,10 @@ const WorkspaceTable = ({ workspaces, onEdit, onDelete, onToggle }) => {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={7} align="center">
-                No workspaces found.
+              <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
+                <Typography variant="body1" color="textSecondary">
+                  No workspaces found.
+                </Typography>
               </TableCell>
             </TableRow>
           )}

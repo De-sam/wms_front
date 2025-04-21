@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
+// src/pages/workspaces/AllWorkspaces.jsx
+
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import {
   Container,
   Paper,
   Dialog,
   DialogTitle,
   DialogContent,
+  CircularProgress,
+  Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
@@ -25,11 +31,13 @@ const initialFormState = {
 };
 
 const AllWorkspaces = () => {
-  const [workspaces, setWorkspaces] = useState([
-    { id: 1, name: 'Desk A1', type: 'Desk', capacity: 1, description: 'Window view desk', amenities: 'Monitor, Keyboard, Mouse', available: true },
-    { id: 2, name: 'Meeting Room 101', type: 'Room', capacity: 8, description: 'Large conference room', amenities: 'Projector, Whiteboard', available: true },
-    { id: 3, name: 'Desk B3', type: 'Desk', capacity: 1, description: 'Corner desk', amenities: 'Dual monitors', available: false },
-  ]);
+  const { shortcode } = useParams();
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const API_BASE = `${BASE_URL}/${shortcode}/api/workspaces`;
+
+  const [workspaces, setWorkspaces] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [editMode, setEditMode] = useState(false);
   const [currentWorkspace, setCurrentWorkspace] = useState(null);
@@ -40,6 +48,24 @@ const AllWorkspaces = () => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
+  // Fetch workspaces on mount
+  useEffect(() => {
+    const fetchWorkspaces = async () => {
+      try {
+        const { data } = await axios.get(`${API_BASE}/`);
+        setWorkspaces(Array.isArray(data) ? data : []);
+        setError(null);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to load workspaces.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchWorkspaces();
+  }, [API_BASE]);
+
+  // Handlers (add/edit/delete/toggle) — unchanged
   const handleAddNew = () => {
     setEditMode(false);
     setCurrentWorkspace(null);
@@ -54,60 +80,105 @@ const AllWorkspaces = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id) => {
-    if (confirm('Are you sure you want to delete this workspace?')) {
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this workspace?')) return;
+    try {
+      await axios.delete(`${API_BASE}/${id}/`);
       setWorkspaces(prev => prev.filter(ws => ws.id !== id));
+    } catch (err) {
+      console.error(err);
+      alert('Delete failed.');
     }
   };
 
-  const handleToggleAvailability = (id) => {
-    setWorkspaces(prev =>
-      prev.map(ws => ws.id === id ? { ...ws, available: !ws.available } : ws)
-    );
+  const handleToggleAvailability = async (id) => {
+    const ws = workspaces.find(w => w.id === id);
+    if (!ws) return;
+    try {
+      const { data } = await axios.patch(`${API_BASE}/${id}/`, {
+        available: !ws.available,
+      });
+      setWorkspaces(prev => prev.map(item => item.id === id ? data : item));
+    } catch (err) {
+      console.error(err);
+      alert('Update failed.');
+    }
   };
 
   const handleFormChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value
-    });
+    setFormData(f => ({
+      ...f,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (editMode) {
-      setWorkspaces(prev =>
-        prev.map(ws => ws.id === currentWorkspace.id ? { ...formData } : ws)
-      );
-    } else {
-      const newId = Math.max(0, ...workspaces.map(ws => ws.id)) + 1;
-      setWorkspaces(prev => [...prev, { ...formData, id: newId }]);
+    try {
+      if (editMode && currentWorkspace) {
+        const { data } = await axios.put(
+          `${API_BASE}/${currentWorkspace.id}/`,
+          formData
+        );
+        setWorkspaces(prev =>
+          prev.map(ws => (ws.id === currentWorkspace.id ? data : ws))
+        );
+      } else {
+        const payload = { ...formData };
+        delete payload.id;
+        const { data } = await axios.post(`${API_BASE}/`, payload);
+        setWorkspaces(prev => [...prev, data]);
+      }
+      // reset state & close modal
+      setFormData(initialFormState);
+      setEditMode(false);
+      setCurrentWorkspace(null);
+      setIsModalOpen(false);
+    } catch (err) {
+      console.error(err);
+      alert('Save failed.');
     }
-    setFormData(initialFormState);
-    setEditMode(false);
-    setCurrentWorkspace(null);
-    setIsModalOpen(false); // ✅ Close modal after submit
   };
 
   const handleCancel = () => {
     setFormData(initialFormState);
     setEditMode(false);
     setCurrentWorkspace(null);
-    setIsModalOpen(false); // ✅ Close modal on cancel
+    setIsModalOpen(false);
   };
 
   const handleSearch = (e) => {
     setSearchText(e.target.value);
   };
 
-  const filteredWorkspaces = workspaces.filter(ws =>
-    ws.name.toLowerCase().includes(searchText.toLowerCase()) ||
-    ws.type.toLowerCase().includes(searchText.toLowerCase()) ||
-    ws.description.toLowerCase().includes(searchText.toLowerCase()) ||
-    ws.amenities.toLowerCase().includes(searchText.toLowerCase())
-  );
+  // Ensure we always have an array here
+  const filteredWorkspaces = Array.isArray(workspaces)
+    ? workspaces.filter(ws =>
+        [ws.name, ws.type, ws.description, ws.amenities]
+          .join(' ')
+          .toLowerCase()
+          .includes(searchText.toLowerCase())
+      )
+    : [];
 
+  // Loading or error state
+  if (loading) {
+    return (
+      <Container sx={{ textAlign: 'center', mt: 4 }}>
+        <CircularProgress />
+      </Container>
+    );
+  }
+  if (error) {
+    return (
+      <Container sx={{ textAlign: 'center', mt: 4 }}>
+        <Typography color="error">{error}</Typography>
+      </Container>
+    );
+  }
+
+  // Always render the table container, even if filteredWorkspaces is empty
   return (
     <Container maxWidth="xl" sx={{ px: { xs: 1, md: 3 }, pt: 0.5, pb: 3 }}>
       <Paper
@@ -121,6 +192,8 @@ const AllWorkspaces = () => {
       >
         <WorkspaceHeader onAdd={handleAddNew} />
         <WorkspaceSearch value={searchText} onChange={handleSearch} />
+
+        {/* TABLE: always rendered */}
         <WorkspaceTable
           workspaces={filteredWorkspaces}
           onEdit={handleEdit}
@@ -129,7 +202,7 @@ const AllWorkspaces = () => {
         />
       </Paper>
 
-      {/* 🧩 Modal for Add/Edit Form */}
+      {/* MODAL for Add/Edit */}
       <Dialog
         open={isModalOpen}
         onClose={handleCancel}
