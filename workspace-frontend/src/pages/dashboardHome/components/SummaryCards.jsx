@@ -4,7 +4,8 @@ import {
   Paper,
   Typography,
   Box,
-  useTheme
+  useTheme,
+  CircularProgress
 } from '@mui/material';
 import {
   WorkspacePremium,
@@ -26,25 +27,29 @@ const SummaryCards = ({
       label: 'Total Workspaces',
       value: totalWorkspaces,
       Icon: WorkspacePremium,
-      color: '#2196f3'
+      color: '#2196f3',
+      isLoading: totalWorkspaces === null,
     },
     {
       label: 'Total Users',
       value: totalUsers,
       Icon: Group,
-      color: '#4caf50'
+      color: '#4caf50',
+      isLoading: false,
     },
     {
       label: 'Bookings Today',
       value: bookingsToday,
       Icon: EventNote,
-      color: '#ff9800'
+      color: '#ff9800',
+      isLoading: false,
     },
     {
       label: 'Occupancy Rate',
       value: `${occupancyRate}%`,
       Icon: Percent,
-      color: '#e91e63'
+      color: '#e91e63',
+      isLoading: false,
     }
   ];
 
@@ -57,18 +62,18 @@ const SummaryCards = ({
         justifyContent: { xs: 'center', sm: 'flex-start' }
       }}
     >
-      {summaryItems.map(({ label, value, Icon, color }, idx) => (
+      {summaryItems.map(({ label, value, Icon, color, isLoading }, idx) => (
         <Grid
           item
           key={idx}
-          xs={12}    // 1 per row on mobile
-          sm={6}     // 2 per row on tablet+
+          xs={12}
+          sm={6}
           sx={{
             display: 'flex',
             justifyContent: {
-              xs: 'center',    // center the fixed‑width mobile card
+              xs: 'center',
               sm: 'flex-start',
-              md: 'center'     // center the fixed‑width desktop card
+              md: 'center'
             }
           }}
         >
@@ -76,9 +81,9 @@ const SummaryCards = ({
             elevation={0}
             sx={{
               width: {
-                xs: 390,     // mobile: original 390px
-                sm: '100%',  // tablet: fill its 50% grid cell
-                md: 330      // desktop: fixed 350px
+                xs: 390,
+                sm: '100%',
+                md: 330
               },
               minWidth: 0,
               height: 130,
@@ -94,9 +99,13 @@ const SummaryCards = ({
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
               <Icon sx={{ color, fontSize: 32 }} />
-              <Typography variant="h4" fontWeight="bold">
-                {value}
-              </Typography>
+              {isLoading ? (
+                <CircularProgress size={24} thickness={4} sx={{ color }} />
+              ) : (
+                <Typography variant="h4" fontWeight="bold">
+                  {value}
+                </Typography>
+              )}
             </Box>
             <Typography
               variant="subtitle2"
