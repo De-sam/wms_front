@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -7,22 +7,54 @@ import {
   TableHead,
   TableRow,
   Paper,
-  IconButton,
-  Tooltip,
   Chip,
   Typography,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tooltip,
 } from '@mui/material';
-import { Edit, Delete, Check, Close } from '@mui/icons-material';
+import {
+  MoreVert as MoreVertIcon,
+  Edit,
+  Delete,
+  Check,
+  Close,
+} from '@mui/icons-material';
 
 const WorkspaceTable = ({ workspaces = [], onEdit, onDelete, onToggle }) => {
-  // Ensure workspaces is always an array
   const items = Array.isArray(workspaces) ? workspaces : [];
 
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
+
+  const handleOpenMenu = (event, id) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedId(id);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+    setSelectedId(null);
+  };
+
+  const handleEdit = (ws) => {
+    handleCloseMenu();
+    onEdit(ws);
+  };
+
+  const handleDelete = (id) => {
+    handleCloseMenu();
+    onDelete(id);
+  };
+
+  const handleToggle = (id) => {
+    handleCloseMenu();
+    onToggle(id);
+  };
+
   return (
-    <TableContainer
-      component={Paper}
-      sx={{ width: '100%', mt: 2, overflowX: 'auto' }}
-    >
+    <TableContainer component={Paper} sx={{ width: '100%', mt: 2, overflowX: 'auto' }}>
       <Table sx={{ minWidth: 900 }} size="small" aria-label="workspace table">
         <TableHead>
           <TableRow>
@@ -52,24 +84,36 @@ const WorkspaceTable = ({ workspaces = [], onEdit, onDelete, onToggle }) => {
                   />
                 </TableCell>
                 <TableCell align="center">
-                  <Tooltip title={ws.available ? 'Mark as Unavailable' : 'Mark as Available'}>
-                    <IconButton
-                      onClick={() => onToggle(ws.id)}
-                      color={ws.available ? 'warning' : 'success'}
+                  <Tooltip title="More actions">
+                    <IconButton onClick={(e) => handleOpenMenu(e, ws.id)}>
+                      <MoreVertIcon />
+                    </IconButton>
+                  </Tooltip>
+                  {selectedId === ws.id && (
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl)}
+                      onClose={handleCloseMenu}
                     >
-                      {ws.available ? <Close /> : <Check />}
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Edit">
-                    <IconButton onClick={() => onEdit(ws)} color="primary">
-                      <Edit />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Delete">
-                    <IconButton onClick={() => onDelete(ws.id)} color="error">
-                      <Delete />
-                    </IconButton>
-                  </Tooltip>
+                      <MenuItem onClick={() => handleToggle(ws.id)}>
+                        {ws.available ? (
+                          <>
+                            <Close fontSize="small" sx={{ mr: 1 }} /> Mark Unavailable
+                          </>
+                        ) : (
+                          <>
+                            <Check fontSize="small" sx={{ mr: 1 }} /> Mark Available
+                          </>
+                        )}
+                      </MenuItem>
+                      <MenuItem onClick={() => handleEdit(ws)}>
+                        <Edit fontSize="small" sx={{ mr: 1 }} /> Edit
+                      </MenuItem>
+                      <MenuItem onClick={() => handleDelete(ws.id)}>
+                        <Delete fontSize="small" sx={{ mr: 1 }} /> Delete
+                      </MenuItem>
+                    </Menu>
+                  )}
                 </TableCell>
               </TableRow>
             ))

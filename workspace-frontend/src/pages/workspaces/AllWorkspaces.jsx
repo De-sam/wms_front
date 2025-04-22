@@ -1,5 +1,3 @@
-// src/pages/workspaces/AllWorkspaces.jsx
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -48,7 +46,6 @@ const AllWorkspaces = () => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // Fetch workspaces on mount
   useEffect(() => {
     const fetchWorkspaces = async () => {
       try {
@@ -65,7 +62,6 @@ const AllWorkspaces = () => {
     fetchWorkspaces();
   }, [API_BASE]);
 
-  // Handlers (add/edit/delete/toggle) — unchanged
   const handleAddNew = () => {
     setEditMode(false);
     setCurrentWorkspace(null);
@@ -117,7 +113,7 @@ const AllWorkspaces = () => {
     e.preventDefault();
     try {
       if (editMode && currentWorkspace) {
-        const { data } = await axios.put(
+        const { data } = await axios.patch(
           `${API_BASE}/${currentWorkspace.id}/`,
           formData
         );
@@ -130,7 +126,7 @@ const AllWorkspaces = () => {
         const { data } = await axios.post(`${API_BASE}/`, payload);
         setWorkspaces(prev => [...prev, data]);
       }
-      // reset state & close modal
+
       setFormData(initialFormState);
       setEditMode(false);
       setCurrentWorkspace(null);
@@ -152,7 +148,6 @@ const AllWorkspaces = () => {
     setSearchText(e.target.value);
   };
 
-  // Ensure we always have an array here
   const filteredWorkspaces = Array.isArray(workspaces)
     ? workspaces.filter(ws =>
         [ws.name, ws.type, ws.description, ws.amenities]
@@ -162,7 +157,6 @@ const AllWorkspaces = () => {
       )
     : [];
 
-  // Loading or error state
   if (loading) {
     return (
       <Container sx={{ textAlign: 'center', mt: 4 }}>
@@ -178,7 +172,6 @@ const AllWorkspaces = () => {
     );
   }
 
-  // Always render the table container, even if filteredWorkspaces is empty
   return (
     <Container maxWidth="xl" sx={{ px: { xs: 1, md: 3 }, pt: 0.5, pb: 3 }}>
       <Paper
@@ -193,7 +186,6 @@ const AllWorkspaces = () => {
         <WorkspaceHeader onAdd={handleAddNew} />
         <WorkspaceSearch value={searchText} onChange={handleSearch} />
 
-        {/* TABLE: always rendered */}
         <WorkspaceTable
           workspaces={filteredWorkspaces}
           onEdit={handleEdit}
@@ -202,7 +194,6 @@ const AllWorkspaces = () => {
         />
       </Paper>
 
-      {/* MODAL for Add/Edit */}
       <Dialog
         open={isModalOpen}
         onClose={handleCancel}
