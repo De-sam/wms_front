@@ -8,7 +8,6 @@ import {
   useTheme,
   useMediaQuery
 } from '@mui/material';
-import Header from '../components/landingPage/Header';
 import InfoPanel from '../components/auth/InfoPanel';
 import LoginForm from '../components/auth/LoginForm';
 import SignupForm from '../components/auth/SignupForm';
@@ -105,7 +104,6 @@ const Auth = () => {
 
   return (
     <>
-      <Header />
       <Box
         sx={{
           backgroundColor: theme.palette.background.default,
