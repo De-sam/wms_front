@@ -27,7 +27,7 @@ const PeakBookingHoursTable = () => {
   return (
     <Box
       sx={{
-        width: { xs: '100%', sm: '90%', md: 700 },
+        width: { xs: '100%', sm: '100%', md: 700 },
         maxWidth: 700,
         height: { xs: 360, sm: 320, md: 380 }, // increased mobile height
         mx: { xs: 0, sm: 'auto' },

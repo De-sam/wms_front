@@ -1,14 +1,7 @@
 // src/pages/reports/components/BookingHoursBarChart.jsx
-import React from 'react';
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-} from 'recharts';
-import { Paper, Typography, useTheme, Box, useMediaQuery } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Paper, Typography, Box, useTheme, useMediaQuery } from '@mui/material';
+import { amber } from '@mui/material/colors';
 import DownloadExportButtons from './DownloadExportButtons';
 
 const data = [
@@ -24,6 +17,21 @@ const data = [
 const BookingHoursBarChart = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [animate, setAnimate] = useState(false);
+
+  // compute percentage heights relative to the max bookings
+  const max = Math.max(...data.map(d => d.bookings));
+  const percents = data.map(d => (d.bookings / max) * 100);
+
+  useEffect(() => {
+    const t = setTimeout(() => setAnimate(true), 50);
+    return () => clearTimeout(t);
+  }, []);
+
+  // prepare full vs. short labels
+  const fullLabels = data.map(d => d.time);
+  // keep AM/PM but remove the extra space e.g. "9 AM" → "9AM"
+  const shortLabels = data.map(d => d.time.replace(' ', ''));
 
   return (
     <Paper
@@ -31,7 +39,7 @@ const BookingHoursBarChart = () => {
       sx={{
         width: { xs: '100%', sm: '90%', md: 790 },
         maxWidth: 790,
-        height: { xs: 420, sm: 320, md: 380 },
+        height: { xs: 300, sm: 380, md: 380 },
         mx: { xs: 0, sm: 'auto' },
         p: 2,
         backgroundColor: 'transparent',
@@ -41,7 +49,7 @@ const BookingHoursBarChart = () => {
         flexDirection: 'column',
       }}
     >
-      {/* Header for desktop */}
+      {/* Desktop header */}
       <Box
         sx={{
           display: { xs: 'none', sm: 'flex' },
@@ -54,69 +62,86 @@ const BookingHoursBarChart = () => {
         <DownloadExportButtons />
       </Box>
 
-      {/* Title for mobile */}
+      {/* Mobile title */}
       <Typography
         variant="subtitle1"
-        sx={{
-          display: { xs: 'block', sm: 'none' },
-          mb: 1,
-        }}
+        sx={{ display: { xs: 'block', sm: 'none' }, mb: 1 }}
       >
         Bookings per Hour
       </Typography>
 
-      {/* Chart container */}
+      {/* Chart area pushed to bottom */}
       <Box
         sx={{
           flexGrow: 1,
           display: 'flex',
-          justifyContent: isMobile ? 'center' : 'flex-start',
-          px: isMobile ? 0 : 2,
+          flexDirection: 'column',
+          justifyContent: 'flex-end',
         }}
       >
-        <ResponsiveContainer width={isMobile ? '95%' : '100%'} height="100%">
-          <BarChart
-            data={data}
-            margin={isMobile ? { top: 0, right: 0, bottom: 0, left: 0 } : { top: 20, right: 20, bottom: 20, left: 20 }}
-          >
-            <CartesianGrid
-              horizontal
-              vertical={false}
-              stroke={theme.palette.divider}
-              strokeDasharray="3 3"
-              strokeOpacity={0.15}
-            />
-            <XAxis
-              dataKey="time"
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: theme.palette.text.primary }}
-              padding={{ left: 0, right: 0 }}
-            />
-            <YAxis
-              axisLine={false}
-              tickLine={false}
-              tick={false}
-              domain={[0, 'dataMax']}
-            />
-            <Bar
-              dataKey="bookings"
-              fill={theme.palette.primary.main}
-              barSize={20}
-              barCategoryGap={isMobile ? '20%' : '20%'}
-              cursor="default"
-            />
-          </BarChart>
-        </ResponsiveContainer>
+        {/* Bars row – fixed max height */}
+        <Box
+          sx={{
+            height: { xs: 120, md: 200 },
+            display: 'flex',
+            justifyContent: 'space-around',
+            alignItems: 'flex-end',
+            px: 1,
+          }}
+        >
+          {percents.map((pct, i) => (
+            <Box
+              key={i}
+              sx={{
+                display: 'flex',
+                alignItems: 'flex-end',
+                width: { xs: 16, md: 24 },
+                height: '100%',
+              }}
+            >
+              <Box
+                sx={{
+                  width: '100%',
+                  height: animate ? `${pct}%` : 0,
+                  backgroundColor: amber[400],
+                  border: '1px solid rgba(255,255,255,0.3)',
+                  backdropFilter: 'blur(4px)',
+                  borderRadius: 1,
+                  transition: 'height 0.8s ease-in-out',
+                  mb: 1,
+                }}
+              />
+            </Box>
+          ))}
+        </Box>
+
+        {/* Labels row */}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            mt: 1,
+          }}
+        >
+          {fullLabels.map((lbl, i) => (
+            <Typography
+              key={i}
+              variant="body2"
+              sx={{ fontSize: { xs: '0.7rem', md: '0.8rem' } }}
+            >
+              {isMobile ? shortLabels[i] : lbl}
+            </Typography>
+          ))}
+        </Box>
       </Box>
 
-      {/* Buttons for mobile */}
+      {/* Mobile export buttons */}
       <Box
         sx={{
           display: { xs: 'flex', sm: 'none' },
           justifyContent: 'flex-end',
           mt: 1,
-          gap: 1,
         }}
       >
         <DownloadExportButtons />

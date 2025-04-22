@@ -109,7 +109,8 @@ const Sidebar = ({ open, onClose }) => {
         : 'linear-gradient(135deg, rgba(255,255,255,0.2), rgba(240,240,240,0.2))',
     backdropFilter: 'blur(25px)',
     WebkitBackdropFilter: 'blur(25px)',
-    boxShadow: '4px 0 10px rgba(0, 255, 255, 0.2)',
+    // Changed to a soft grey glow instead of blue
+    boxShadow: '4px 0 10px rgba(128,128,128,0.3)',
     border:
       theme.palette.mode === 'dark'
         ? 'none'
@@ -335,7 +336,7 @@ const Sidebar = ({ open, onClose }) => {
         transitionDuration={300}
         sx={{
           display: { xs: 'block', md: 'none' },
-          zIndex: (theme) => theme.zIndex.drawer + 1,  // ensure overlay is on top
+          zIndex: (theme) => theme.zIndex.drawer + 1,
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
