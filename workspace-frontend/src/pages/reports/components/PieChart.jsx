@@ -8,34 +8,63 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-const data = [
-  { name: 'Usage', value: 85 },
-  { name: 'Remaining', value: 15 },
-];
+const usageValue = 85;
+const remainingValue = 100 - usageValue;
 
 const PieChart = () => {
   const theme = useTheme();
-  const COLORS = [
-    theme.palette.primary.main,
-    theme.palette.grey[300],
-  ];
 
   return (
-    <Box width="100%" height={250} position="relative">
+    <Box
+      sx={{
+        // full‑width on xs, then up to 700px
+        width: { xs: '100%', sm: '90%', md: 700 },
+        maxWidth: 700,
+        // shorter on mobile, taller on desktop
+        height: { xs: 280, sm: 320, md: 400 },
+        position: 'relative',
+        backgroundColor: 'transparent',
+        border: `1px solid ${theme.palette.divider}`,
+        borderRadius: 2,
+        // center when it's narrower than its container
+        mx: { xs: 0, sm: 'auto' },
+        p: 1,
+      }}
+    >
       <ResponsiveContainer>
         <RePieChart>
+          {/* Grey background ring */}
           <Pie
-            data={data}
+            data={[{ name: 'Remaining', value: 100 }]}
             dataKey="value"
             startAngle={90}
             endAngle={-270}
             innerRadius="70%"
             outerRadius="100%"
             stroke="none"
+            isAnimationActive={false}
           >
-            {data.map((entry, idx) => (
-              <Cell key={`cell-${idx}`} fill={COLORS[idx]} />
-            ))}
+            <Cell fill={theme.palette.grey[300]} />
+          </Pie>
+
+          {/* Animated blue slice */}
+          <Pie
+            data={[
+              { name: 'Usage', value: usageValue },
+              { name: 'Blank', value: remainingValue },
+            ]}
+            dataKey="value"
+            startAngle={90}
+            endAngle={-270}
+            innerRadius="70%"
+            outerRadius="100%"
+            stroke="none"
+            isAnimationActive
+            animationBegin={100}
+            animationDuration={1000}
+          >
+            <Cell fill={theme.palette.primary.main} />
+            <Cell fill="transparent" />
           </Pie>
         </RePieChart>
       </ResponsiveContainer>
@@ -48,9 +77,7 @@ const PieChart = () => {
         sx={{ transform: 'translate(-50%, -50%)' }}
         textAlign="center"
       >
-        <Typography variant="h4" component="div">
-          85%
-        </Typography>
+        <Typography variant="h4">{usageValue}%</Typography>
         <Typography variant="subtitle2" color="textSecondary">
           Total Usage This Week
         </Typography>
