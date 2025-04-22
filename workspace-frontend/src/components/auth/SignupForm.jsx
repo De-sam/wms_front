@@ -4,20 +4,19 @@ import { Box, Typography, TextField, Button, Link } from '@mui/material';
 const SignupForm = ({
   orgName,
   email,
+  fullName,
+  phone,
   onOrgChange,
   onEmailChange,
+  onFullNameChange,
+  onPhoneChange,
   onSwitch,
+  onSubmit,
 }) => {
-  // No API call is made; the form submission prevents the default behavior.
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // API call would normally go here.
-  };
-
   return (
     <Box
       component="form"
-      onSubmit={handleSubmit}
+      onSubmit={onSubmit}
       sx={{
         width: '100%',
         maxWidth: 400,
@@ -29,16 +28,37 @@ const SignupForm = ({
       <Typography variant="h4" align="center" fontWeight="bold" sx={{ mb: 1 }}>
         Create Your Workspace Account
       </Typography>
+
+      <TextField
+        label="Full Name"
+        variant="standard"
+        fullWidth
+        required
+        value={fullName}
+        onChange={onFullNameChange}
+        sx={{ mb: 2 }}
+      />
+
+      <TextField
+        label="Phone Number"
+        variant="standard"
+        fullWidth
+        required
+        value={phone}
+        onChange={onPhoneChange}
+        sx={{ mb: 2 }}
+      />
+
       <TextField
         label="Organization Name"
         variant="standard"
         fullWidth
         required
-        autoFocus
         value={orgName}
         onChange={onOrgChange}
         sx={{ mb: 2 }}
       />
+
       <TextField
         label="Email Address"
         variant="standard"
@@ -49,9 +69,18 @@ const SignupForm = ({
         onChange={onEmailChange}
         sx={{ mb: 2 }}
       />
-      <Button type="submit" variant="contained" color="primary" size="large" sx={{ px: 4, mt: 2 }} fullWidth>
+
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        size="large"
+        sx={{ px: 4, mt: 2 }}
+        fullWidth
+      >
         Sign Up
       </Button>
+
       <Typography sx={{ mt: 2 }}>
         Already have an account?{' '}
         <Link component="button" variant="body2" onClick={onSwitch}>

@@ -29,6 +29,8 @@ const Auth = () => {
 
   const [signupOrg, setSignupOrg] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
+  const [signupFullName, setSignupFullName] = useState('');
+  const [signupPhone, setSignupPhone] = useState('');
   const [signupLoading, setSignupLoading] = useState(false);
   const [signupAlert, setSignupAlert] = useState({ open: false, message: '', severity: 'info' });
 
@@ -53,9 +55,8 @@ const Auth = () => {
         throw new Error(data.detail || 'Login failed.');
       }
 
-      // ✅ Save all important items to localStorage
       if (data.access) {
-        localStorage.setItem('token', data.access);  // Store access token correctly
+        localStorage.setItem('token', data.access);
       }
 
       if (shortcode) {
@@ -69,14 +70,6 @@ const Auth = () => {
       if (data.email) {
         localStorage.setItem('user', JSON.stringify({ email: data.email, id: data.user_id }));
       }
-
-      // ✅ Debug logs
-      console.log('📦 Saved to localStorage:', {
-        token: localStorage.getItem('token'),
-        shortcode: localStorage.getItem('shortcode'),
-        org_name: localStorage.getItem('org_name'),
-        user: localStorage.getItem('user'),
-      });
 
       setLoginAlert({ open: true, message: '🎉 Successfully logged in!', severity: 'success' });
 
@@ -96,10 +89,50 @@ const Auth = () => {
     setSignupLoading(true);
     setSignupAlert({ open: false, message: '', severity: 'info' });
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setSignupAlert({ open: true, message: 'Signup complete!', severity: 'success' });
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/${shortcode}/users/signup/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          organization_name: signupOrg,
+          email: signupEmail,
+          full_name: signupFullName,
+          phone_number: signupPhone
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        const errorMessage = Object.values(data).flat().join(' ');
+        throw new Error(errorMessage || 'Signup failed.');
+      }
+
+      setSignupAlert({ open: true, message: '🎉 Signup successful! Check your email.', severity: 'success' });
+
+      setTimeout(() => setMode('login'), 1500);
+    } catch (error) {
+      setSignupAlert({ open: true, message: error.message, severity: 'error' });
+    }
+
     setSignupLoading(false);
-    setMode('login');
+  };
+
+  const signupFormProps = {
+    orgName: signupOrg,
+    email: signupEmail,
+    fullName: signupFullName,
+    phone: signupPhone,
+    onOrgChange: (e) => setSignupOrg(e.target.value),
+    onEmailChange: (e) => setSignupEmail(e.target.value),
+    onFullNameChange: (e) => setSignupFullName(e.target.value),
+    onPhoneChange: (e) => setSignupPhone(e.target.value),
+    onSubmit: handleSignupSubmit,
+    loading: signupLoading,
+    alert: signupAlert,
+    onSwitch: () => setMode('login'),
   };
 
   return (
@@ -161,16 +194,7 @@ const Auth = () => {
                   onSwitch={() => setMode('signup')}
                 />
               ) : (
-                <SignupForm
-                  orgName={signupOrg}
-                  email={signupEmail}
-                  onOrgChange={(e) => setSignupOrg(e.target.value)}
-                  onEmailChange={(e) => setSignupEmail(e.target.value)}
-                  onSubmit={handleSignupSubmit}
-                  loading={signupLoading}
-                  alert={signupAlert}
-                  onSwitch={() => setMode('login')}
-                />
+                <SignupForm {...signupFormProps} />
               )}
             </Box>
 
@@ -254,16 +278,7 @@ const Auth = () => {
                       onSwitch={() => setMode('signup')}
                     />
                   ) : (
-                    <SignupForm
-                      orgName={signupOrg}
-                      email={signupEmail}
-                      onOrgChange={(e) => setSignupOrg(e.target.value)}
-                      onEmailChange={(e) => setSignupEmail(e.target.value)}
-                      onSubmit={handleSignupSubmit}
-                      loading={signupLoading}
-                      alert={signupAlert}
-                      onSwitch={() => setMode('login')}
-                    />
+                    <SignupForm {...signupFormProps} />
                   )}
                 </Box>
               )}
