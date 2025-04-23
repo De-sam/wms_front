@@ -2,11 +2,9 @@ import React from 'react';
 import { Box, Typography, TextField, Button, Link } from '@mui/material';
 
 const SignupForm = ({
-  orgName,
   email,
   fullName,
   phone,
-  onOrgChange,
   onEmailChange,
   onFullNameChange,
   onPhoneChange,
@@ -46,16 +44,6 @@ const SignupForm = ({
         required
         value={phone}
         onChange={onPhoneChange}
-        sx={{ mb: 2 }}
-      />
-
-      <TextField
-        label="Organization Name"
-        variant="standard"
-        fullWidth
-        required
-        value={orgName}
-        onChange={onOrgChange}
         sx={{ mb: 2 }}
       />
 

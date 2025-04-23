@@ -1,4 +1,3 @@
-// src/pages/Auth.jsx
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
@@ -27,7 +26,6 @@ const Auth = () => {
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginAlert, setLoginAlert] = useState({ open: false, message: '', severity: 'info' });
 
-  const [signupOrg, setSignupOrg] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [signupFullName, setSignupFullName] = useState('');
   const [signupPhone, setSignupPhone] = useState('');
@@ -96,7 +94,6 @@ const Auth = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          organization_name: signupOrg,
           email: signupEmail,
           full_name: signupFullName,
           phone_number: signupPhone
@@ -121,11 +118,9 @@ const Auth = () => {
   };
 
   const signupFormProps = {
-    orgName: signupOrg,
     email: signupEmail,
     fullName: signupFullName,
     phone: signupPhone,
-    onOrgChange: (e) => setSignupOrg(e.target.value),
     onEmailChange: (e) => setSignupEmail(e.target.value),
     onFullNameChange: (e) => setSignupFullName(e.target.value),
     onPhoneChange: (e) => setSignupPhone(e.target.value),
